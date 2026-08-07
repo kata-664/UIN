@@ -30,7 +30,7 @@ window.LOCK_SETTINGS = {
   // Kunci akses ke materi/file & absensi per pertemuan
   pertemuan: {
     1: false,   // Pertemuan 1 — sudah dibuka
-    2: true,
+    2: false,
     3: true,
     4: true,
     5: true,
