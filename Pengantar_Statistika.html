@@ -108,6 +108,10 @@ body{
 .page-header{position:fixed;top:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;z-index:50;background:#fff;display:flex;align-items:center;gap:12px;padding:16px;border-bottom:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.05);}
 .btn-back{width:36px;height:36px;border-radius:10px;background:var(--gray-light);border:none;font-size:18px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:var(--dark);}
 .page-header h2{font-size:16px;font-weight:800;color:var(--dark);flex:1;margin:0;}
+.btn-refresh{width:36px;height:36px;border-radius:10px;background:var(--gray-light);border:none;font-size:17px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:var(--blue);margin-left:auto;transition:transform .4s ease;}
+.btn-refresh:active{transform:scale(.9);}
+.btn-refresh.spinning{animation:refreshSpin .6s linear;}
+@keyframes refreshSpin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
 .page-body{padding:86px 16px 24px;}
 
 .card{background:#fff;border-radius:var(--radius-sm);padding:16px;box-shadow:var(--shadow);margin-bottom:12px;}
@@ -166,6 +170,8 @@ body{
 .chat-quote.quote-me b{color:#2E7D32;}
 .chat-reply-btn{background:none;border:none;color:var(--gray);font-size:11px;font-weight:700;cursor:pointer;padding:3px 2px 0;}
 .chat-reply-btn.me{color:var(--blue);}
+.chat-bubble-actions{display:flex;gap:10px;}
+.chat-delete-btn{background:none;border:none;color:var(--red);font-size:11px;font-weight:700;cursor:pointer;padding:3px 2px 0;}
 .chat-row.chat-highlight .chat-bubble{animation:chatFlash 1.4s ease;}
 @keyframes chatFlash{0%{box-shadow:0 0 0 3px #FFD54F;}100%{box-shadow:0 1px 2px rgba(0,0,0,.08);}}
 .diskusi-date-sep{text-align:center;font-size:11px;color:var(--gray);font-weight:700;margin:14px 0 10px;}
@@ -486,6 +492,7 @@ body{
   <div class="page-header">
     <button class="btn-back" onclick="goTo('homePage')">←</button>
     <h2>💬 Diskusi Kelas</h2>
+    <button class="btn-refresh" id="btnRefreshDiskusi" onclick="refreshDiskusi()" aria-label="Muat ulang diskusi">⟳</button>
   </div>
   <div class="page-body diskusi-thread-body">
     <div id="diskusiListWrap"></div>
@@ -1059,7 +1066,10 @@ function renderDiskusiList(items){
           <div class="chat-text">${escapeHtml(it.isi||'')}</div>
           <div class="chat-meta"><span class="chat-time">${timeAgo(it.waktu)}</span></div>
         </div>
-        <button class="chat-reply-btn ${isMe?'me':'other'}" onclick="balasKomentar('${it.id}','${escapeHtml(it.nama||'Anonim').replace(/'/g,"\\'")}','${escapeHtml((it.isi||'').slice(0,80)).replace(/'/g,"\\'")}')">↩ Balas</button>
+        <div class="chat-bubble-actions">
+          <button class="chat-reply-btn ${isMe?'me':'other'}" onclick="balasKomentar('${it.id}','${escapeHtml(it.nama||'Anonim').replace(/'/g,"\\'")}','${escapeHtml((it.isi||'').slice(0,80)).replace(/'/g,"\\'")}')">↩ Balas</button>
+          ${isMe?`<button class="chat-delete-btn" onclick="hapusDiskusi('${it.id}')">🗑 Hapus</button>`:''}
+        </div>
       </div>
     </div>`;
   });
@@ -1137,6 +1147,42 @@ function kirimDiskusi(ev){
     if(btn)btn.disabled=false;
     alert('⚠️ Gagal terhubung ke server diskusi. Cek koneksi internet.');
   });
+}
+
+/* Hapus pesan milik sendiri. Hanya menampilkan tombol hapus pada pesan
+   dengan nama pengirim = user yang sedang login (lihat isMe di renderDiskusiList),
+   jadi pesan orang lain tidak akan bisa dihapus dari sisi tampilan.
+   Untuk keamanan penuh (server-side), Apps Script backend idealnya juga
+   memvalidasi bahwa "nama" pengirim cocok dengan pemilik id sebelum menandai
+   status = 'dihapus'. */
+function hapusDiskusi(id){
+  if(!confirm('Hapus pesan ini?'))return;
+  if(!gasReady()){alert('Forum diskusi belum diaktifkan.');return;}
+  const nama=getUser()||'Anonim';
+  fetch(GAS_DISKUSI_URL,{
+    method:'POST',
+    headers:{'Content-Type':'text/plain;charset=utf-8'},
+    body:JSON.stringify({pertemuan:DISKUSI_THREAD_ID,id,nama,aksi:'hapus'})
+  })
+  .then(r=>r.json())
+  .then(res=>{
+    if(res.ok){
+      loadDiskusi();
+    } else {
+      alert(res.error||'Gagal menghapus pesan.');
+    }
+  })
+  .catch(()=>{alert('⚠️ Gagal terhubung ke server diskusi. Cek koneksi internet.');});
+}
+
+function refreshDiskusi(){
+  const btn=document.getElementById('btnRefreshDiskusi');
+  if(btn){
+    btn.classList.remove('spinning');
+    void btn.offsetWidth;
+    btn.classList.add('spinning');
+  }
+  loadDiskusi();
 }
 
 /* ============================================================
