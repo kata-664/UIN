@@ -30,23 +30,19 @@ window.PERTEMUAN_DATA = [
         id: "f1",
         nama: "Slide Pertemuan 1 - Pengantar Statistika",
         tipe: "ppt",
-        url: "https://drive.google.com/drive/folders/118R0bT5ETucgkXX31sxglx1eN55TLblW?hl=ID"
+        // GANTI: pakai link FILE-nya, bukan link folder
+        url: "https://drive.google.com/file/d/11ASsH-qGV58yyYF6rl7eYzXu82B2nZl4/view?usp=sharing"
       },
       {
         id: "f2",
         nama: "Modul Pertemuan 1",
-        tipe: "pdf",
+        tipe: "ppt", // <- ini sebenarnya Google Slides, bukan pdf
         url: "https://docs.google.com/presentation/d/11ASsH-qGV58yyYF6rl7eYzXu82B2nZl4/edit?usp=sharing&ouid=100048788146072930182&rtpof=true&sd=true"
       }
     ]
   },
-  {
-    nomor: 2,
-    judul: "Ukuran Pemusatan Data (Mean, Median, Modus)",
-    tanggal: "2026-08-18",
-    files: []
-  },
-
+  ...
+];
   // Tambahkan pertemuan baru di sini, contoh:
   // {
   //   nomor: 3,
