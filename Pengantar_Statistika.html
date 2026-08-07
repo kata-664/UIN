@@ -82,7 +82,19 @@ body{
 .menu-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 16px;}
 .menu-item{background:#fff;border-radius:var(--radius-sm);padding:16px;box-shadow:var(--shadow);cursor:pointer;transition:.15s;}
 .menu-item:active{transform:scale(.96);}
-.menu-icon-wrap{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:10px;}
+.menu-icon-wrap{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:10px;position:relative;}
+.tag-visited{color:#2E7D32;font-size:10.5px;font-weight:700;margin-left:6px;white-space:nowrap;}
+.tag-new{background:#FFEBEE;color:#C62828;font-size:9px;font-weight:800;padding:2px 7px;border-radius:10px;margin-left:6px;white-space:nowrap;vertical-align:middle;}
+.tag-unread{color:#C62828;font-weight:700;}
+.next-pertemuan-card{display:flex;align-items:center;gap:12px;}
+.next-pertemuan-icon{font-size:26px;flex-shrink:0;}
+.next-pertemuan-label{font-size:11px;color:var(--gray);font-weight:700;text-transform:uppercase;letter-spacing:.3px;}
+.next-pertemuan-title{font-size:14px;font-weight:800;color:var(--dark);margin-top:2px;}
+.next-pertemuan-date{font-size:12px;color:var(--blue);font-weight:700;margin-top:2px;}
+.progress-belajar-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.progress-belajar-head span:first-child{font-size:12px;font-weight:700;color:var(--dark);}
+.progress-belajar-pct{font-size:12px;font-weight:800;color:var(--blue);}
+.progress-belajar-sub{font-size:11px;color:var(--gray);margin-top:6px;}
 .menu-icon-wrap.blue{background:#E3F2FD;}
 .menu-icon-wrap.purple{background:#F3E5F5;}
 .menu-icon-wrap.yellow{background:#FFF8E1;}
@@ -141,6 +153,9 @@ body{
 .hadir-toggle.izin{background:#FFF3E0;color:#E65100;}
 .hadir-toggle.alpha{background:#FFEBEE;color:#C62828;}
 .mhs-del{background:none;border:none;color:#CFD8DC;font-size:16px;cursor:pointer;padding:0 2px;flex-shrink:0;}
+.mhs-row.mhs-row-self{background:#E3F2FD;border-radius:10px;padding-left:8px;padding-right:8px;margin:0 -8px;}
+.mhs-row.mhs-row-self .mhs-name{color:var(--blue);}
+.mhs-self-tag{color:var(--blue);font-weight:800;font-size:11px;margin-left:5px;}
 .absensi-summary{display:flex;gap:10px;margin-bottom:14px;}
 .abs-chip{flex:1;text-align:center;padding:10px;border-radius:12px;}
 .abs-chip.h{background:#E8F5E9;}
@@ -277,7 +292,7 @@ body{
     <div class="login-icon-wrap">
       <span class="big-icon">🎓</span>
       <h1>Kelas Digital</h1>
-      <p>Masukkan nama Anda untuk mulai mengelola kelas</p>
+      <p>Masukkan nama Anda untuk mulai mengakses kelas</p>
     </div>
     <div id="loginError" class="login-error">⚠️ Nama tidak boleh kosong!</div>
     <div class="field-group">
@@ -303,7 +318,7 @@ body{
         <div class="greeting-text">
           <div class="gday" id="homeGreetingDay">Selamat datang</div>
           <div class="gname" id="homeUsernameStrip">—</div>
-          <div class="gmotto">Kelola pertemuan &amp; latihan kelas Anda</div>
+          <div class="gmotto">Akses materi &amp; latihan kelas Anda</div>
         </div>
       </div>
       <button class="notif-btn" onclick="toggleNotifPanel()">
@@ -325,12 +340,36 @@ body{
     </div>
   </div>
 
+  <div class="hero-card-wrap" style="margin-top:12px;">
+    <div class="card" style="margin-bottom:0;">
+      <div class="progress-belajar-head">
+        <span>📘 Progress Belajar</span>
+        <span class="progress-belajar-pct" id="progressBelajarPct">0%</span>
+      </div>
+      <div class="pencapaian-progress-bar" style="margin:0;">
+        <div class="pencapaian-progress-fill" id="progressBelajarFill" style="width:0%"></div>
+      </div>
+      <div class="progress-belajar-sub" id="progressBelajarSub">0 dari 0 pertemuan dipelajari</div>
+    </div>
+  </div>
+
+  <div class="hero-card-wrap" id="nextPertemuanWrap" style="margin-top:12px;display:none;">
+    <div class="card next-pertemuan-card" style="margin-bottom:0;">
+      <div class="next-pertemuan-icon">📌</div>
+      <div style="flex:1;min-width:0;">
+        <div class="next-pertemuan-label">Pertemuan Berikutnya</div>
+        <div class="next-pertemuan-title" id="nextPertemuanTitle"></div>
+        <div class="next-pertemuan-date" id="nextPertemuanDate"></div>
+      </div>
+    </div>
+  </div>
+
   <div class="section-title">Menu Utama</div>
   <div class="menu-grid">
     <div class="menu-item" onclick="navTo('pertemuanListPage','navPertemuan')">
-      <div class="menu-icon-wrap blue">📅</div>
+      <div class="menu-icon-wrap blue">📅<span class="notif-dot" id="pertemuanUnreadDot" style="border-color:#fff;"></span></div>
       <div class="menu-item-name">Pertemuan</div>
-      <div class="menu-item-desc">Kelola pertemuan, share file &amp; absensi</div>
+      <div class="menu-item-desc">Lihat pertemuan, materi &amp; absensi</div>
     </div>
     <div class="menu-item" onclick="navTo('latihanListPage','navLatihan')">
       <div class="menu-icon-wrap purple">📝</div>
@@ -425,7 +464,13 @@ body{
     <div class="akun-hero">
       <div class="akun-avatar-big">🎓</div>
       <div class="akun-name" id="akunUsername">—</div>
-      <span class="akun-badge-pill">Pengajar</span>
+      <span class="akun-badge-pill">Mahasiswa</span>
+    </div>
+    <div class="section-title" style="padding:0 0 10px;">📋 Rekap Kehadiran Saya</div>
+    <div class="absensi-summary">
+      <div class="abs-chip h"><b id="akunHadirCount">0</b><span>Hadir</span></div>
+      <div class="abs-chip i"><b id="akunIzinCount">0</b><span>Izin</span></div>
+      <div class="abs-chip t"><b id="akunAlphaCount">0</b><span>Alpha</span></div>
     </div>
     <div class="akun-info-card">
       <div class="akun-row"><span class="akun-row-left">Nama</span><span class="akun-row-val" id="akunUsernameInfo">—</span></div>
@@ -542,6 +587,22 @@ function getMahasiswaByNomor(nomor){
 
 function uid(){return 'id'+Date.now()+Math.floor(Math.random()*1000);}
 
+/* --- Progress belajar (pertemuan yang sudah dibuka) --- */
+function getPertemuanVisited(){try{return JSON.parse(localStorage.getItem('kd_pertemuan_visited')||'{}');}catch(e){return {};}}
+function markPertemuanVisited(nomor){
+  const v=getPertemuanVisited();
+  v[nomor]=true;
+  localStorage.setItem('kd_pertemuan_visited',JSON.stringify(v));
+}
+
+/* --- File yang sudah dilihat (untuk penanda "Baru") --- */
+function getSeenFiles(){try{return JSON.parse(localStorage.getItem('kd_seen_files')||'[]');}catch(e){return [];}}
+function markFilesSeen(ids){
+  const seen=new Set(getSeenFiles());
+  ids.forEach(id=>seen.add(id));
+  localStorage.setItem('kd_seen_files',JSON.stringify([...seen]));
+}
+
 /* ============================================================
    PAGE ROUTER
 ============================================================ */
@@ -566,6 +627,7 @@ function goTo(pageId){
 }
 function navTo(pageId,navId){
   goTo(pageId);
+  if(pageId==='homePage'){refreshHomeStats();refreshProgressBelajar();refreshNextPertemuan();}
   if(pageId==='pertemuanListPage')renderPertemuanList();
   if(pageId==='latihanListPage')renderLatihanList();
   if(pageId==='akunPage')renderAkun();
@@ -601,6 +663,8 @@ function initHome(){
   const h=new Date().getHours();
   document.getElementById('homeGreetingDay').textContent = h<11?'Selamat pagi':h<15?'Selamat siang':h<18?'Selamat sore':'Selamat malam';
   refreshHomeStats();
+  refreshProgressBelajar();
+  refreshNextPertemuan();
   updateNotifDot();
   updateHeaderAnim();
 }
@@ -609,6 +673,40 @@ function refreshHomeStats(){
   document.getElementById('heroPertemuanCount').textContent=list.length;
   const totalFile=list.reduce((a,p)=>a+(p.files?p.files.length:0),0);
   document.getElementById('heroFileCount').textContent=totalFile;
+  const seen=new Set(getSeenFiles());
+  const totalUnread=list.reduce((a,p)=>a+(p.files||[]).filter(f=>!seen.has(f.id)).length,0);
+  const dot=document.getElementById('pertemuanUnreadDot');
+  if(dot)dot.style.display=totalUnread>0?'block':'none';
+}
+function refreshProgressBelajar(){
+  const list=getPertemuan();
+  const visited=getPertemuanVisited();
+  const total=list.length;
+  const done=list.filter(p=>visited[p.nomor]).length;
+  const pct=total?Math.round(done/total*100):0;
+  const fill=document.getElementById('progressBelajarFill');
+  const pctEl=document.getElementById('progressBelajarPct');
+  const sub=document.getElementById('progressBelajarSub');
+  if(fill)fill.style.width=pct+'%';
+  if(pctEl)pctEl.textContent=pct+'%';
+  if(sub)sub.textContent=`${done} dari ${total} pertemuan dipelajari`;
+}
+function refreshNextPertemuan(){
+  const today=new Date();today.setHours(0,0,0,0);
+  const upcoming=getPertemuan()
+    .filter(p=>p.tanggal)
+    .map(p=>({...p,_d:new Date(p.tanggal+'T00:00:00')}))
+    .filter(p=>p._d>=today)
+    .sort((a,b)=>a._d-b._d);
+  const wrap=document.getElementById('nextPertemuanWrap');
+  if(!wrap)return;
+  if(upcoming.length===0){wrap.style.display='none';return;}
+  const p=upcoming[0];
+  const diffDays=Math.round((p._d-today)/86400000);
+  const when=diffDays===0?'Hari ini':diffDays===1?'Besok':`${diffDays} hari lagi`;
+  document.getElementById('nextPertemuanTitle').textContent=`Pertemuan ${p.nomor} — ${p.judul}`;
+  document.getElementById('nextPertemuanDate').textContent=`${formatTanggal(p.tanggal)} · ${when}`;
+  wrap.style.display='block';
 }
 
 /* ============================================================
@@ -621,14 +719,17 @@ function renderPertemuanList(){
     wrap.innerHTML=`<div class="empty-state"><div class="es-icon">📅</div><p>Belum ada pertemuan.<br>Tambahkan pertemuan di file data-pertemuan.js.</p></div>`;
     return;
   }
+  const visited=getPertemuanVisited();
+  const seen=new Set(getSeenFiles());
   wrap.innerHTML=list.map(p=>{
     const hadir=(p.mahasiswa||[]).filter(m=>m.status==='hadir').length;
     const total=(p.mahasiswa||[]).length;
+    const unread=(p.files||[]).filter(f=>!seen.has(f.id)).length;
     return `<div class="pertemuan-card" onclick="openPertemuanDetail(${p.nomor})">
       <div class="pertemuan-num">${p.nomor}</div>
       <div class="pertemuan-info">
-        <div class="pertemuan-title">${escapeHtml(p.judul)}</div>
-        <div class="pertemuan-meta">${p.tanggal?formatTanggal(p.tanggal)+' · ':''}${(p.files||[]).length} file · ${hadir}/${total} hadir</div>
+        <div class="pertemuan-title">${escapeHtml(p.judul)}${visited[p.nomor]?'<span class="tag-visited">✓ Dipelajari</span>':''}</div>
+        <div class="pertemuan-meta">${p.tanggal?formatTanggal(p.tanggal)+' · ':''}${(p.files||[]).length} file${unread>0?` · <span class="tag-unread">🆕 ${unread} baru</span>`:''} · ${hadir}/${total} hadir</div>
       </div>
       <div class="pertemuan-chevron">›</div>
     </div>`;
@@ -650,6 +751,7 @@ function openPertemuanDetail(id){
   renderMhsList();
   goTo('pertemuanDetailPage');
   markMenuVisited('pertemuanDetailPage');
+  markPertemuanVisited(id);
 }
 function getCurrentPertemuan(){return getPertemuan().find(x=>x.nomor===currentPertemuanId);}
 function updateCurrentPertemuan(mutateFn){
@@ -678,19 +780,24 @@ function renderFileList(){
     return;
   }
   const labels={ppt:'PPT',doc:'DOC',xlsx:'XLSX',pdf:'PDF'};
-  wrap.innerHTML=files.map(f=>`
+  const seen=new Set(getSeenFiles());
+  wrap.innerHTML=files.map(f=>{
+    const isNew=!seen.has(f.id);
+    return `
     <div class="file-item">
       <div class="file-item-top">
         <div class="file-badge ${f.tipe}">${labels[f.tipe]}</div>
         <div style="flex:1;min-width:0;">
-          <div class="file-name">${escapeHtml(f.nama)}</div>
+          <div class="file-name">${escapeHtml(f.nama)}${isNew?'<span class="tag-new">🆕 BARU</span>':''}</div>
           <div class="file-type">${labels[f.tipe]}</div>
         </div>
       </div>
       <iframe class="file-preview" src="${previewUrl(f.url,f.tipe)}" loading="lazy"></iframe>
       <a class="file-open-link" href="${f.url}" target="_blank" rel="noopener">🔗 Buka di Tab Baru</a>
-    </div>
-  `).join('');
+    </div>`;
+  }).join('');
+  markFilesSeen(files.map(f=>f.id));
+  refreshHomeStats();
 }
 function openAddFileModal(){
   document.getElementById('mfNama').value='';
@@ -734,16 +841,19 @@ function renderMhsList(){
     wrap.innerHTML=`<div class="empty-state"><div class="es-icon">🧑‍🎓</div><p>Belum ada data mahasiswa.<br>Tambahkan mahasiswa di file daftar-mahasiswa.js.</p></div>`;
     return;
   }
-  wrap.innerHTML=list.map(m=>`
-    <div class="mhs-row">
+  const myName=(getUser()||'').trim().toLowerCase();
+  wrap.innerHTML=list.map(m=>{
+    const isMe=!!myName&&(m.nama||'').trim().toLowerCase()===myName;
+    return `
+    <div class="mhs-row ${isMe?'mhs-row-self':''}">
       <div class="mhs-avatar">${(m.nama||'?').charAt(0).toUpperCase()}</div>
       <div class="mhs-info">
-        <div class="mhs-name">${escapeHtml(m.nama)}</div>
+        <div class="mhs-name">${escapeHtml(m.nama)}${isMe?'<span class="mhs-self-tag">(Anda)</span>':''}</div>
         <div class="mhs-nim">${escapeHtml(m.nim||'-')}</div>
       </div>
       <span class="hadir-toggle ${m.status}">${STATUS_LABEL[m.status]}</span>
-    </div>
-  `).join('');
+    </div>`;
+  }).join('');
 }
 
 /* ============================================================
@@ -757,9 +867,34 @@ function renderLatihanList(){
     return;
   }
   const bank=window.SOAL_PERTEMUAN||{};
-  wrap.innerHTML=list.map(p=>{
+  let tersedia=0,dikerjakan=0,totalSkor=0,jumlahSkor=0;
+  list.forEach(p=>{
+    const soal=bank[p.nomor];
+    if(soal&&soal.length>0){
+      tersedia++;
+      const attempts=parseInt(localStorage.getItem('kd_lastcount_'+p.nomor)||'0');
+      if(attempts>0){
+        dikerjakan++;
+        totalSkor+=parseInt(localStorage.getItem('kd_best_'+p.nomor)||'0');
+        jumlahSkor++;
+      }
+    }
+  });
+  const rataRata=jumlahSkor?Math.round(totalSkor/jumlahSkor):null;
+  const summaryHtml=`<div class="card" style="display:flex;">
+    <div style="flex:1;text-align:center;">
+      <div style="font-size:22px;font-weight:900;color:var(--blue);">${dikerjakan}/${tersedia}</div>
+      <div style="font-size:11px;color:var(--gray);margin-top:2px;">Latihan Dikerjakan</div>
+    </div>
+    <div style="flex:1;text-align:center;border-left:1px solid var(--border);">
+      <div style="font-size:22px;font-weight:900;color:var(--blue);">${rataRata!==null?rataRata:'–'}</div>
+      <div style="font-size:11px;color:var(--gray);margin-top:2px;">Rata-rata Skor Terbaik</div>
+    </div>
+  </div>`;
+  wrap.innerHTML=summaryHtml+list.map(p=>{
     const soal=bank[p.nomor];
     const best=localStorage.getItem('kd_best_'+p.nomor);
+    const attempts=parseInt(localStorage.getItem('kd_lastcount_'+p.nomor)||'0');
     const jumlah=soal?soal.length:0;
     return `<div class="latihan-card">
       <div class="latihan-top">
@@ -767,7 +902,7 @@ function renderLatihanList(){
         ${best?`<span class="score-pill">Terbaik: ${best}</span>`:`<span class="score-pill none">Belum</span>`}
       </div>
       ${soal ? `
-        <div style="font-size:12px;color:var(--gray);margin-bottom:10px;">${jumlah} soal tersedia</div>
+        <div style="font-size:12px;color:var(--gray);margin-bottom:10px;">${jumlah} soal tersedia${attempts>0?` · dikerjakan ${attempts}x`:''}</div>
         <button class="btn-primary" onclick="startQuiz(${p.nomor})">Mulai Latihan</button>
       ` : `
         <div class="error-notice" style="margin-bottom:0;">⚠️ Soal untuk pertemuan ini belum tersedia di <strong>soal-pertemuan.js</strong></div>
@@ -868,6 +1003,20 @@ function renderAkun(){
   let latihanCount=0;
   list.forEach(p=>{latihanCount+=parseInt(localStorage.getItem('kd_lastcount_'+p.nomor)||'0');});
   document.getElementById('akunLatihanCount').textContent=latihanCount;
+
+  const myName=(nama||'').trim().toLowerCase();
+  let hadir=0,izin=0,alpha=0;
+  list.forEach(p=>{
+    const me=(p.mahasiswa||[]).find(m=>(m.nama||'').trim().toLowerCase()===myName);
+    if(me){
+      if(me.status==='hadir')hadir++;
+      else if(me.status==='izin')izin++;
+      else alpha++;
+    }
+  });
+  document.getElementById('akunHadirCount').textContent=hadir;
+  document.getElementById('akunIzinCount').textContent=izin;
+  document.getElementById('akunAlphaCount').textContent=alpha;
 }
 function openEditNama(){
   document.getElementById('editNamaInput').value=getUser();
