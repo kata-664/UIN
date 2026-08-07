@@ -138,6 +138,9 @@ body{
 .diskusi-name{font-size:12.5px;font-weight:700;color:var(--dark);}
 .diskusi-time{font-size:10.5px;color:#B0BEC5;}
 .diskusi-text{font-size:13px;color:var(--dark);line-height:1.5;margin-top:3px;white-space:pre-wrap;word-break:break-word;}
+.diskusi-quote{background:var(--gray-light);border-left:3px solid var(--blue);border-radius:6px;padding:5px 8px;margin-top:5px;font-size:11.5px;color:var(--gray);}
+.diskusi-quote b{color:var(--dark);}
+.diskusi-reply-btn{background:none;border:none;color:var(--blue);font-size:11.5px;font-weight:700;cursor:pointer;padding:0;margin-top:6px;}
 
 /* file item */
 .file-item{background:#fff;border-radius:var(--radius-sm);box-shadow:var(--shadow);margin-bottom:12px;overflow:hidden;}
@@ -384,10 +387,15 @@ body{
       <div class="menu-item-name">Pertemuan</div>
       <div class="menu-item-desc">Lihat pertemuan, materi &amp; absensi</div>
     </div>
-    <div class="menu-item" onclick="navTo('latihanListPage','navLatihan')">
+    <div class="menu-item" onclick="goTo('latihanListPage');renderLatihanList();markMenuVisited('latihanListPage')">
       <div class="menu-icon-wrap purple">📝</div>
       <div class="menu-item-name">Latihan</div>
       <div class="menu-item-desc">Soal latihan tiap pertemuan</div>
+    </div>
+    <div class="menu-item" onclick="navTo('diskusiListPage','navDiskusi')">
+      <div class="menu-icon-wrap blue">💬</div>
+      <div class="menu-item-name">Diskusi</div>
+      <div class="menu-item-desc">Tanya jawab tiap pertemuan</div>
     </div>
     <div class="menu-item" onclick="goTo('pencapaianPage');renderPencapaian();markMenuVisited('pencapaianPage')">
       <div class="menu-icon-wrap yellow">🏆</div>
@@ -431,10 +439,33 @@ body{
     <div class="card">
       <div id="mhsListWrap"></div>
     </div>
-    <div style="height:10px;"></div>
+  </div>
+</div>
 
-    <div class="section-title" style="padding:0 0 10px;">💬 Diskusi</div>
+<!-- =========== DISKUSI LIST =========== -->
+<div id="diskusiListPage" class="page">
+  <div class="page-header">
+    <button class="btn-back" onclick="goTo('homePage')">←</button>
+    <h2>💬 Diskusi</h2>
+  </div>
+  <div class="page-body">
+    <div id="diskusiPertemuanListWrap"></div>
+  </div>
+</div>
+
+<!-- =========== DISKUSI THREAD =========== -->
+<div id="diskusiThreadPage" class="page">
+  <div class="page-header">
+    <button class="btn-back" onclick="goTo('diskusiListPage')">←</button>
+    <h2 id="diskusiThreadTitle">Diskusi</h2>
+  </div>
+  <div class="page-body">
+    <div id="diskusiThreadMeta" style="font-size:12px;color:var(--gray);margin-bottom:16px;"></div>
     <div class="card" style="padding:14px;">
+      <div id="diskusiReplyIndicator" style="display:none;align-items:center;justify-content:space-between;background:#F0F7FF;border-radius:8px;padding:7px 10px;margin-bottom:8px;font-size:12px;color:var(--blue);">
+        <span>↪ Membalas <b id="diskusiReplyNama"></b></span>
+        <button onclick="batalBalas()" style="background:none;border:none;color:var(--blue);font-size:15px;cursor:pointer;line-height:1;">✕</button>
+      </div>
       <textarea id="diskusiInput" rows="2" maxlength="500" placeholder="Tulis pertanyaan atau tanggapan..." style="width:100%;border:1px solid var(--border);border-radius:10px;padding:10px;font-size:13px;font-family:inherit;resize:vertical;box-sizing:border-box;"></textarea>
       <button class="btn-primary" style="margin-top:8px;" onclick="kirimDiskusi(event)">Kirim</button>
     </div>
@@ -545,8 +576,8 @@ body{
   <button class="nav-item" id="navPertemuan" onclick="navTo('pertemuanListPage','navPertemuan')">
     <div class="nav-icon">📅</div><div class="nav-label">Pertemuan</div>
   </button>
-  <button class="nav-item" id="navLatihan" onclick="navTo('latihanListPage','navLatihan')">
-    <div class="nav-icon">📝</div><div class="nav-label">Latihan</div>
+  <button class="nav-item" id="navDiskusi" onclick="navTo('diskusiListPage','navDiskusi')">
+    <div class="nav-icon">💬</div><div class="nav-label">Diskusi</div>
   </button>
   <button class="nav-item" id="navProfil" onclick="navTo('akunPage','navProfil')">
     <div class="nav-icon">👤</div><div class="nav-label">Profil</div>
@@ -585,7 +616,7 @@ body{
    Ganti URL di bawah dengan URL Web App hasil Deploy Apps Script.
    Lihat panduan setup di PANDUAN_SETUP_FORUM.md
 ============================================================ */
-const GAS_DISKUSI_URL = 'https://script.google.com/macros/s/AKfycbxv7r5va2ViYv4CX0KNPp4M4XaoiQ1CL6us2nPHeCm4yCxEgkwWic8BrI1dKatJ2Aml2w/exec';
+const GAS_DISKUSI_URL = 'PASTE_URL_WEB_APP_APPS_SCRIPT_DI_SINI';
 
 const LS_USER='kd_user', LS_NOTIF='kd_notif';
 
@@ -650,7 +681,7 @@ function isLatihanLocked(nomor){
 /* ============================================================
    PAGE ROUTER
 ============================================================ */
-const MAIN_PAGES={homePage:'navHome',pertemuanListPage:'navPertemuan',latihanListPage:'navLatihan',akunPage:'navProfil'};
+const MAIN_PAGES={homePage:'navHome',pertemuanListPage:'navPertemuan',diskusiListPage:'navDiskusi',akunPage:'navProfil'};
 
 function goTo(pageId){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
@@ -674,6 +705,7 @@ function navTo(pageId,navId){
   if(pageId==='homePage'){refreshHomeStats();refreshProgressBelajar();refreshNextPertemuan();}
   if(pageId==='pertemuanListPage')renderPertemuanList();
   if(pageId==='latihanListPage')renderLatihanList();
+  if(pageId==='diskusiListPage')renderDiskusiPertemuanList();
   if(pageId==='akunPage')renderAkun();
   markMenuVisited(pageId);
 }
@@ -799,7 +831,6 @@ function openPertemuanDetail(id){
   document.getElementById('pdMeta').innerHTML=`<strong>${escapeHtml(p.judul)}</strong>${p.tanggal?' · '+formatTanggal(p.tanggal):''}`;
   renderFileList();
   renderMhsList();
-  loadDiskusi(id);
   goTo('pertemuanDetailPage');
   markMenuVisited('pertemuanDetailPage');
   markPertemuanVisited(id);
@@ -933,15 +964,37 @@ function renderDiskusiList(items){
     wrap.innerHTML=`<div class="empty-state"><div class="es-icon">💬</div><p>Belum ada diskusi di pertemuan ini.<br>Jadilah yang pertama bertanya!</p></div>`;
     return;
   }
+  const byId={};
+  visible.forEach(it=>{byId[it.id]=it;});
   visible.sort((a,b)=>new Date(b.waktu)-new Date(a.waktu));
-  wrap.innerHTML=visible.map(it=>`
+  wrap.innerHTML=visible.map(it=>{
+    const parent=it.balasan_untuk?byId[it.balasan_untuk]:null;
+    const quoteHtml=parent?`<div class="diskusi-quote">↪ Membalas <b>${escapeHtml(parent.nama||'Anonim')}</b>: ${escapeHtml((parent.isi||'').slice(0,60))}${(parent.isi||'').length>60?'…':''}</div>`:'';
+    return `
     <div class="diskusi-item">
       <div class="diskusi-avatar">${escapeHtml((it.nama||'?').charAt(0).toUpperCase())}</div>
       <div class="diskusi-body">
         <div class="diskusi-head"><span class="diskusi-name">${escapeHtml(it.nama||'Anonim')}</span><span class="diskusi-time">${timeAgo(it.waktu)}</span></div>
+        ${quoteHtml}
         <div class="diskusi-text">${escapeHtml(it.isi||'')}</div>
+        <button class="diskusi-reply-btn" onclick="balasKomentar('${it.id}','${escapeHtml(it.nama||'Anonim').replace(/'/g,"\\'")}')">↩ Balas</button>
       </div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
+}
+
+let diskusiReplyTarget=null;
+function balasKomentar(id,nama){
+  diskusiReplyTarget={id,nama};
+  document.getElementById('diskusiReplyNama').textContent=nama;
+  document.getElementById('diskusiReplyIndicator').style.display='flex';
+  const input=document.getElementById('diskusiInput');
+  input.focus();
+  input.scrollIntoView({behavior:'smooth',block:'center'});
+}
+function batalBalas(){
+  diskusiReplyTarget=null;
+  document.getElementById('diskusiReplyIndicator').style.display='none';
 }
 function kirimDiskusi(ev){
   const input=document.getElementById('diskusiInput');
@@ -950,18 +1003,20 @@ function kirimDiskusi(ev){
   if(isi.length>500){alert('Pesan maksimal 500 karakter.');return;}
   if(!gasReady()){alert('Forum diskusi belum diaktifkan. Isi GAS_DISKUSI_URL terlebih dahulu.');return;}
   const nama=getUser()||'Anonim';
+  const balasanUntuk=diskusiReplyTarget?diskusiReplyTarget.id:'';
   const btn=ev&&ev.target;
   if(btn){btn.disabled=true;btn.textContent='Mengirim...';}
   fetch(GAS_DISKUSI_URL,{
     method:'POST',
     headers:{'Content-Type':'text/plain;charset=utf-8'},
-    body:JSON.stringify({pertemuan:currentPertemuanId,nama,isi})
+    body:JSON.stringify({pertemuan:currentPertemuanId,nama,isi,balasan_untuk:balasanUntuk})
   })
   .then(r=>r.json())
   .then(res=>{
     if(btn){btn.disabled=false;btn.textContent='Kirim';}
     if(res.ok){
       input.value='';
+      batalBalas();
       loadDiskusi(currentPertemuanId);
     } else {
       alert(res.error||'Gagal mengirim pesan.');
@@ -971,6 +1026,37 @@ function kirimDiskusi(ev){
     if(btn){btn.disabled=false;btn.textContent='Kirim';}
     alert('⚠️ Gagal terhubung ke server diskusi. Cek koneksi internet.');
   });
+}
+
+/* ============================================================
+   DISKUSI LIST & THREAD
+============================================================ */
+function renderDiskusiPertemuanList(){
+  const list=getPertemuan();
+  const wrap=document.getElementById('diskusiPertemuanListWrap');
+  if(list.length===0){
+    wrap.innerHTML=`<div class="empty-state"><div class="es-icon">💬</div><p>Belum ada pertemuan.<br>Tambahkan pertemuan di file data-pertemuan.js.</p></div>`;
+    return;
+  }
+  wrap.innerHTML=list.map(p=>`
+    <div class="pertemuan-card" onclick="openDiskusiThread(${p.nomor})">
+      <div class="pertemuan-num">${p.nomor}</div>
+      <div class="pertemuan-info">
+        <div class="pertemuan-title">${escapeHtml(p.judul)}</div>
+        <div class="pertemuan-meta">Pertemuan ${p.nomor}${p.tanggal?' · '+formatTanggal(p.tanggal):''}</div>
+      </div>
+      <div class="pertemuan-chevron">›</div>
+    </div>`).join('');
+}
+function openDiskusiThread(nomor){
+  currentPertemuanId=nomor;
+  const p=getPertemuan().find(x=>x.nomor===nomor);
+  document.getElementById('diskusiThreadTitle').textContent='Diskusi Pertemuan '+nomor;
+  document.getElementById('diskusiThreadMeta').innerHTML=p?`<strong>${escapeHtml(p.judul)}</strong>`:'';
+  document.getElementById('diskusiInput').value='';
+  batalBalas();
+  goTo('diskusiThreadPage');
+  loadDiskusi(nomor);
 }
 
 /* ============================================================
