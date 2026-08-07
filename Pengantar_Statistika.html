@@ -657,7 +657,7 @@ body{
    Ganti URL di bawah dengan URL Web App hasil Deploy Apps Script.
    Lihat panduan setup di PANDUAN_SETUP_FORUM.md
 ============================================================ */
-const GAS_DISKUSI_URL = 'https://script.google.com/macros/s/AKfycbxv7r5va2ViYv4CX0KNPp4M4XaoiQ1CL6us2nPHeCm4yCxEgkwWic8BrI1dKatJ2Aml2w/exec';
+const GAS_DISKUSI_URL = 'https://script.google.com/macros/s/AKfycbxQNwRnKxPTVz_BKcIbvx7hmO-J4fJeKkjYiJg4zI3GguEboOfTWEuh80nTse1LP7JMeQ/exec';
 /* Diskusi sekarang jadi satu ruang obrolan kelas (bukan per pertemuan lagi).
    Nilai konstan ini dikirim sebagai parameter "pertemuan" ke Apps Script supaya
    semua pesan tersimpan & dimuat dari satu ruang yang sama.
@@ -1007,6 +1007,16 @@ function normalizeDiskusiItem_(raw){
     status: out.status || ''
   };
 }
+function getDeletedDiskusiIds(){
+  try{return JSON.parse(localStorage.getItem('kd_deleted_diskusi')||'[]');}catch(e){return [];}
+}
+function addDeletedDiskusiId(id){
+  const arr=getDeletedDiskusiIds();
+  if(!arr.includes(String(id))){
+    arr.push(String(id));
+    localStorage.setItem('kd_deleted_diskusi',JSON.stringify(arr));
+  }
+}
 function loadDiskusi(){
   const wrap=document.getElementById('diskusiListWrap');
   if(!gasReady()){
@@ -1027,7 +1037,8 @@ function loadDiskusi(){
 }
 function renderDiskusiList(items){
   const wrap=document.getElementById('diskusiListWrap');
-  const visible=items.filter(it=>it.status!=='dihapus');
+  const deletedLocal=getDeletedDiskusiIds();
+  const visible=items.filter(it=>it.status!=='dihapus'&&!deletedLocal.includes(String(it.id)));
   if(!visible.length){
     wrap.innerHTML=`<div class="empty-state"><div class="es-icon">💬</div><p>Belum ada diskusi.<br>Jadilah yang pertama menulis pesan!</p></div>`;
     scrollDiskusiToBottom();
@@ -1185,28 +1196,28 @@ function kirimDiskusi(ev){
 /* Hapus pesan milik sendiri. Hanya menampilkan tombol hapus pada pesan
    dengan nama pengirim = user yang sedang login (lihat isMe di renderDiskusiList),
    jadi pesan orang lain tidak akan bisa dihapus dari sisi tampilan.
-   Untuk keamanan penuh (server-side), Apps Script backend idealnya juga
-   memvalidasi bahwa "nama" pengirim cocok dengan pemilik id sebelum menandai
-   status = 'dihapus'. */
+
+   CATATAN: Backend Apps Script saat ini belum mendukung permintaan hapus
+   (mengembalikan error "Data tidak lengkap" karena mengharuskan field "isi").
+   Supaya fitur hapus tetap bisa dipakai TANPA perlu mengubah Apps Script,
+   pesan yang dihapus disembunyikan secara lokal (localStorage) di perangkat
+   ini — jadi langsung hilang dari tampilanmu tanpa error. Permintaan tetap
+   dikirim ke server sebagai percobaan (best-effort, diam-diam) supaya kalau
+   suatu saat Apps Script sudah diperbarui untuk menangani aksi:'hapus',
+   penghapusan akan otomatis tersinkron ke semua perangkat/mahasiswa lain juga. */
 function hapusDiskusi(id){
   if(!confirm('Hapus pesan ini?'))return;
   document.querySelectorAll('.chat-row.actions-visible').forEach(el=>el.classList.remove('actions-visible'));
-  if(!gasReady()){alert('Forum diskusi belum diaktifkan.');return;}
+  addDeletedDiskusiId(id);
+  const row=document.getElementById('msg-'+id);
+  if(row)row.remove();
+  if(!gasReady())return;
   const nama=getUser()||'Anonim';
   fetch(GAS_DISKUSI_URL,{
     method:'POST',
     headers:{'Content-Type':'text/plain;charset=utf-8'},
     body:JSON.stringify({pertemuan:DISKUSI_THREAD_ID,id,nama,aksi:'hapus'})
-  })
-  .then(r=>r.json())
-  .then(res=>{
-    if(res.ok){
-      loadDiskusi();
-    } else {
-      alert(res.error||'Gagal menghapus pesan.');
-    }
-  })
-  .catch(()=>{alert('⚠️ Gagal terhubung ke server diskusi. Cek koneksi internet.');});
+  }).catch(()=>{});
 }
 
 function refreshDiskusi(){
