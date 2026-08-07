@@ -150,18 +150,18 @@ body{
 .diskusi-thread-body{padding-bottom:150px !important;background:#E9EEF6;}
 
 /* ===== CHAT BUBBLES (diskusi) ===== */
-.chat-row{display:flex;align-items:flex-end;gap:7px;margin-bottom:10px;}
+.chat-row{display:flex;align-items:flex-end;gap:7px;margin-bottom:10px;min-width:0;}
 .chat-row.me{justify-content:flex-end;}
 .chat-row.other{justify-content:flex-start;}
 .chat-avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#1565C0,#42A5F5);color:#fff;font-weight:800;font-size:11.5px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-bottom:2px;}
-.chat-bubble-col{display:flex;flex-direction:column;max-width:78%;}
+.chat-bubble-col{display:flex;flex-direction:column;max-width:78%;min-width:0;}
 .chat-row.me .chat-bubble-col{align-items:flex-end;}
 .chat-row.other .chat-bubble-col{align-items:flex-start;}
-.chat-bubble{padding:7px 10px 6px;border-radius:14px;box-shadow:0 1px 2px rgba(0,0,0,.08);position:relative;}
+.chat-bubble{padding:7px 10px 6px;border-radius:14px;box-shadow:0 1px 2px rgba(0,0,0,.08);position:relative;max-width:100%;min-width:0;-webkit-touch-callout:none;user-select:none;}
 .chat-bubble.me{background:#DCF8C6;border-bottom-right-radius:3px;}
 .chat-bubble.other{background:#fff;border-bottom-left-radius:3px;}
 .chat-name{font-size:11.5px;font-weight:800;color:var(--blue);margin-bottom:2px;}
-.chat-text{font-size:13.5px;color:var(--dark);line-height:1.42;white-space:pre-wrap;word-break:break-word;}
+.chat-text{font-size:13.5px;color:var(--dark);line-height:1.42;white-space:pre-wrap;word-break:break-word;overflow-wrap:anywhere;}
 .chat-meta{display:flex;justify-content:flex-end;margin-top:2px;}
 .chat-time{font-size:10px;color:#8696a0;}
 .chat-quote{border-radius:7px;padding:5px 8px;margin-bottom:5px;font-size:11.5px;line-height:1.4;cursor:pointer;border-left:3px solid var(--blue);background:rgba(21,101,192,.07);color:var(--gray);}
@@ -170,7 +170,8 @@ body{
 .chat-quote.quote-me b{color:#2E7D32;}
 .chat-reply-btn{background:none;border:none;color:var(--gray);font-size:11px;font-weight:700;cursor:pointer;padding:3px 2px 0;}
 .chat-reply-btn.me{color:var(--blue);}
-.chat-bubble-actions{display:flex;gap:10px;}
+.chat-bubble-actions{display:none;gap:10px;margin-top:2px;}
+.chat-row.actions-visible .chat-bubble-actions{display:flex;}
 .chat-delete-btn{background:none;border:none;color:var(--red);font-size:11px;font-weight:700;cursor:pointer;padding:3px 2px 0;}
 .chat-row.chat-highlight .chat-bubble{animation:chatFlash 1.4s ease;}
 @keyframes chatFlash{0%{box-shadow:0 0 0 3px #FFD54F;}100%{box-shadow:0 1px 2px rgba(0,0,0,.08);}}
@@ -1060,7 +1061,7 @@ function renderDiskusiList(items){
     <div class="chat-row ${isMe?'me':'other'}" id="msg-${it.id}">
       ${avatarHtml}
       <div class="chat-bubble-col">
-        <div class="chat-bubble ${isMe?'me':'other'}">
+        <div class="chat-bubble ${isMe?'me':'other'}" onpointerdown="chatLongPressStart('${it.id}')" onpointerup="chatLongPressEnd()" onpointerleave="chatLongPressEnd()" onpointercancel="chatLongPressEnd()" oncontextmenu="return false;">
           ${nameHtml}
           ${quoteHtml}
           <div class="chat-text">${escapeHtml(it.isi||'')}</div>
@@ -1074,6 +1075,7 @@ function renderDiskusiList(items){
     </div>`;
   });
   wrap.innerHTML=html;
+  bindChatOutsideClose();
   scrollDiskusiToBottom();
 }
 function formatDiskusiDate(d){
@@ -1099,7 +1101,38 @@ function highlightDiskusiMsg(id){
 }
 
 let diskusiReplyTarget=null;
+let _lpTimer=null;
+let _lpFired=false;
+let _chatOutsideBound=false;
+function chatLongPressStart(id){
+  clearTimeout(_lpTimer);
+  _lpFired=false;
+  _lpTimer=setTimeout(()=>{
+    _lpFired=true;
+    showChatActions(id);
+    if(navigator.vibrate)navigator.vibrate(15);
+  },450);
+}
+function chatLongPressEnd(){
+  clearTimeout(_lpTimer);
+}
+function showChatActions(id){
+  document.querySelectorAll('.chat-row.actions-visible').forEach(el=>{
+    if(el.id!=='msg-'+id)el.classList.remove('actions-visible');
+  });
+  const row=document.getElementById('msg-'+id);
+  if(row)row.classList.add('actions-visible');
+}
+function bindChatOutsideClose(){
+  if(_chatOutsideBound)return;
+  _chatOutsideBound=true;
+  document.addEventListener('click',function(e){
+    if(e.target.closest('.chat-bubble-col'))return;
+    document.querySelectorAll('.chat-row.actions-visible').forEach(el=>el.classList.remove('actions-visible'));
+  });
+}
 function balasKomentar(id,nama,isi){
+  document.querySelectorAll('.chat-row.actions-visible').forEach(el=>el.classList.remove('actions-visible'));
   diskusiReplyTarget={id,nama};
   document.getElementById('diskusiReplyNama').textContent=nama;
   document.getElementById('diskusiReplySnippet').textContent=isi||'';
@@ -1157,6 +1190,7 @@ function kirimDiskusi(ev){
    status = 'dihapus'. */
 function hapusDiskusi(id){
   if(!confirm('Hapus pesan ini?'))return;
+  document.querySelectorAll('.chat-row.actions-visible').forEach(el=>el.classList.remove('actions-visible'));
   if(!gasReady()){alert('Forum diskusi belum diaktifkan.');return;}
   const nama=getUser()||'Anonim';
   fetch(GAS_DISKUSI_URL,{
