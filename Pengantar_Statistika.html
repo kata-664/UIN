@@ -1187,6 +1187,7 @@ function kirimDiskusi(ev){
       autoGrow(input);
       batalBalas();
       loadDiskusi();
+      try{const c=parseInt(localStorage.getItem('kd_diskusi_sent')||'0');localStorage.setItem('kd_diskusi_sent',String(c+1));}catch(e){}
     } else {
       alert(res.error||'Gagal mengirim pesan.');
     }
@@ -1526,15 +1527,21 @@ const BADGE_TIERS=[
     {id:'first_done',icon:'🎯',name:'Langkah Pertama',desc:'Selesaikan 1 latihan',check:s=>s.totalDone>=1},
     {id:'penjelajah',icon:'🗺️',name:'Penjelajah',desc:'Kunjungi semua menu utama',check:s=>s.menuAll},
     {id:'siap_belajar',icon:'✏️',name:'Siap Belajar',desc:'Buka detail 1 pertemuan',check:s=>s.pertemuanDibuka},
+    {id:'aktif_diskusi',icon:'🗨️',name:'Buka Suara',desc:'Kirim 1 pesan di forum diskusi',check:s=>s.diskusiSent>=1},
+    {id:'rajin_hadir',icon:'🙋',name:'Rajin Hadir',desc:'Tercatat hadir minimal 1 pertemuan',check:s=>s.hadirCount>=1},
   ]},
   {tier:2,label:'🔵 Tier 2 — Menengah',badges:[
     {id:'nilai_sempurna',icon:'💯',name:'Nilai Sempurna',desc:'Raih skor 100 di satu latihan',check:s=>s.perfectCount>=1},
     {id:'rajin',icon:'📓',name:'Rajin Berlatih',desc:'Kerjakan minimal 2 latihan berbeda',check:s=>s.totalDone>=2},
     {id:'pantang',icon:'🔁',name:'Pantang Menyerah',desc:'Ulangi 1 latihan 3 kali atau lebih',check:s=>s.maxAttempt>=3},
+    {id:'jelajah_semua',icon:'🧭',name:'Jelajah Tuntas',desc:'Buka semua pertemuan yang ada',check:s=>s.totalPertemuan>0&&s.pertemuanVisitedCount>=s.totalPertemuan},
+    {id:'kehadiran_baik',icon:'📆',name:'Kehadiran Baik',desc:'Hadir minimal separuh dari seluruh pertemuan',check:s=>s.totalPertemuan>0&&s.hadirCount>=Math.ceil(s.totalPertemuan/2)},
   ]},
   {tier:3,label:'🥇 Tier 3 — Mahir',badges:[
     {id:'semua_tuntas',icon:'🏁',name:'Semua Latihan Tuntas',desc:'Kerjakan semua latihan yang tersedia',check:s=>s.totalTersedia>0&&s.totalDone>=s.totalTersedia},
     {id:'master',icon:'👑',name:'Master Statistika',desc:'Skor sempurna di semua latihan',check:s=>s.totalTersedia>0&&s.perfectCount>=s.totalTersedia},
+    {id:'kehadiran_sempurna',icon:'🌟',name:'Kehadiran Sempurna',desc:'Hadir di semua pertemuan tanpa absen',check:s=>s.totalPertemuan>0&&s.hadirCount>=s.totalPertemuan},
+    {id:'aktivis_diskusi',icon:'📣',name:'Aktivis Diskusi',desc:'Kirim minimal 5 pesan di forum diskusi',check:s=>s.diskusiSent>=5},
   ]},
 ];
 
@@ -1544,7 +1551,7 @@ function getBadgeStats(){
   let totalTersedia=0,totalDone=0,perfectCount=0,maxAttempt=0;
   list.forEach(p=>{
     const soal=bank[p.nomor];
-    if(soal&&soal.length>0&&!isLatihanLocked(p.nomor)){
+    if(soal&&soal.length>0){
       totalTersedia++;
       const attempts=parseInt(localStorage.getItem('kd_lastcount_'+p.nomor)||'0');
       if(attempts>0)totalDone++;
@@ -1556,7 +1563,21 @@ function getBadgeStats(){
   const menuVisited=getMenuVisited();
   const menuAll=['pertemuanListPage','latihanListPage','akunPage'].every(m=>menuVisited[m]);
   const pertemuanDibuka=!!menuVisited['pertemuanDetailPage'];
-  return{totalTersedia,totalDone,perfectCount,maxAttempt,menuAll,pertemuanDibuka};
+
+  const totalPertemuan=list.length;
+  const visited=getPertemuanVisited();
+  const pertemuanVisitedCount=list.filter(p=>!!visited[p.nomor]).length;
+
+  const myName=(getUser()||'').trim().toLowerCase();
+  let hadirCount=0;
+  list.forEach(p=>{
+    const me=(p.mahasiswa||[]).find(m=>(m.nama||'').trim().toLowerCase()===myName);
+    if(me&&me.status==='hadir')hadirCount++;
+  });
+
+  const diskusiSent=parseInt(localStorage.getItem('kd_diskusi_sent')||'0');
+
+  return{totalTersedia,totalDone,perfectCount,maxAttempt,menuAll,pertemuanDibuka,totalPertemuan,pertemuanVisitedCount,hadirCount,diskusiSent};
 }
 
 function renderPencapaian(){
