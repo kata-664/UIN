@@ -147,7 +147,9 @@ body{
 .diskusi-reply-btn{background:none;border:none;color:var(--blue);font-size:11.5px;font-weight:700;cursor:pointer;padding:0;margin-top:6px;}
 .diskusi-item.diskusi-highlight{animation:diskusiFlash 1.4s ease;}
 @keyframes diskusiFlash{0%{background:#FFF3CD;}100%{background:#fff;}}
-.diskusi-thread-body{padding-bottom:150px !important;background:#E9EEF6;}
+.diskusi-thread-body{padding-bottom:150px !important;background:#E9EEF6;min-height:100vh;box-sizing:border-box;}
+.diskusi-thread-body #diskusiListWrap:has(.empty-state){min-height:calc(100vh - 236px);display:flex;align-items:center;justify-content:center;}
+.diskusi-thread-body #diskusiListWrap:has(.empty-state) .empty-state{padding:0 20px;}
 
 /* ===== CHAT BUBBLES (diskusi) ===== */
 .chat-row{display:flex;align-items:flex-end;gap:7px;margin-bottom:10px;min-width:0;}
