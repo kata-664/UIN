@@ -85,6 +85,7 @@ body{
 .menu-icon-wrap{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:10px;}
 .menu-icon-wrap.blue{background:#E3F2FD;}
 .menu-icon-wrap.purple{background:#F3E5F5;}
+.menu-icon-wrap.yellow{background:#FFF8E1;}
 .menu-item-name{font-size:14px;font-weight:700;color:var(--dark);}
 .menu-item-desc{font-size:11px;color:var(--gray);line-height:1.4;margin-top:4px;}
 
@@ -223,6 +224,45 @@ body{
 .btn-logout{width:100%;padding:13px;border:none;border-radius:12px;background:#FFEBEE;color:var(--red);font-size:14px;font-weight:700;cursor:pointer;}
 
 .error-notice{background:#FFF3E0;border:1px solid #FFCC80;color:#E65100;padding:10px 14px;border-radius:10px;font-size:12px;font-weight:600;margin-bottom:14px;}
+
+/* ===== PENCAPAIAN / BADGE ===== */
+.pencapaian-progress-bar{background:var(--border);border-radius:10px;height:10px;overflow:hidden;margin:10px 0 16px;}
+.pencapaian-progress-fill{height:100%;border-radius:10px;background:linear-gradient(90deg,#1565C0,#7B1FA2);transition:width .6s ease;display:flex;align-items:center;justify-content:center;color:#fff;font-size:8px;font-weight:700;}
+.pencapaian-tier-label{display:inline-block;padding:5px 14px;border-radius:20px;font-size:13px;font-weight:800;margin:14px 0 10px;letter-spacing:.3px;}
+.pencapaian-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.badge-card{border-radius:14px;padding:14px 10px;text-align:center;transition:.2s;position:relative;}
+.badge-card .badge-icon{font-size:28px;margin-bottom:5px;}
+.badge-card .badge-name{font-size:12px;font-weight:700;margin-bottom:3px;}
+.badge-card .badge-desc{font-size:10px;line-height:1.4;}
+.badge-card.locked .badge-icon{filter:grayscale(1);opacity:.35;}
+.badge-card.locked .badge-desc{color:var(--gray);}
+.badge-tier-tag{position:absolute;top:7px;right:7px;font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px;}
+.badge-unlocked-check{margin-top:5px;font-size:10px;font-weight:700;}
+
+.tier-1 .pencapaian-tier-label{background:#D3D1C7;color:#2C2C2A;}
+.tier-1 .badge-card{border:1.5px solid #D3D1C7;background:linear-gradient(135deg,#F1EFE8,#ffffff);}
+.tier-1 .badge-card.unlocked{border-color:#888780;background:linear-gradient(135deg,#D3D1C7,#F1EFE8);}
+.tier-1 .badge-card .badge-name{color:#444441;}
+.tier-1 .badge-card.unlocked .badge-name{color:#2C2C2A;}
+.tier-1 .badge-tier-tag{background:#B4B2A9;color:#2C2C2A;}
+.tier-1 .badge-unlocked-check{color:#444441;}
+
+.tier-2 .pencapaian-tier-label{background:#B5D4F4;color:#042C53;}
+.tier-2 .badge-card{border:1.5px solid #85B7EB;background:linear-gradient(135deg,#E6F1FB,#ffffff);}
+.tier-2 .badge-card.unlocked{border-color:#378ADD;background:linear-gradient(135deg,#B5D4F4,#E6F1FB);}
+.tier-2 .badge-card .badge-name{color:#0C447C;}
+.tier-2 .badge-card.unlocked .badge-name{color:#042C53;}
+.tier-2 .badge-tier-tag{background:#85B7EB;color:#042C53;}
+.tier-2 .badge-unlocked-check{color:#0C447C;}
+
+.tier-3 .pencapaian-tier-label{background:#FAC775;color:#412402;}
+.tier-3 .badge-card{border:1.5px solid #FAC775;background:linear-gradient(135deg,#FAEEDA,#ffffff);}
+.tier-3 .badge-card.unlocked{border-color:#BA7517;background:linear-gradient(135deg,#FAC775,#FAEEDA);box-shadow:0 2px 12px rgba(186,117,23,.25);}
+.tier-3 .badge-card .badge-name{color:#633806;}
+.tier-3 .badge-card.unlocked .badge-name{color:#412402;}
+.tier-3 .badge-tier-tag{background:#EF9F27;color:#412402;}
+.tier-3 .badge-unlocked-check{color:#633806;}
+
 </style>
 </head>
 <body>
@@ -293,6 +333,11 @@ body{
       <div class="menu-icon-wrap purple">📝</div>
       <div class="menu-item-name">Latihan</div>
       <div class="menu-item-desc">Soal latihan tiap pertemuan</div>
+    </div>
+    <div class="menu-item" onclick="goTo('pencapaianPage');renderPencapaian();markMenuVisited('pencapaianPage')">
+      <div class="menu-icon-wrap yellow">🏆</div>
+      <div class="menu-item-name">Pencapaian</div>
+      <div class="menu-item-desc">Kumpulkan badge dari belajarmu</div>
     </div>
   </div>
   <div style="height:20px;"></div>
@@ -387,6 +432,19 @@ body{
       <div class="akun-row"><span class="akun-row-left">Latihan Dikerjakan</span><span class="akun-row-val" id="akunLatihanCount">0</span></div>
     </div>
     <button class="btn-logout" onclick="doLogout()">🚪 Logout</button>
+  </div>
+</div>
+
+<!-- =========== PENCAPAIAN =========== -->
+<div id="pencapaianPage" class="page">
+  <div class="page-header">
+    <button class="btn-back" onclick="goTo('homePage')">←</button>
+    <h2>🏆 Pencapaian</h2>
+  </div>
+  <div class="page-body">
+    <p style="color:var(--gray);font-size:13px;margin-bottom:6px;">Kumpulkan semua badge dengan terus belajar &amp; berlatih!</p>
+    <div class="pencapaian-progress-bar"><div class="pencapaian-progress-fill" id="pencapaianProgressFill" style="width:0%">0%</div></div>
+    <div id="pencapaianScroll"></div>
   </div>
 </div>
 
@@ -488,6 +546,7 @@ function navTo(pageId,navId){
   if(pageId==='pertemuanListPage')renderPertemuanList();
   if(pageId==='latihanListPage')renderLatihanList();
   if(pageId==='akunPage')renderAkun();
+  markMenuVisited(pageId);
 }
 
 /* ============================================================
@@ -501,6 +560,7 @@ function doLogin(){
   setUser(val);
   initHome();
   goTo('homePage');
+  updateHeaderAnim();
 }
 function doLogout(){
   if(confirm('Yakin ingin logout?')){
@@ -519,6 +579,7 @@ function initHome(){
   document.getElementById('homeGreetingDay').textContent = h<11?'Selamat pagi':h<15?'Selamat siang':h<18?'Selamat sore':'Selamat malam';
   refreshHomeStats();
   updateNotifDot();
+  updateHeaderAnim();
 }
 function refreshHomeStats(){
   const list=getPertemuan();
@@ -565,6 +626,7 @@ function openPertemuanDetail(id){
   renderFileList();
   renderMhsList();
   goTo('pertemuanDetailPage');
+  markMenuVisited('pertemuanDetailPage');
 }
 function getCurrentPertemuan(){return getPertemuan().find(x=>x.nomor===currentPertemuanId);}
 function updateCurrentPertemuan(mutateFn){
@@ -866,6 +928,279 @@ function formatTanggal(iso){
   if(!iso)return '';
   const d=new Date(iso+'T00:00:00');
   return d.toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'});
+}
+
+/* ============================================================
+   PENCAPAIAN / BADGE
+   Badge otomatis terbuka berdasarkan aktivitas belajar (dari
+   localStorage). Tambah/edit badge di BADGE_TIERS di bawah.
+============================================================ */
+function markMenuVisited(name){
+  try{
+    const v=JSON.parse(localStorage.getItem('kd_menu_visited')||'{}');
+    v[name]=true;
+    localStorage.setItem('kd_menu_visited',JSON.stringify(v));
+  }catch(e){}
+}
+function getMenuVisited(){
+  try{return JSON.parse(localStorage.getItem('kd_menu_visited')||'{}');}catch(e){return {};}
+}
+
+const BADGE_TIERS=[
+  {tier:1,label:'🎗️ Tier 1 — Pemula',badges:[
+    {id:'first_done',icon:'🎯',name:'Langkah Pertama',desc:'Selesaikan 1 latihan',check:s=>s.totalDone>=1},
+    {id:'penjelajah',icon:'🗺️',name:'Penjelajah',desc:'Kunjungi semua menu utama',check:s=>s.menuAll},
+    {id:'siap_belajar',icon:'✏️',name:'Siap Belajar',desc:'Buka detail 1 pertemuan',check:s=>s.pertemuanDibuka},
+  ]},
+  {tier:2,label:'🔵 Tier 2 — Menengah',badges:[
+    {id:'nilai_sempurna',icon:'💯',name:'Nilai Sempurna',desc:'Raih skor 100 di satu latihan',check:s=>s.perfectCount>=1},
+    {id:'rajin',icon:'📓',name:'Rajin Berlatih',desc:'Kerjakan minimal 2 latihan berbeda',check:s=>s.totalDone>=2},
+    {id:'pantang',icon:'🔁',name:'Pantang Menyerah',desc:'Ulangi 1 latihan 3 kali atau lebih',check:s=>s.maxAttempt>=3},
+  ]},
+  {tier:3,label:'🥇 Tier 3 — Mahir',badges:[
+    {id:'semua_tuntas',icon:'🏁',name:'Semua Latihan Tuntas',desc:'Kerjakan semua latihan yang tersedia',check:s=>s.totalTersedia>0&&s.totalDone>=s.totalTersedia},
+    {id:'master',icon:'👑',name:'Master Statistika',desc:'Skor sempurna di semua latihan',check:s=>s.totalTersedia>0&&s.perfectCount>=s.totalTersedia},
+  ]},
+];
+
+function getBadgeStats(){
+  const list=getPertemuan();
+  const bank=window.SOAL_PERTEMUAN||{};
+  let totalTersedia=0,totalDone=0,perfectCount=0,maxAttempt=0;
+  list.forEach(p=>{
+    const soal=bank[p.nomor];
+    if(soal&&soal.length>0){
+      totalTersedia++;
+      const attempts=parseInt(localStorage.getItem('kd_lastcount_'+p.nomor)||'0');
+      if(attempts>0)totalDone++;
+      if(attempts>maxAttempt)maxAttempt=attempts;
+      const best=parseInt(localStorage.getItem('kd_best_'+p.nomor)||'0');
+      if(best>=100)perfectCount++;
+    }
+  });
+  const menuVisited=getMenuVisited();
+  const menuAll=['pertemuanListPage','latihanListPage','akunPage'].every(m=>menuVisited[m]);
+  const pertemuanDibuka=!!menuVisited['pertemuanDetailPage'];
+  return{totalTersedia,totalDone,perfectCount,maxAttempt,menuAll,pertemuanDibuka};
+}
+
+function renderPencapaian(){
+  const stats=getBadgeStats();
+  const scroll=document.getElementById('pencapaianScroll');
+  let totalBadge=0,unlockedBadge=0;
+  BADGE_TIERS.forEach(t=>t.badges.forEach(b=>{totalBadge++;if(b.check(stats))unlockedBadge++;}));
+  const pct=totalBadge?Math.round(unlockedBadge/totalBadge*100):0;
+  const pf=document.getElementById('pencapaianProgressFill');
+  if(pf){pf.style.width=pct+'%';pf.textContent=pct+'%';}
+  let html='';
+  BADGE_TIERS.forEach(tier=>{
+    html+=`<div class="pencapaian-tier-section tier-${tier.tier}" style="margin-bottom:14px;">
+      <div class="pencapaian-tier-label">${tier.label}</div>
+      <div class="pencapaian-grid">`;
+    tier.badges.forEach(b=>{
+      const unlocked=b.check(stats);
+      html+=`<div class="badge-card ${unlocked?'unlocked':'locked'}">
+        <span class="badge-tier-tag">T${tier.tier}</span>
+        <div class="badge-icon">${b.icon}</div>
+        <div class="badge-name">${b.name}</div>
+        <div class="badge-desc">${b.desc}</div>
+        <div class="badge-unlocked-check">${unlocked?'✅ Diraih!':'🔒 Belum'}</div>
+      </div>`;
+    });
+    html+='</div></div>';
+  });
+  if(scroll)scroll.innerHTML=html;
+}
+
+/* ============================================================
+   ANIMASI HEADER SIANG & MALAM (real-time, mengikuti jam HP)
+============================================================ */
+let _skyRaf=null;
+let _skyBuilt=false;
+let _skyPrevHour=-1;
+const SKY_STARS_CACHE=[];
+for(let i=0;i<22;i++) SKY_STARS_CACHE.push({
+  x:Math.random()*92+1, y:Math.random()*60+2,
+  r:Math.random()*1.6+0.7, phase:Math.random()*Math.PI*2
+});
+
+function updateHeaderAnim(){
+  if(_skyRaf) cancelAnimationFrame(_skyRaf);
+  _buildSkyDOM();
+  _skyRaf=requestAnimationFrame(_skyLoop);
+}
+
+function _buildSkyDOM(){
+  const wrap=document.getElementById('headerAnim');
+  if(!wrap||_skyBuilt) return;
+  _skyBuilt=true;
+
+  if(!document.getElementById('_skyKf')){
+    const s=document.createElement('style');
+    s.id='_skyKf';
+    s.textContent=`
+      @keyframes _drift{0%,100%{transform:translateX(0)}50%{transform:translateX(18px)}}
+      @keyframes _float{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+    `;
+    document.head.appendChild(s);
+  }
+
+  wrap.innerHTML=`
+    <div id="_skyBg" style="position:absolute;inset:0;z-index:0;transition:background 4s ease;"></div>
+    <canvas id="_starCanvas" style="position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;"></canvas>
+    <div id="_skyClouds" style="position:absolute;inset:0;z-index:2;pointer-events:none;transition:opacity 3s ease;opacity:0;"></div>
+    <div id="_skyExtras" style="position:absolute;inset:0;z-index:3;pointer-events:none;"></div>
+    <div id="_skyOrbit" style="position:absolute;width:300px;height:150px;bottom:0;left:50%;transform:translateX(-50%);z-index:4;pointer-events:none;overflow:visible;">
+      <div id="_skyBody" style="position:absolute;width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-size:30px;line-height:1;will-change:transform;"></div>
+    </div>
+  `;
+
+  const cData=[[5,10,26],[22,18,22],[48,13,28],[68,8,24],[84,20,20]];
+  document.getElementById('_skyClouds').innerHTML=cData.map(([x,y,sz],i)=>
+    `<div style="position:absolute;left:${x}%;top:${y}%;font-size:${sz}px;animation:_drift ${10+i*2}s ease-in-out infinite ${i*.8}s;opacity:.6;">☁️</div>`
+  ).join('');
+}
+
+function _skyLoop(ts){
+  const now=new Date();
+  const h=now.getHours();
+  const m=now.getMinutes();
+  const s=now.getSeconds();
+  const totalMin=h*60+m+s/60;
+
+  const cv=document.getElementById('_starCanvas');
+  const sa=h<5?1:h<6?.4:h<7?.1:h>=20?.7+(h>=21?.3:0):h>=18?.4:0;
+  if(cv){
+    const W=cv.offsetWidth, H=cv.offsetHeight;
+    if(cv.width!==W) cv.width=W;
+    if(cv.height!==H) cv.height=H;
+    const ctx=cv.getContext('2d');
+    ctx.clearRect(0,0,W,H);
+    if(sa>0){
+      SKY_STARS_CACHE.forEach(star=>{
+        const tw=0.6+0.4*Math.sin(ts/1200+star.phase);
+        ctx.globalAlpha=sa*tw*0.85;
+        ctx.fillStyle='#fff';
+        ctx.beginPath();
+        ctx.arc(star.x/100*W, star.y/100*H, star.r, 0, Math.PI*2);
+        ctx.fill();
+      });
+      ctx.globalAlpha=1;
+    }
+  }
+
+  const isSun=h>=6&&h<18;
+  let frac;
+  if(isSun){
+    frac=(totalMin-360)/720;
+  }else{
+    const moonMin=totalMin>=1080?totalMin-1080:totalMin+360;
+    frac=moonMin/720;
+  }
+  frac=Math.max(0,Math.min(1,frac));
+  const angleDeg=180-frac*180;
+  const rad=angleDeg*Math.PI/180;
+  const R=150;
+  const bx=150+R*Math.cos(rad);
+  const by=150-R*Math.sin(rad)*0.88;
+
+  const body=document.getElementById('_skyBody');
+  if(body){
+    body.style.transform=`translate(${bx-20}px,${by-20}px)`;
+    if(h>=6&&h<7){body.textContent='🌅';body.style.fontSize='26px';body.style.filter='drop-shadow(0 0 8px rgba(255,140,40,.9))';}
+    else if(h>=7&&h<17){body.textContent='☀️';body.style.fontSize=(h>=11&&h<15)?'34px':'30px';body.style.filter=(h>=11&&h<15)?'drop-shadow(0 0 16px rgba(255,235,50,1))':'drop-shadow(0 0 10px rgba(255,210,60,.75))';}
+    else if(h>=17&&h<19){body.textContent='🌇';body.style.fontSize='26px';body.style.filter='drop-shadow(0 0 8px rgba(255,90,20,.85))';}
+    else{body.textContent='🌙';body.style.fontSize='28px';body.style.filter='drop-shadow(0 0 10px rgba(200,220,255,.65))';}
+  }
+
+  if(h!==_skyPrevHour){
+    _skyPrevHour=h;
+    _applySkyPhase(h);
+  }
+
+  _skyRaf=requestAnimationFrame(_skyLoop);
+}
+
+const SKY_COLORS_24=[
+  ['#000814','#001d3d','#002d5f'], // 00 tengah malam
+  ['#000510','#001133','#001d3d'], // 01
+  ['#000510','#000e2a','#001133'], // 02
+  ['#000814','#001540','#002d5f'], // 03
+  ['#000A1A','#002050','#003d80'], // 04 mulai pre-subuh
+  ['#0D1A4E','#8B3A00','#C85A00'], // 05 subuh kemerahan
+  ['#0D47A1','#E65100','#FFA000'], // 06 fajar oranye
+  ['#0D47A1','#1565C0','#FF8C00'], // 07 pagi awal
+  ['#0D47A1','#1565C0','#42A5F5'], // 08 pagi cerah
+  ['#0D47A1','#1976D2','#29B6F6'], // 09
+  ['#1565C0','#1976D2','#29B6F6'], // 10
+  ['#1565C0','#1E88E5','#4FC3F7'], // 11 menjelang siang
+  ['#1A6CC7','#1E88E5','#29B6F6'], // 12 siang terik
+  ['#1565C0','#1976D2','#29B6F6'], // 13
+  ['#1565C0','#1976D2','#42A5F5'], // 14
+  ['#1260B0','#0D47A1','#FF7043'], // 15 mulai sore
+  ['#0D47A1','#BF360C','#FF7043'], // 16 sore oranye
+  ['#0D3A8C','#BF360C','#E65100'], // 17 sore gelap
+  ['#1A0050','#6A0D8C','#BF360C'], // 18 magrib ungu
+  ['#100030','#0A2070','#6A0050'], // 19 magrib gelap
+  ['#050820','#001133','#0D47A1'], // 20 malam awal
+  ['#000510','#001133','#0D3080'], // 21
+  ['#000510','#001133','#001d3d'], // 22
+  ['#000814','#001d3d','#002d5f'], // 23 hampir tengah malam
+];
+
+function _hexToRgb(hex){
+  return[parseInt(hex.slice(1,3),16),parseInt(hex.slice(3,5),16),parseInt(hex.slice(5,7),16)];
+}
+function _rgbToHex(r,g,b){
+  return'#'+[r,g,b].map(v=>Math.round(Math.max(0,Math.min(255,v))).toString(16).padStart(2,'0')).join('');
+}
+function _lerpColor(c1,c2,t){
+  const a=_hexToRgb(c1),b=_hexToRgb(c2);
+  return _rgbToHex(a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t,a[2]+(b[2]-a[2])*t);
+}
+
+function _applySkyPhase(h){
+  const header=document.getElementById('topHeader');
+  const bg=document.getElementById('_skyBg');
+  const clouds=document.getElementById('_skyClouds');
+  const extras=document.getElementById('_skyExtras');
+  if(!bg)return;
+
+  const m=new Date().getMinutes();
+  const t=m/60;
+  const next=(h+1)%24;
+  const c1=SKY_COLORS_24[h], c2=SKY_COLORS_24[next];
+  const top=_lerpColor(c1[0],c2[0],t);
+  const mid=_lerpColor(c1[1],c2[1],t);
+  const bot=_lerpColor(c1[2],c2[2],t);
+
+  if(header) header.style.background=`linear-gradient(135deg,${top},${mid},${bot})`;
+  bg.style.background=`linear-gradient(180deg,${top},${mid},${bot})`;
+
+  const cloudAlpha=h<5?0:h<6?.4:h<7?.7:h<11?.85:h<15?.7:h<18?.5:h<20?.2:0;
+  if(clouds) clouds.style.opacity=cloudAlpha;
+
+  const EXTRAS={
+    0:'',1:'',2:'',3:'',4:'',
+    5:`<div style="position:absolute;left:10%;bottom:22%;font-size:18px;opacity:.28;animation:_float 5s ease-in-out infinite;">🌄</div>`,
+    6:`<div style="position:absolute;right:7%;bottom:18%;font-size:20px;opacity:.3;animation:_float 4s ease-in-out infinite;">🌸</div>`,
+    7:`<div style="position:absolute;left:6%;top:22%;font-size:13px;opacity:.48;animation:_float 2.5s ease-in-out infinite;">🌸</div><div style="position:absolute;right:10%;top:17%;font-size:11px;opacity:.38;animation:_float 3s ease-in-out infinite .7s;">🐦</div>`,
+    8:`<div style="position:absolute;right:10%;top:17%;font-size:11px;opacity:.38;animation:_float 3s ease-in-out infinite;">🐦</div>`,
+    9:'',10:'',
+    11:`<div style="position:absolute;left:4%;top:20%;font-size:11px;opacity:.42;animation:_float 2s ease-in-out infinite;">💫</div>`,
+    12:`<div style="position:absolute;left:4%;top:20%;font-size:11px;opacity:.42;animation:_float 2s ease-in-out infinite;">💫</div><div style="position:absolute;right:6%;top:16%;font-size:9px;opacity:.38;animation:_float 1.5s ease-in-out infinite .5s;">✨</div>`,
+    13:'',14:'',
+    15:`<div style="position:absolute;right:5%;bottom:16%;font-size:22px;opacity:.2;animation:_float 4s ease-in-out infinite;">🌅</div>`,
+    16:`<div style="position:absolute;right:5%;bottom:16%;font-size:22px;opacity:.2;animation:_float 4s ease-in-out infinite;">🌅</div>`,
+    17:`<div style="position:absolute;right:5%;bottom:16%;font-size:18px;opacity:.18;animation:_float 4s ease-in-out infinite;">🌇</div>`,
+    18:`<div style="position:absolute;right:8%;bottom:20%;font-size:16px;opacity:.28;animation:_float 5s ease-in-out infinite;">🌆</div><div style="position:absolute;left:10%;top:18%;font-size:9px;opacity:.28;animation:_float 3s ease-in-out infinite .5s;">⭐</div>`,
+    19:`<div style="position:absolute;left:10%;top:18%;font-size:9px;opacity:.28;animation:_float 3s ease-in-out infinite .5s;">⭐</div>`,
+    20:`<div style="position:absolute;right:10%;bottom:22%;font-size:20px;opacity:.15;animation:_float 6s ease-in-out infinite;">🌙</div>`,
+    21:`<div style="position:absolute;right:10%;bottom:22%;font-size:20px;opacity:.15;animation:_float 6s ease-in-out infinite;">🌙</div><div style="position:absolute;left:16%;top:14%;font-size:9px;opacity:.32;animation:_float 4s ease-in-out infinite 1s;">✨</div>`,
+    22:`<div style="position:absolute;left:16%;top:14%;font-size:9px;opacity:.32;animation:_float 4s ease-in-out infinite 1s;">✨</div>`,
+    23:'',
+  };
+  if(extras) extras.innerHTML=EXTRAS[h]||'';
 }
 
 /* ============================================================
