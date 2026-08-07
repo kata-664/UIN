@@ -283,7 +283,9 @@ body{
 /* bottom nav */
 .bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:#fff;border-top:1px solid var(--border);display:flex;z-index:100;box-shadow:0 -2px 12px rgba(0,0,0,.05);}
 .nav-item{flex:1;background:none;border:none;padding:10px 0 8px;display:flex;flex-direction:column;align-items:center;cursor:pointer;}
-.nav-item .nav-icon{font-size:20px;margin-bottom:3px;transition:.15s;}
+.nav-item .nav-icon{font-size:20px;margin-bottom:3px;transition:.15s;color:#90A4AE;}
+.nav-item .nav-icon svg{width:22px;height:22px;display:block;}
+.nav-item.active .nav-icon{color:var(--blue);}
 .nav-item .nav-label{font-size:10px;color:#90A4AE;font-weight:600;}
 .nav-item.active .nav-label{color:var(--blue);}
 .nav-item.active .nav-icon{transform:scale(1.15);}
@@ -612,16 +614,16 @@ body{
 <!-- ===== BOTTOM NAV ===== -->
 <div class="bottom-nav" id="bottomNav" style="display:none;">
   <button class="nav-item active" id="navHome" onclick="navTo('homePage','navHome')">
-    <div class="nav-icon">🏠</div><div class="nav-label">Home</div>
+    <div class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 9.5V20a1 1 0 0 0 1 1H9a1 1 0 0 0 1-1v-4.5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1V20a1 1 0 0 0 1 1h2.5a1 1 0 0 0 1-1V9.5"/></svg></div><div class="nav-label">Home</div>
   </button>
   <button class="nav-item" id="navPertemuan" onclick="navTo('pertemuanListPage','navPertemuan')">
-    <div class="nav-icon">📅</div><div class="nav-label">Pertemuan</div>
+    <div class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="16" rx="2"/><path d="M3.5 9h17"/><path d="M8 2.5v3.5"/><path d="M16 2.5v3.5"/><path d="M7.5 13h2"/><path d="M11 13h2"/><path d="M14.5 13h2"/><path d="M7.5 16.5h2"/><path d="M11 16.5h2"/></svg></div><div class="nav-label">Pertemuan</div>
   </button>
   <button class="nav-item" id="navDiskusi" onclick="navTo('diskusiThreadPage','navDiskusi')">
-    <div class="nav-icon">💬</div><div class="nav-label">Diskusi</div>
+    <div class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5h16a1 1 0 0 1 1 1V15a1 1 0 0 1-1 1H9l-4.5 4V16H4a1 1 0 0 1-1-1V6.5a1 1 0 0 1 1-1Z"/></svg></div><div class="nav-label">Diskusi</div>
   </button>
   <button class="nav-item" id="navProfil" onclick="navTo('akunPage','navProfil')">
-    <div class="nav-icon">👤</div><div class="nav-label">Profil</div>
+    <div class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20c1.2-4 4-6 7.5-6s6.3 2 7.5 6"/></svg></div><div class="nav-label">Profil</div>
   </button>
 </div>
 
@@ -1389,7 +1391,7 @@ function renderAkun(){
   const list=getPertemuan();
   document.getElementById('akunPertemuanCount').textContent=list.length;
   document.getElementById('akunFileCount').textContent=list.reduce((a,p)=>a+(p.files?p.files.length:0),0);
-  document.getElementById('akunMhsCount').textContent=list.reduce((a,p)=>a+(p.mahasiswa?p.mahasiswa.length:0),0);
+  document.getElementById('akunMhsCount').textContent=(window.MAHASISWA_DATA||[]).length;
   let latihanCount=0;
   list.forEach(p=>{latihanCount+=parseInt(localStorage.getItem('kd_lastcount_'+p.nomor)||'0');});
   document.getElementById('akunLatihanCount').textContent=latihanCount;
