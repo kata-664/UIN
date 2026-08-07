@@ -54,6 +54,7 @@ body{
 .top-header{background:linear-gradient(135deg,#0D47A1 0%,#1565C0 50%,#1976D2 100%);padding:50px 20px 70px;position:relative;overflow:hidden;}
 .top-header::before{content:'';position:absolute;top:-40px;right:-40px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.06);}
 .top-header::after{content:'';position:absolute;bottom:-20px;left:-20px;width:140px;height:140px;border-radius:50%;background:rgba(255,255,255,.04);}
+.header-anim-wrap{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:1;}
 .header-row{display:flex;align-items:center;justify-content:space-between;position:relative;z-index:2;}
 .user-info{display:flex;align-items:center;gap:12px;}
 .avatar{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#42A5F5,#90CAF9);display:flex;align-items:center;justify-content:center;font-size:22px;border:2.5px solid rgba(255,255,255,.5);flex-shrink:0;}
@@ -247,7 +248,8 @@ body{
 
 <!-- =========== HOME =========== -->
 <div id="homePage" class="page">
-  <div class="top-header">
+  <div class="top-header" id="topHeader">
+    <div class="header-anim-wrap" id="headerAnim"></div>
     <div class="header-row">
       <div class="user-info">
         <div class="avatar">🎓</div>
@@ -300,7 +302,6 @@ body{
   </div>
   <div class="page-body">
     <div id="pertemuanListWrap"></div>
-    <button class="btn-primary" onclick="openAddPertemuanModal()">+ Tambah Pertemuan</button>
   </div>
 </div>
 
@@ -309,14 +310,13 @@ body{
   <div class="page-header">
     <button class="btn-back" onclick="goTo('pertemuanListPage')">←</button>
     <h2 id="pdTitle">Pertemuan</h2>
-    <button class="btn-back" onclick="openEditPertemuanModal()">✏️</button>
   </div>
   <div class="page-body">
     <div id="pdMeta" style="font-size:12px;color:var(--gray);margin-bottom:16px;"></div>
 
     <div class="section-title" style="padding:0 0 10px;">📎 Berbagi File</div>
     <div id="fileListWrap"></div>
-    <button class="btn-outline" onclick="openAddFileModal()" style="margin-bottom:22px;">+ Tambah File (Link)</button>
+    <div style="height:10px;"></div>
 
     <div class="section-title" style="padding:0 0 10px;">🧑‍🎓 Absensi Mahasiswa</div>
     <div class="absensi-summary">
@@ -413,44 +413,6 @@ body{
   <div class="notif-clear-btn"><button onclick="clearAllNotif()">Hapus Semua Riwayat</button></div>
 </div>
 
-<!-- ===== MODAL: Tambah/Edit Pertemuan ===== -->
-<div class="modal-overlay" id="modalPertemuan">
-  <div class="modal-box">
-    <h3 id="modalPertemuanTitle">Tambah Pertemuan</h3>
-    <div class="field-row"><label>Judul / Topik Pertemuan</label><input id="mpJudul" placeholder="Contoh: Pengenalan HTML &amp; CSS"></div>
-    <div class="field-row"><label>Tanggal</label><input id="mpTanggal" type="date"></div>
-    <div class="modal-actions">
-      <button class="btn-outline" onclick="closeModal('modalPertemuan')">Batal</button>
-      <button class="btn-primary" onclick="savePertemuan()">Simpan</button>
-    </div>
-  </div>
-</div>
-
-<!-- ===== MODAL: Tambah File ===== -->
-<div class="modal-overlay" id="modalFile">
-  <div class="modal-box">
-    <h3>Tambah File (Link)</h3>
-    <div class="field-row"><label>Nama File</label><input id="mfNama" placeholder="Contoh: Materi Pertemuan 1"></div>
-    <div class="field-row">
-      <label>Jenis File</label>
-      <select id="mfTipe">
-        <option value="ppt">PowerPoint (PPT)</option>
-        <option value="doc">Word (DOC)</option>
-        <option value="xlsx">Excel (XLSX)</option>
-        <option value="pdf">PDF</option>
-      </select>
-    </div>
-    <div class="field-row">
-      <label>Link Google Drive / OneDrive</label>
-      <input id="mfUrl" placeholder="https://drive.google.com/file/d/...">
-    </div>
-    <div class="modal-actions">
-      <button class="btn-outline" onclick="closeModal('modalFile')">Batal</button>
-      <button class="btn-primary" onclick="saveFile()">Simpan</button>
-    </div>
-  </div>
-</div>
-
 <!-- ===== MODAL: Tambah Mahasiswa ===== -->
 <div class="modal-overlay" id="modalMhs">
   <div class="modal-box">
@@ -466,19 +428,39 @@ body{
 
 </div><!-- /.app -->
 
+<!-- Data pertemuan & file materi. Edit di file ini untuk menambah/mengubah pertemuan. -->
+<script src="data-pertemuan.js"></script>
 <!-- File soal latihan per pertemuan (opsional). Format lihat komentar di dalam file. -->
 <script src="soal-pertemuan.js"></script>
 <script>
 /* ============================================================
    STORAGE HELPERS
 ============================================================ */
-const LS_USER='kd_user', LS_PERTEMUAN='kd_pertemuan', LS_NOTIF='kd_notif';
+const LS_USER='kd_user', LS_NOTIF='kd_notif', LS_MHS_PREFIX='kd_mhs_';
 
 function getUser(){return localStorage.getItem(LS_USER)||'';}
 function setUser(v){localStorage.setItem(LS_USER,v);}
 
-function getPertemuan(){try{return JSON.parse(localStorage.getItem(LS_PERTEMUAN)||'[]');}catch(e){return [];}}
-function savePertemuanList(list){localStorage.setItem(LS_PERTEMUAN,JSON.stringify(list));}
+/* Pertemuan & file materi sekarang berasal dari data-pertemuan.js (diedit di
+   syntax, bukan lewat web) supaya semua mahasiswa yang membuka web ini melihat
+   pertemuan & file yang sama persis. Hanya data absensi mahasiswa yang tetap
+   disimpan lokal per perangkat. */
+function getPertemuan(){
+  const data=(window.PERTEMUAN_DATA||[]).slice().sort((a,b)=>a.nomor-b.nomor);
+  return data.map(p=>({
+    nomor:p.nomor,
+    judul:p.judul||'',
+    tanggal:p.tanggal||'',
+    files:p.files||[],
+    mahasiswa:getMahasiswaByNomor(p.nomor)
+  }));
+}
+function getMahasiswaByNomor(nomor){
+  try{return JSON.parse(localStorage.getItem(LS_MHS_PREFIX+nomor)||'[]');}catch(e){return [];}
+}
+function saveMahasiswaByNomor(nomor,list){
+  localStorage.setItem(LS_MHS_PREFIX+nomor,JSON.stringify(list));
+}
 
 function uid(){return 'id'+Date.now()+Math.floor(Math.random()*1000);}
 
@@ -549,21 +531,19 @@ function refreshHomeStats(){
 }
 
 /* ============================================================
-   PERTEMUAN LIST + CRUD
+   PERTEMUAN LIST (read-only — dikelola di data-pertemuan.js)
 ============================================================ */
-let editingPertemuanId=null;
-
 function renderPertemuanList(){
   const list=getPertemuan();
   const wrap=document.getElementById('pertemuanListWrap');
   if(list.length===0){
-    wrap.innerHTML=`<div class="empty-state"><div class="es-icon">📅</div><p>Belum ada pertemuan.<br>Tambahkan pertemuan pertama Anda.</p></div>`;
+    wrap.innerHTML=`<div class="empty-state"><div class="es-icon">📅</div><p>Belum ada pertemuan.<br>Tambahkan pertemuan di file data-pertemuan.js.</p></div>`;
     return;
   }
   wrap.innerHTML=list.map(p=>{
     const hadir=(p.mahasiswa||[]).filter(m=>m.hadir).length;
     const total=(p.mahasiswa||[]).length;
-    return `<div class="pertemuan-card" onclick="openPertemuanDetail('${p.id}')">
+    return `<div class="pertemuan-card" onclick="openPertemuanDetail(${p.nomor})">
       <div class="pertemuan-num">${p.nomor}</div>
       <div class="pertemuan-info">
         <div class="pertemuan-title">${escapeHtml(p.judul)}</div>
@@ -572,51 +552,6 @@ function renderPertemuanList(){
       <div class="pertemuan-chevron">›</div>
     </div>`;
   }).join('');
-}
-
-function openAddPertemuanModal(){
-  editingPertemuanId=null;
-  document.getElementById('modalPertemuanTitle').textContent='Tambah Pertemuan';
-  document.getElementById('mpJudul').value='';
-  document.getElementById('mpTanggal').value='';
-  openModal('modalPertemuan');
-}
-function openEditPertemuanModal(){
-  const p=getPertemuan().find(x=>x.id===editingPertemuanId || x.id===currentPertemuanId);
-  const pm=getPertemuan().find(x=>x.id===currentPertemuanId);
-  if(!pm)return;
-  editingPertemuanId=pm.id;
-  document.getElementById('modalPertemuanTitle').textContent='Edit Pertemuan';
-  document.getElementById('mpJudul').value=pm.judul;
-  document.getElementById('mpTanggal').value=pm.tanggal||'';
-  openModal('modalPertemuan');
-}
-function savePertemuan(){
-  const judul=document.getElementById('mpJudul').value.trim();
-  const tanggal=document.getElementById('mpTanggal').value;
-  if(!judul){alert('Judul pertemuan wajib diisi');return;}
-  let list=getPertemuan();
-  if(editingPertemuanId){
-    const p=list.find(x=>x.id===editingPertemuanId);
-    p.judul=judul;p.tanggal=tanggal;
-  }else{
-    const nomor=list.length? Math.max(...list.map(x=>x.nomor))+1 : 1;
-    list.push({id:uid(),nomor,judul,tanggal,files:[],mahasiswa:[]});
-    addNotif('📅','Pertemuan ditambahkan',`Pertemuan ${nomor}: ${judul}`);
-  }
-  savePertemuanList(list);
-  closeModal('modalPertemuan');
-  renderPertemuanList();
-  refreshHomeStats();
-  if(currentPertemuanId)openPertemuanDetail(currentPertemuanId);
-}
-function deletePertemuan(id){
-  if(!confirm('Hapus pertemuan ini beserta seluruh file dan data absensinya?'))return;
-  let list=getPertemuan().filter(p=>p.id!==id);
-  savePertemuanList(list);
-  goTo('pertemuanListPage');
-  renderPertemuanList();
-  refreshHomeStats();
 }
 
 /* ============================================================
