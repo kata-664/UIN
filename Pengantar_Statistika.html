@@ -434,7 +434,27 @@ body{
       <div class="akun-row"><span class="akun-row-left">Total Mahasiswa Terdaftar</span><span class="akun-row-val" id="akunMhsCount">0</span></div>
       <div class="akun-row"><span class="akun-row-left">Latihan Dikerjakan</span><span class="akun-row-val" id="akunLatihanCount">0</span></div>
     </div>
+    <button class="btn-outline" style="margin-bottom:10px;" onclick="openEditNama()">✏️ Ubah Nama</button>
     <button class="btn-logout" onclick="doLogout()">🚪 Logout</button>
+  </div>
+</div>
+
+<!-- =========== MODAL EDIT NAMA =========== -->
+<div class="modal-overlay" id="modalEditNama">
+  <div class="modal-box">
+    <h3>✏️ Ubah Nama</h3>
+    <div class="field-group">
+      <label>Nama Anda</label>
+      <div class="field-wrap">
+        <input type="text" id="editNamaInput" placeholder="Masukkan nama baru"
+          autocomplete="name" autocapitalize="words" spellcheck="false"
+          onkeydown="if(event.key==='Enter')saveEditNama()">
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-outline" onclick="closeModal('modalEditNama')">Batal</button>
+      <button class="btn-primary" onclick="saveEditNama()">Simpan</button>
+    </div>
   </div>
 </div>
 
@@ -666,9 +686,6 @@ function renderFileList(){
           <div class="file-name">${escapeHtml(f.nama)}</div>
           <div class="file-type">${labels[f.tipe]}</div>
         </div>
-        <div class="file-actions">
-          <button class="btn-danger" onclick="deleteFile('${f.id}')">Hapus</button>
-        </div>
       </div>
       <iframe class="file-preview" src="${previewUrl(f.url,f.tipe)}" loading="lazy"></iframe>
       <a class="file-open-link" href="${f.url}" target="_blank" rel="noopener">🔗 Buka di Tab Baru</a>
@@ -851,6 +868,18 @@ function renderAkun(){
   let latihanCount=0;
   list.forEach(p=>{latihanCount+=parseInt(localStorage.getItem('kd_lastcount_'+p.nomor)||'0');});
   document.getElementById('akunLatihanCount').textContent=latihanCount;
+}
+function openEditNama(){
+  document.getElementById('editNamaInput').value=getUser();
+  openModal('modalEditNama');
+}
+function saveEditNama(){
+  const val=document.getElementById('editNamaInput').value.trim();
+  if(!val){alert('Nama tidak boleh kosong');return;}
+  setUser(val);
+  renderAkun();
+  document.getElementById('homeUsernameStrip').textContent=val;
+  closeModal('modalEditNama');
 }
 
 /* ============================================================
