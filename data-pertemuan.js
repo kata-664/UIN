@@ -30,13 +30,13 @@ window.PERTEMUAN_DATA = [
         id: "f1",
         nama: "Slide Pertemuan 1 - Pengantar Statistika",
         tipe: "ppt",
-        url: "https://drive.google.com/file/d/GANTI_DENGAN_ID_FILE/view"
+        url: "https://docs.google.com/presentation/d/11ASsH-qGV58yyYF6rl7eYzXu82B2nZl4/edit?usp=sharing&ouid=100048788146072930182&rtpof=true&sd=true"
       },
       {
         id: "f2",
         nama: "Modul Pertemuan 1",
         tipe: "pdf",
-        url: "https://drive.google.com/file/d/GANTI_DENGAN_ID_FILE/view"
+        url: "https://docs.google.com/presentation/d/11ASsH-qGV58yyYF6rl7eYzXu82B2nZl4/edit?usp=sharing&ouid=100048788146072930182&rtpof=true&sd=true"
       }
     ]
   },
