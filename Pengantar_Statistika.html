@@ -137,14 +137,18 @@ body{
 .hadir-toggle{border:none;border-radius:20px;padding:6px 12px;font-size:11px;font-weight:800;cursor:pointer;flex-shrink:0;}
 .hadir-toggle.hadir{background:#E8F5E9;color:#2E7D32;}
 .hadir-toggle.tidak{background:#FFEBEE;color:#C62828;}
+.hadir-toggle.izin{background:#FFF3E0;color:#E65100;}
+.hadir-toggle.alpha{background:#FFEBEE;color:#C62828;}
 .mhs-del{background:none;border:none;color:#CFD8DC;font-size:16px;cursor:pointer;padding:0 2px;flex-shrink:0;}
 .absensi-summary{display:flex;gap:10px;margin-bottom:14px;}
 .abs-chip{flex:1;text-align:center;padding:10px;border-radius:12px;}
 .abs-chip.h{background:#E8F5E9;}
 .abs-chip.t{background:#FFEBEE;}
+.abs-chip.i{background:#FFF3E0;}
 .abs-chip b{display:block;font-size:18px;}
 .abs-chip.h b{color:#2E7D32;}
 .abs-chip.t b{color:#C62828;}
+.abs-chip.i b{color:#E65100;}
 .abs-chip span{font-size:10.5px;color:var(--gray);}
 
 /* latihan list */
@@ -321,7 +325,8 @@ body{
     <div class="section-title" style="padding:0 0 10px;">🧑‍🎓 Absensi Mahasiswa</div>
     <div class="absensi-summary">
       <div class="abs-chip h"><b id="absHadirCount">0</b><span>Hadir</span></div>
-      <div class="abs-chip t"><b id="absTidakCount">0</b><span>Tidak Hadir</span></div>
+      <div class="abs-chip i"><b id="absIzinCount">0</b><span>Izin</span></div>
+      <div class="abs-chip t"><b id="absAlphaCount">0</b><span>Alpha</span></div>
     </div>
     <div class="card">
       <div id="mhsListWrap"></div>
@@ -372,7 +377,7 @@ body{
     <div class="akun-hero">
       <div class="akun-avatar-big">🎓</div>
       <div class="akun-name" id="akunUsername">—</div>
-      <span class="akun-badge-pill">Mahasiswa</span>
+      <span class="akun-badge-pill">Pengajar</span>
     </div>
     <div class="akun-info-card">
       <div class="akun-row"><span class="akun-row-left">Nama</span><span class="akun-row-val" id="akunUsernameInfo">—</span></div>
@@ -445,12 +450,12 @@ function getPertemuan(){
 }
 function getMahasiswaByNomor(nomor){
   const master=window.MAHASISWA_DATA||[];
-  const hadirSet=new Set((window.ABSENSI_DATA&&window.ABSENSI_DATA[nomor])||[]);
+  const statusMap=(window.ABSENSI_DATA&&window.ABSENSI_DATA[nomor])||{};
   return master.map(m=>({
     id:m.nim,
     nama:m.nama,
     nim:m.nim,
-    hadir:hadirSet.has(m.nim)
+    status:statusMap[m.nim]||'alpha' // default: kalau NIM gak dicantumkan = alpha
   }));
 }
 
@@ -533,7 +538,7 @@ function renderPertemuanList(){
     return;
   }
   wrap.innerHTML=list.map(p=>{
-    const hadir=(p.mahasiswa||[]).filter(m=>m.hadir).length;
+    const hadir=(p.mahasiswa||[]).filter(m=>m.status==='hadir').length;
     const total=(p.mahasiswa||[]).length;
     return `<div class="pertemuan-card" onclick="openPertemuanDetail(${p.nomor})">
       <div class="pertemuan-num">${p.nomor}</div>
@@ -601,7 +606,7 @@ function renderFileList(){
         </div>
       </div>
       <iframe class="file-preview" src="${previewUrl(f.url,f.tipe)}" loading="lazy"></iframe>
-      <a class="file-open-link" href="${f.url}" target="_blank" rel="noopener">💾 Open and Save</a>
+      <a class="file-open-link" href="${f.url}" target="_blank" rel="noopener">🔗 Buka di Tab Baru</a>
     </div>
   `).join('');
 }
@@ -635,13 +640,14 @@ function deleteFile(fid){
 }
 
 /* --- Absensi --- */
+const STATUS_LABEL={hadir:'✓ Hadir',izin:'📄 Izin',alpha:'✕ Alpha'};
 function renderMhsList(){
   const p=getCurrentPertemuan();
   const wrap=document.getElementById('mhsListWrap');
   const list=p.mahasiswa||[];
-  const hadir=list.filter(m=>m.hadir).length;
-  document.getElementById('absHadirCount').textContent=hadir;
-  document.getElementById('absTidakCount').textContent=list.length-hadir;
+  document.getElementById('absHadirCount').textContent=list.filter(m=>m.status==='hadir').length;
+  document.getElementById('absIzinCount').textContent=list.filter(m=>m.status==='izin').length;
+  document.getElementById('absAlphaCount').textContent=list.filter(m=>m.status==='alpha').length;
   if(list.length===0){
     wrap.innerHTML=`<div class="empty-state"><div class="es-icon">🧑‍🎓</div><p>Belum ada data mahasiswa.<br>Tambahkan mahasiswa di file daftar-mahasiswa.js.</p></div>`;
     return;
@@ -653,7 +659,7 @@ function renderMhsList(){
         <div class="mhs-name">${escapeHtml(m.nama)}</div>
         <div class="mhs-nim">${escapeHtml(m.nim||'-')}</div>
       </div>
-      <span class="hadir-toggle ${m.hadir?'hadir':'tidak'}">${m.hadir?'✓ Hadir':'✕ Tidak'}</span>
+      <span class="hadir-toggle ${m.status}">${STATUS_LABEL[m.status]}</span>
     </div>
   `).join('');
 }
