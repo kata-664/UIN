@@ -37,7 +37,7 @@ window.PERTEMUAN_DATA = [
         id: "f2",
         nama: "Modul Pertemuan 1",
         tipe: "ppt", // <- ini sebenarnya Google Slides, bukan pdf
-        url: "https://docs.google.com/presentation/d/11ASsH-qGV58yyYF6rl7eYzXu82B2nZl4/edit?usp=sharing&ouid=100048788146072930182&rtpof=true&sd=true"
+        url: "https://drive.google.com/file/d/16sUh3zUVYd1lqALIED2OCXXQi2js-GNK/view?usp=sharing"
       }
     ]
   },
