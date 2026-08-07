@@ -86,6 +86,10 @@ body{
 .tag-visited{color:#2E7D32;font-size:10.5px;font-weight:700;margin-left:6px;white-space:nowrap;}
 .tag-new{background:#FFEBEE;color:#C62828;font-size:9px;font-weight:800;padding:2px 7px;border-radius:10px;margin-left:6px;white-space:nowrap;vertical-align:middle;}
 .tag-unread{color:#C62828;font-weight:700;}
+.tag-locked{background:#ECEFF1;color:#546E7A;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:10px;margin-left:6px;white-space:nowrap;}
+.pertemuan-card.locked{opacity:.6;cursor:not-allowed;}
+.pertemuan-card.locked .pertemuan-num{background:linear-gradient(135deg,#90A4AE,#B0BEC5);}
+.locked-notice{background:#ECEFF1 !important;border:1px solid #CFD8DC !important;color:#546E7A !important;}
 .next-pertemuan-card{display:flex;align-items:center;gap:12px;}
 .next-pertemuan-icon{font-size:26px;flex-shrink:0;}
 .next-pertemuan-label{font-size:11px;color:var(--gray);font-weight:700;text-transform:uppercase;letter-spacing:.3px;}
@@ -551,6 +555,10 @@ body{
 <script src="daftar-mahasiswa.js"></script>
 <!-- File soal latihan per pertemuan (opsional). Format lihat komentar di dalam file. -->
 <script src="soal-pertemuan.js"></script>
+<!-- Pengaturan buka/kunci per pertemuan & per latihan (opsional). Set true untuk mengunci,
+     false untuk membuka. Edit di file ini untuk mengatur pertemuan/latihan mana yang
+     sudah boleh diakses mahasiswa. -->
+<script src="setting-locks.js"></script>
 <script>
 /* ============================================================
    STORAGE HELPERS
@@ -601,6 +609,18 @@ function markFilesSeen(ids){
   const seen=new Set(getSeenFiles());
   ids.forEach(id=>seen.add(id));
   localStorage.setItem('kd_seen_files',JSON.stringify([...seen]));
+}
+
+/* --- Lock/kunci pertemuan & latihan (diatur di setting-locks.js) ---
+   window.LOCK_SETTINGS = { pertemuan:{1:false,2:true,...}, latihan:{1:false,2:true,...} }
+   true = terkunci (belum bisa dibuka), false/tidak ada = terbuka. */
+function isPertemuanLocked(nomor){
+  const locks=(window.LOCK_SETTINGS&&window.LOCK_SETTINGS.pertemuan)||{};
+  return !!locks[nomor];
+}
+function isLatihanLocked(nomor){
+  const locks=(window.LOCK_SETTINGS&&window.LOCK_SETTINGS.latihan)||{};
+  return !!locks[nomor];
 }
 
 /* ============================================================
@@ -671,15 +691,16 @@ function initHome(){
 function refreshHomeStats(){
   const list=getPertemuan();
   document.getElementById('heroPertemuanCount').textContent=list.length;
-  const totalFile=list.reduce((a,p)=>a+(p.files?p.files.length:0),0);
+  const unlockedList=list.filter(p=>!isPertemuanLocked(p.nomor));
+  const totalFile=unlockedList.reduce((a,p)=>a+(p.files?p.files.length:0),0);
   document.getElementById('heroFileCount').textContent=totalFile;
   const seen=new Set(getSeenFiles());
-  const totalUnread=list.reduce((a,p)=>a+(p.files||[]).filter(f=>!seen.has(f.id)).length,0);
+  const totalUnread=unlockedList.reduce((a,p)=>a+(p.files||[]).filter(f=>!seen.has(f.id)).length,0);
   const dot=document.getElementById('pertemuanUnreadDot');
   if(dot)dot.style.display=totalUnread>0?'block':'none';
 }
 function refreshProgressBelajar(){
-  const list=getPertemuan();
+  const list=getPertemuan().filter(p=>!isPertemuanLocked(p.nomor));
   const visited=getPertemuanVisited();
   const total=list.length;
   const done=list.filter(p=>visited[p.nomor]).length;
@@ -722,16 +743,17 @@ function renderPertemuanList(){
   const visited=getPertemuanVisited();
   const seen=new Set(getSeenFiles());
   wrap.innerHTML=list.map(p=>{
+    const locked=isPertemuanLocked(p.nomor);
     const hadir=(p.mahasiswa||[]).filter(m=>m.status==='hadir').length;
     const total=(p.mahasiswa||[]).length;
-    const unread=(p.files||[]).filter(f=>!seen.has(f.id)).length;
-    return `<div class="pertemuan-card" onclick="openPertemuanDetail(${p.nomor})">
-      <div class="pertemuan-num">${p.nomor}</div>
+    const unread=locked?0:(p.files||[]).filter(f=>!seen.has(f.id)).length;
+    return `<div class="pertemuan-card ${locked?'locked':''}" onclick="openPertemuanDetail(${p.nomor})">
+      <div class="pertemuan-num">${locked?'🔒':p.nomor}</div>
       <div class="pertemuan-info">
-        <div class="pertemuan-title">${escapeHtml(p.judul)}${visited[p.nomor]?'<span class="tag-visited">✓ Dipelajari</span>':''}</div>
-        <div class="pertemuan-meta">${p.tanggal?formatTanggal(p.tanggal)+' · ':''}${(p.files||[]).length} file${unread>0?` · <span class="tag-unread">🆕 ${unread} baru</span>`:''} · ${hadir}/${total} hadir</div>
+        <div class="pertemuan-title">${escapeHtml(p.judul)}${locked?'<span class="tag-locked">🔒 Terkunci</span>':visited[p.nomor]?'<span class="tag-visited">✓ Dipelajari</span>':''}</div>
+        <div class="pertemuan-meta">${locked?'Belum dibuka dosen':`${p.tanggal?formatTanggal(p.tanggal)+' · ':''}${(p.files||[]).length} file${unread>0?` · <span class="tag-unread">🆕 ${unread} baru</span>`:''} · ${hadir}/${total} hadir`}</div>
       </div>
-      <div class="pertemuan-chevron">›</div>
+      <div class="pertemuan-chevron">${locked?'':'›'}</div>
     </div>`;
   }).join('');
 }
@@ -742,6 +764,10 @@ function renderPertemuanList(){
 let currentPertemuanId=null;
 
 function openPertemuanDetail(id){
+  if(isPertemuanLocked(id)){
+    alert('🔒 Pertemuan ini belum dibuka oleh dosen.');
+    return;
+  }
   currentPertemuanId=id;
   const p=getPertemuan().find(x=>x.nomor===id);
   if(!p)return;
@@ -870,7 +896,7 @@ function renderLatihanList(){
   let tersedia=0,dikerjakan=0,totalSkor=0,jumlahSkor=0;
   list.forEach(p=>{
     const soal=bank[p.nomor];
-    if(soal&&soal.length>0){
+    if(soal&&soal.length>0&&!isLatihanLocked(p.nomor)){
       tersedia++;
       const attempts=parseInt(localStorage.getItem('kd_lastcount_'+p.nomor)||'0');
       if(attempts>0){
@@ -893,19 +919,22 @@ function renderLatihanList(){
   </div>`;
   wrap.innerHTML=summaryHtml+list.map(p=>{
     const soal=bank[p.nomor];
+    const locked=isLatihanLocked(p.nomor);
     const best=localStorage.getItem('kd_best_'+p.nomor);
     const attempts=parseInt(localStorage.getItem('kd_lastcount_'+p.nomor)||'0');
     const jumlah=soal?soal.length:0;
     return `<div class="latihan-card">
       <div class="latihan-top">
-        <div class="latihan-title">Pertemuan ${p.nomor} — ${escapeHtml(p.judul)}</div>
+        <div class="latihan-title">Pertemuan ${p.nomor} — ${escapeHtml(p.judul)}${locked?'<span class="tag-locked">🔒 Terkunci</span>':''}</div>
         ${best?`<span class="score-pill">Terbaik: ${best}</span>`:`<span class="score-pill none">Belum</span>`}
       </div>
-      ${soal ? `
+      ${!soal ? `
+        <div class="error-notice" style="margin-bottom:0;">⚠️ Soal untuk pertemuan ini belum tersedia di <strong>soal-pertemuan.js</strong></div>
+      ` : locked ? `
+        <div class="error-notice locked-notice" style="margin-bottom:0;">🔒 Latihan ini masih terkunci. Tunggu dosen membukanya.</div>
+      ` : `
         <div style="font-size:12px;color:var(--gray);margin-bottom:10px;">${jumlah} soal tersedia${attempts>0?` · dikerjakan ${attempts}x`:''}</div>
         <button class="btn-primary" onclick="startQuiz(${p.nomor})">Mulai Latihan</button>
-      ` : `
-        <div class="error-notice" style="margin-bottom:0;">⚠️ Soal untuk pertemuan ini belum tersedia di <strong>soal-pertemuan.js</strong></div>
       `}
     </div>`;
   }).join('');
@@ -916,6 +945,10 @@ function renderLatihanList(){
 ============================================================ */
 let quizState=null;
 function startQuiz(nomor){
+  if(isLatihanLocked(nomor)){
+    alert('🔒 Latihan ini masih terkunci. Tunggu dosen membukanya.');
+    return;
+  }
   const bank=window.SOAL_PERTEMUAN||{};
   const soal=bank[nomor];
   if(!soal||soal.length===0){alert('Soal belum tersedia untuk pertemuan ini.');return;}
@@ -1150,7 +1183,7 @@ function getBadgeStats(){
   let totalTersedia=0,totalDone=0,perfectCount=0,maxAttempt=0;
   list.forEach(p=>{
     const soal=bank[p.nomor];
-    if(soal&&soal.length>0){
+    if(soal&&soal.length>0&&!isLatihanLocked(p.nomor)){
       totalTersedia++;
       const attempts=parseInt(localStorage.getItem('kd_lastcount_'+p.nomor)||'0');
       if(attempts>0)totalDone++;
