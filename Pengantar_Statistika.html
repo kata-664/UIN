@@ -143,7 +143,7 @@ body{
 .diskusi-reply-btn{background:none;border:none;color:var(--blue);font-size:11.5px;font-weight:700;cursor:pointer;padding:0;margin-top:6px;}
 .diskusi-item.diskusi-highlight{animation:diskusiFlash 1.4s ease;}
 @keyframes diskusiFlash{0%{background:#FFF3CD;}100%{background:#fff;}}
-.diskusi-thread-body{padding-bottom:150px !important;background:#E9EEF6;margin:-16px -16px 0;padding-left:12px;padding-right:12px;padding-top:12px;}
+.diskusi-thread-body{padding-bottom:150px !important;background:#E9EEF6;}
 
 /* ===== CHAT BUBBLES (diskusi) ===== */
 .chat-row{display:flex;align-items:flex-end;gap:7px;margin-bottom:10px;}
@@ -170,9 +170,12 @@ body{
 @keyframes chatFlash{0%{box-shadow:0 0 0 3px #FFD54F;}100%{box-shadow:0 1px 2px rgba(0,0,0,.08);}}
 .diskusi-date-sep{text-align:center;font-size:11px;color:var(--gray);font-weight:700;margin:14px 0 10px;}
 .diskusi-input-bar{position:fixed;bottom:56px;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:#fff;border-top:1px solid var(--border);box-shadow:0 -2px 8px rgba(0,0,0,.05);padding:8px 12px;box-sizing:border-box;z-index:90;}
-.diskusi-reply-indicator{display:none;align-items:center;justify-content:space-between;background:#F0F7FF;border-radius:8px;padding:6px 10px;margin-bottom:6px;font-size:12px;color:var(--blue);}
+.diskusi-reply-indicator{display:none;align-items:center;justify-content:space-between;gap:8px;background:#F0F7FF;border-left:3px solid var(--blue);border-radius:8px;padding:6px 10px;margin-bottom:6px;font-size:12px;color:var(--blue);}
 .diskusi-reply-indicator.show{display:flex;}
-.diskusi-reply-cancel{background:none;border:none;color:var(--blue);font-size:15px;cursor:pointer;line-height:1;}
+.diskusi-reply-indicator-body{min-width:0;flex:1;}
+.diskusi-reply-indicator-name{font-weight:800;}
+.diskusi-reply-indicator-snippet{color:var(--gray);font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px;}
+.diskusi-reply-cancel{background:none;border:none;color:var(--blue);font-size:15px;cursor:pointer;line-height:1;flex-shrink:0;}
 .diskusi-input-row{display:flex;align-items:flex-end;gap:8px;}
 .diskusi-input-row textarea{flex:1;border:1px solid var(--border);border-radius:18px;padding:10px 14px;font-size:13px;font-family:inherit;resize:none;box-sizing:border-box;max-height:100px;overflow-y:auto;line-height:1.4;}
 .diskusi-send-btn{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#1565C0,#1976D2);color:#fff;border:none;font-size:16px;flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 10px rgba(21,101,192,.3);}
@@ -490,7 +493,10 @@ body{
   </div>
   <div class="diskusi-input-bar">
     <div id="diskusiReplyIndicator" class="diskusi-reply-indicator">
-      <span>↪ Membalas <b id="diskusiReplyNama"></b></span>
+      <div class="diskusi-reply-indicator-body">
+        <div>↪ Membalas <span class="diskusi-reply-indicator-name" id="diskusiReplyNama"></span></div>
+        <div class="diskusi-reply-indicator-snippet" id="diskusiReplySnippet"></div>
+      </div>
       <button onclick="batalBalas()" class="diskusi-reply-cancel">✕</button>
     </div>
     <div class="diskusi-input-row">
@@ -997,7 +1003,7 @@ function renderDiskusiList(items){
     return;
   }
   const byId={};
-  visible.forEach(it=>{byId[it.id]=it;});
+  visible.forEach(it=>{byId[String(it.id)]=it;});
   visible.sort((a,b)=>new Date(a.waktu)-new Date(b.waktu)); // lama -> baru, seperti chat
   const myName=(getUser()||'').trim().toLowerCase();
   let lastDate=null,html='';
@@ -1009,11 +1015,14 @@ function renderDiskusiList(items){
       html+=`<div class="diskusi-date-sep">${formatDiskusiDate(d)}</div>`;
     }
     const isMe=!!myName&&(it.nama||'').trim().toLowerCase()===myName;
-    const parent=it.balasan_untuk?byId[it.balasan_untuk]:null;
+    const parent=it.balasan_untuk?byId[String(it.balasan_untuk)]:null;
     let quoteHtml='';
     if(parent){
       const parentIsMe=!!myName&&(parent.nama||'').trim().toLowerCase()===myName;
       quoteHtml=`<div class="chat-quote ${parentIsMe?'quote-me':''}" onclick="highlightDiskusiMsg('${parent.id}')"><b>${escapeHtml(parentIsMe?'Anda':(parent.nama||'Anonim'))}</b>${escapeHtml((parent.isi||'').slice(0,70))}${(parent.isi||'').length>70?'…':''}</div>`;
+    }else if(it.balasan_untuk){
+      // pesan asli tidak ditemukan (mis. sudah dihapus) — tetap tampilkan tanda balasan
+      quoteHtml=`<div class="chat-quote"><b>↪ Membalas pesan</b>Pesan asli tidak tersedia</div>`;
     }
     const avatarHtml=!isMe?`<div class="chat-avatar">${escapeHtml((it.nama||'?').charAt(0).toUpperCase())}</div>`:'';
     const nameHtml=!isMe?`<div class="chat-name">${escapeHtml(it.nama||'Anonim')}</div>`:'';
@@ -1027,7 +1036,7 @@ function renderDiskusiList(items){
           <div class="chat-text">${escapeHtml(it.isi||'')}</div>
           <div class="chat-meta"><span class="chat-time">${timeAgo(it.waktu)}</span></div>
         </div>
-        <button class="chat-reply-btn ${isMe?'me':'other'}" onclick="balasKomentar('${it.id}','${escapeHtml(it.nama||'Anonim').replace(/'/g,"\\'")}')">↩ Balas</button>
+        <button class="chat-reply-btn ${isMe?'me':'other'}" onclick="balasKomentar('${it.id}','${escapeHtml(it.nama||'Anonim').replace(/'/g,"\\'")}','${escapeHtml((it.isi||'').slice(0,80)).replace(/'/g,"\\'")}')">↩ Balas</button>
       </div>
     </div>`;
   });
@@ -1057,9 +1066,10 @@ function highlightDiskusiMsg(id){
 }
 
 let diskusiReplyTarget=null;
-function balasKomentar(id,nama){
+function balasKomentar(id,nama,isi){
   diskusiReplyTarget={id,nama};
   document.getElementById('diskusiReplyNama').textContent=nama;
+  document.getElementById('diskusiReplySnippet').textContent=isi||'';
   document.getElementById('diskusiReplyIndicator').classList.add('show');
   const input=document.getElementById('diskusiInput');
   input.focus();
@@ -1067,6 +1077,7 @@ function balasKomentar(id,nama){
 function batalBalas(){
   diskusiReplyTarget=null;
   document.getElementById('diskusiReplyIndicator').classList.remove('show');
+  document.getElementById('diskusiReplySnippet').textContent='';
 }
 function autoGrow(el){
   el.style.height='auto';
