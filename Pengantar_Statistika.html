@@ -138,9 +138,20 @@ body{
 .diskusi-name{font-size:12.5px;font-weight:700;color:var(--dark);}
 .diskusi-time{font-size:10.5px;color:#B0BEC5;}
 .diskusi-text{font-size:13px;color:var(--dark);line-height:1.5;margin-top:3px;white-space:pre-wrap;word-break:break-word;}
-.diskusi-quote{background:var(--gray-light);border-left:3px solid var(--blue);border-radius:6px;padding:5px 8px;margin-top:5px;font-size:11.5px;color:var(--gray);}
+.diskusi-quote{background:var(--gray-light);border-left:3px solid var(--blue);border-radius:6px;padding:5px 8px;margin-top:5px;font-size:11.5px;color:var(--gray);cursor:pointer;}
 .diskusi-quote b{color:var(--dark);}
 .diskusi-reply-btn{background:none;border:none;color:var(--blue);font-size:11.5px;font-weight:700;cursor:pointer;padding:0;margin-top:6px;}
+.diskusi-item.diskusi-highlight{animation:diskusiFlash 1.4s ease;}
+@keyframes diskusiFlash{0%{background:#FFF3CD;}100%{background:#fff;}}
+.diskusi-thread-body{padding-bottom:150px !important;}
+.diskusi-input-bar{position:fixed;bottom:56px;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:#fff;border-top:1px solid var(--border);box-shadow:0 -2px 8px rgba(0,0,0,.05);padding:8px 12px;box-sizing:border-box;z-index:90;}
+.diskusi-reply-indicator{display:none;align-items:center;justify-content:space-between;background:#F0F7FF;border-radius:8px;padding:6px 10px;margin-bottom:6px;font-size:12px;color:var(--blue);}
+.diskusi-reply-indicator.show{display:flex;}
+.diskusi-reply-cancel{background:none;border:none;color:var(--blue);font-size:15px;cursor:pointer;line-height:1;}
+.diskusi-input-row{display:flex;align-items:flex-end;gap:8px;}
+.diskusi-input-row textarea{flex:1;border:1px solid var(--border);border-radius:18px;padding:10px 14px;font-size:13px;font-family:inherit;resize:none;box-sizing:border-box;max-height:100px;overflow-y:auto;line-height:1.4;}
+.diskusi-send-btn{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#1565C0,#1976D2);color:#fff;border:none;font-size:16px;flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 10px rgba(21,101,192,.3);}
+.diskusi-send-btn:active{transform:scale(.94);}
 
 /* file item */
 .file-item{background:#fff;border-radius:var(--radius-sm);box-shadow:var(--shadow);margin-bottom:12px;overflow:hidden;}
@@ -459,17 +470,20 @@ body{
     <button class="btn-back" onclick="goTo('diskusiListPage')">←</button>
     <h2 id="diskusiThreadTitle">Diskusi</h2>
   </div>
-  <div class="page-body">
+  <div class="page-body diskusi-thread-body">
     <div id="diskusiThreadMeta" style="font-size:12px;color:var(--gray);margin-bottom:16px;"></div>
-    <div class="card" style="padding:14px;">
-      <div id="diskusiReplyIndicator" style="display:none;align-items:center;justify-content:space-between;background:#F0F7FF;border-radius:8px;padding:7px 10px;margin-bottom:8px;font-size:12px;color:var(--blue);">
-        <span>↪ Membalas <b id="diskusiReplyNama"></b></span>
-        <button onclick="batalBalas()" style="background:none;border:none;color:var(--blue);font-size:15px;cursor:pointer;line-height:1;">✕</button>
-      </div>
-      <textarea id="diskusiInput" rows="2" maxlength="500" placeholder="Tulis pertanyaan atau tanggapan..." style="width:100%;border:1px solid var(--border);border-radius:10px;padding:10px;font-size:13px;font-family:inherit;resize:vertical;box-sizing:border-box;"></textarea>
-      <button class="btn-primary" style="margin-top:8px;" onclick="kirimDiskusi(event)">Kirim</button>
+    <div id="diskusiListWrap"></div>
+    <div id="diskusiScrollAnchor"></div>
+  </div>
+  <div class="diskusi-input-bar">
+    <div id="diskusiReplyIndicator" class="diskusi-reply-indicator">
+      <span>↪ Membalas <b id="diskusiReplyNama"></b></span>
+      <button onclick="batalBalas()" class="diskusi-reply-cancel">✕</button>
     </div>
-    <div id="diskusiListWrap" style="margin-top:12px;"></div>
+    <div class="diskusi-input-row">
+      <textarea id="diskusiInput" rows="1" maxlength="500" placeholder="Tulis pertanyaan atau tanggapan..." oninput="autoGrow(this)" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();kirimDiskusi(event);}"></textarea>
+      <button class="diskusi-send-btn" onclick="kirimDiskusi(event)" aria-label="Kirim">➤</button>
+    </div>
   </div>
 </div>
 
@@ -962,16 +976,17 @@ function renderDiskusiList(items){
   const visible=items.filter(it=>it.status!=='dihapus');
   if(!visible.length){
     wrap.innerHTML=`<div class="empty-state"><div class="es-icon">💬</div><p>Belum ada diskusi di pertemuan ini.<br>Jadilah yang pertama bertanya!</p></div>`;
+    scrollDiskusiToBottom();
     return;
   }
   const byId={};
   visible.forEach(it=>{byId[it.id]=it;});
-  visible.sort((a,b)=>new Date(b.waktu)-new Date(a.waktu));
+  visible.sort((a,b)=>new Date(a.waktu)-new Date(b.waktu)); // lama -> baru, seperti chat
   wrap.innerHTML=visible.map(it=>{
     const parent=it.balasan_untuk?byId[it.balasan_untuk]:null;
-    const quoteHtml=parent?`<div class="diskusi-quote">↪ Membalas <b>${escapeHtml(parent.nama||'Anonim')}</b>: ${escapeHtml((parent.isi||'').slice(0,60))}${(parent.isi||'').length>60?'…':''}</div>`:'';
+    const quoteHtml=parent?`<div class="diskusi-quote" onclick="highlightDiskusiMsg('${parent.id}')">↪ Membalas <b>${escapeHtml(parent.nama||'Anonim')}</b>: ${escapeHtml((parent.isi||'').slice(0,60))}${(parent.isi||'').length>60?'…':''}</div>`:'';
     return `
-    <div class="diskusi-item">
+    <div class="diskusi-item" id="msg-${it.id}">
       <div class="diskusi-avatar">${escapeHtml((it.nama||'?').charAt(0).toUpperCase())}</div>
       <div class="diskusi-body">
         <div class="diskusi-head"><span class="diskusi-name">${escapeHtml(it.nama||'Anonim')}</span><span class="diskusi-time">${timeAgo(it.waktu)}</span></div>
@@ -981,31 +996,48 @@ function renderDiskusiList(items){
       </div>
     </div>`;
   }).join('');
+  scrollDiskusiToBottom();
+}
+function scrollDiskusiToBottom(){
+  const anchor=document.getElementById('diskusiScrollAnchor');
+  if(anchor)anchor.scrollIntoView({block:'end'});
+}
+function highlightDiskusiMsg(id){
+  const el=document.getElementById('msg-'+id);
+  if(!el)return;
+  el.scrollIntoView({behavior:'smooth',block:'center'});
+  el.classList.remove('diskusi-highlight');
+  void el.offsetWidth; // restart animasi kalau diklik berkali-kali
+  el.classList.add('diskusi-highlight');
+  setTimeout(()=>el.classList.remove('diskusi-highlight'),1400);
 }
 
 let diskusiReplyTarget=null;
 function balasKomentar(id,nama){
   diskusiReplyTarget={id,nama};
   document.getElementById('diskusiReplyNama').textContent=nama;
-  document.getElementById('diskusiReplyIndicator').style.display='flex';
+  document.getElementById('diskusiReplyIndicator').classList.add('show');
   const input=document.getElementById('diskusiInput');
   input.focus();
-  input.scrollIntoView({behavior:'smooth',block:'center'});
 }
 function batalBalas(){
   diskusiReplyTarget=null;
-  document.getElementById('diskusiReplyIndicator').style.display='none';
+  document.getElementById('diskusiReplyIndicator').classList.remove('show');
+}
+function autoGrow(el){
+  el.style.height='auto';
+  el.style.height=Math.min(el.scrollHeight,100)+'px';
 }
 function kirimDiskusi(ev){
   const input=document.getElementById('diskusiInput');
   const isi=input.value.trim();
-  if(!isi){alert('Tulis pesan dulu ya.');return;}
+  if(!isi)return;
   if(isi.length>500){alert('Pesan maksimal 500 karakter.');return;}
   if(!gasReady()){alert('Forum diskusi belum diaktifkan. Isi GAS_DISKUSI_URL terlebih dahulu.');return;}
   const nama=getUser()||'Anonim';
   const balasanUntuk=diskusiReplyTarget?diskusiReplyTarget.id:'';
-  const btn=ev&&ev.target;
-  if(btn){btn.disabled=true;btn.textContent='Mengirim...';}
+  const btn=document.querySelector('.diskusi-send-btn');
+  if(btn)btn.disabled=true;
   fetch(GAS_DISKUSI_URL,{
     method:'POST',
     headers:{'Content-Type':'text/plain;charset=utf-8'},
@@ -1013,9 +1045,10 @@ function kirimDiskusi(ev){
   })
   .then(r=>r.json())
   .then(res=>{
-    if(btn){btn.disabled=false;btn.textContent='Kirim';}
+    if(btn)btn.disabled=false;
     if(res.ok){
       input.value='';
+      autoGrow(input);
       batalBalas();
       loadDiskusi(currentPertemuanId);
     } else {
@@ -1023,7 +1056,7 @@ function kirimDiskusi(ev){
     }
   })
   .catch(()=>{
-    if(btn){btn.disabled=false;btn.textContent='Kirim';}
+    if(btn)btn.disabled=false;
     alert('⚠️ Gagal terhubung ke server diskusi. Cek koneksi internet.');
   });
 }
