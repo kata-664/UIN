@@ -123,12 +123,12 @@ body{
 .fab-add{position:fixed;bottom:96px;left:50%;transform:translateX(190px);width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#1565C0,#1976D2);color:#fff;border:none;font-size:26px;box-shadow:0 6px 18px rgba(21,101,192,.4);cursor:pointer;z-index:40;display:flex;align-items:center;justify-content:center;}
 
 /* pertemuan list */
-.pertemuan-card{background:#fff;border-radius:var(--radius-sm);padding:16px;box-shadow:var(--shadow);margin-bottom:12px;display:flex;align-items:center;gap:12px;cursor:pointer;}
-.pertemuan-num{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#1565C0,#42A5F5);color:#fff;font-weight:800;font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.pertemuan-card{background:#fff;border-radius:var(--radius-sm);padding:16px;box-shadow:var(--shadow);margin-bottom:12px;display:flex;align-items:flex-start;gap:12px;cursor:pointer;}
+.pertemuan-num{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#1565C0,#42A5F5);color:#fff;font-weight:800;font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;align-self:center;}
 .pertemuan-info{flex:1;min-width:0;}
-.pertemuan-title{font-size:14px;font-weight:700;color:var(--dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.pertemuan-title{font-size:14px;font-weight:700;color:var(--dark);white-space:normal;overflow-wrap:break-word;line-height:1.35;}
 .pertemuan-meta{font-size:11px;color:var(--gray);margin-top:3px;}
-.pertemuan-chevron{color:#B0BEC5;font-size:18px;}
+.pertemuan-chevron{color:#B0BEC5;font-size:18px;align-self:center;flex-shrink:0;}
 
 /* file item */
 .file-item{background:#fff;border-radius:var(--radius-sm);box-shadow:var(--shadow);margin-bottom:12px;overflow:hidden;}
