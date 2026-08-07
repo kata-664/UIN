@@ -326,7 +326,6 @@ body{
     <div class="card">
       <div id="mhsListWrap"></div>
     </div>
-    <button class="btn-outline" onclick="openAddMhsModal()">+ Tambah Mahasiswa</button>
   </div>
 </div>
 
@@ -413,38 +412,27 @@ body{
   <div class="notif-clear-btn"><button onclick="clearAllNotif()">Hapus Semua Riwayat</button></div>
 </div>
 
-<!-- ===== MODAL: Tambah Mahasiswa ===== -->
-<div class="modal-overlay" id="modalMhs">
-  <div class="modal-box">
-    <h3>Tambah Mahasiswa</h3>
-    <div class="field-row"><label>Nama Mahasiswa</label><input id="mmNama" placeholder="Contoh: Siti Aminah"></div>
-    <div class="field-row"><label>NIM</label><input id="mmNim" placeholder="Contoh: 2201010023"></div>
-    <div class="modal-actions">
-      <button class="btn-outline" onclick="closeModal('modalMhs')">Batal</button>
-      <button class="btn-primary" onclick="saveMhs()">Simpan</button>
-    </div>
-  </div>
-</div>
-
 </div><!-- /.app -->
 
 <!-- Data pertemuan & file materi. Edit di file ini untuk menambah/mengubah pertemuan. -->
 <script src="data-pertemuan.js"></script>
+<!-- Daftar mahasiswa & absensi per pertemuan. Edit di file ini untuk mengatur hadir/tidak hadir. -->
+<script src="daftar-mahasiswa.js"></script>
 <!-- File soal latihan per pertemuan (opsional). Format lihat komentar di dalam file. -->
 <script src="soal-pertemuan.js"></script>
 <script>
 /* ============================================================
    STORAGE HELPERS
 ============================================================ */
-const LS_USER='kd_user', LS_NOTIF='kd_notif', LS_MHS_PREFIX='kd_mhs_';
+const LS_USER='kd_user', LS_NOTIF='kd_notif';
 
 function getUser(){return localStorage.getItem(LS_USER)||'';}
 function setUser(v){localStorage.setItem(LS_USER,v);}
 
-/* Pertemuan & file materi sekarang berasal dari data-pertemuan.js (diedit di
-   syntax, bukan lewat web) supaya semua mahasiswa yang membuka web ini melihat
-   pertemuan & file yang sama persis. Hanya data absensi mahasiswa yang tetap
-   disimpan lokal per perangkat. */
+/* Pertemuan, file materi, DAN daftar mahasiswa/absensi sekarang berasal dari
+   data-pertemuan.js dan daftar-mahasiswa.js (diedit di file, bukan lewat web)
+   supaya semua orang yang membuka web ini melihat data yang sama persis di
+   semua perangkat. */
 function getPertemuan(){
   const data=(window.PERTEMUAN_DATA||[]).slice().sort((a,b)=>a.nomor-b.nomor);
   return data.map(p=>({
@@ -456,10 +444,14 @@ function getPertemuan(){
   }));
 }
 function getMahasiswaByNomor(nomor){
-  try{return JSON.parse(localStorage.getItem(LS_MHS_PREFIX+nomor)||'[]');}catch(e){return [];}
-}
-function saveMahasiswaByNomor(nomor,list){
-  localStorage.setItem(LS_MHS_PREFIX+nomor,JSON.stringify(list));
+  const master=window.MAHASISWA_DATA||[];
+  const hadirSet=new Set((window.ABSENSI_DATA&&window.ABSENSI_DATA[nomor])||[]);
+  return master.map(m=>({
+    id:m.nim,
+    nama:m.nama,
+    nim:m.nim,
+    hadir:hadirSet.has(m.nim)
+  }));
 }
 
 function uid(){return 'id'+Date.now()+Math.floor(Math.random()*1000);}
@@ -561,7 +553,7 @@ let currentPertemuanId=null;
 
 function openPertemuanDetail(id){
   currentPertemuanId=id;
-  const p=getPertemuan().find(x=>x.id===id);
+  const p=getPertemuan().find(x=>x.nomor===id);
   if(!p)return;
   document.getElementById('pdTitle').textContent='Pertemuan '+p.nomor;
   document.getElementById('pdMeta').innerHTML=`<strong>${escapeHtml(p.judul)}</strong>${p.tanggal?' · '+formatTanggal(p.tanggal):''}`;
@@ -569,10 +561,10 @@ function openPertemuanDetail(id){
   renderMhsList();
   goTo('pertemuanDetailPage');
 }
-function getCurrentPertemuan(){return getPertemuan().find(x=>x.id===currentPertemuanId);}
+function getCurrentPertemuan(){return getPertemuan().find(x=>x.nomor===currentPertemuanId);}
 function updateCurrentPertemuan(mutateFn){
   let list=getPertemuan();
-  const p=list.find(x=>x.id===currentPertemuanId);
+  const p=list.find(x=>x.nomor===currentPertemuanId);
   if(!p)return;
   mutateFn(p);
   savePertemuanList(list);
@@ -651,7 +643,7 @@ function renderMhsList(){
   document.getElementById('absHadirCount').textContent=hadir;
   document.getElementById('absTidakCount').textContent=list.length-hadir;
   if(list.length===0){
-    wrap.innerHTML=`<div class="empty-state"><div class="es-icon">🧑‍🎓</div><p>Belum ada data mahasiswa.</p></div>`;
+    wrap.innerHTML=`<div class="empty-state"><div class="es-icon">🧑‍🎓</div><p>Belum ada data mahasiswa.<br>Tambahkan mahasiswa di file daftar-mahasiswa.js.</p></div>`;
     return;
   }
   wrap.innerHTML=list.map(m=>`
@@ -661,38 +653,9 @@ function renderMhsList(){
         <div class="mhs-name">${escapeHtml(m.nama)}</div>
         <div class="mhs-nim">${escapeHtml(m.nim||'-')}</div>
       </div>
-      <button class="hadir-toggle ${m.hadir?'hadir':'tidak'}" onclick="toggleHadir('${m.id}')">${m.hadir?'✓ Hadir':'✕ Tidak'}</button>
-      <button class="mhs-del" onclick="deleteMhs('${m.id}')">🗑</button>
+      <span class="hadir-toggle ${m.hadir?'hadir':'tidak'}">${m.hadir?'✓ Hadir':'✕ Tidak'}</span>
     </div>
   `).join('');
-}
-function openAddMhsModal(){
-  document.getElementById('mmNama').value='';
-  document.getElementById('mmNim').value='';
-  openModal('modalMhs');
-}
-function saveMhs(){
-  const nama=document.getElementById('mmNama').value.trim();
-  const nim=document.getElementById('mmNim').value.trim();
-  if(!nama){alert('Nama mahasiswa wajib diisi');return;}
-  updateCurrentPertemuan(p=>{
-    p.mahasiswa=p.mahasiswa||[];
-    p.mahasiswa.push({id:uid(),nama,nim,hadir:false});
-  });
-  closeModal('modalMhs');
-  renderMhsList();
-}
-function toggleHadir(mid){
-  updateCurrentPertemuan(p=>{
-    const m=(p.mahasiswa||[]).find(x=>x.id===mid);
-    if(m)m.hadir=!m.hadir;
-  });
-  renderMhsList();
-}
-function deleteMhs(mid){
-  if(!confirm('Hapus mahasiswa ini dari daftar?'))return;
-  updateCurrentPertemuan(p=>{p.mahasiswa=(p.mahasiswa||[]).filter(x=>x.id!==mid);});
-  renderMhsList();
 }
 
 /* ============================================================
