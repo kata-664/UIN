@@ -7,9 +7,13 @@
    CARA PAKAI:
    1) Daftarkan SEMUA mahasiswa SEKALI SAJA di MAHASISWA_DATA
       di bawah (nim + nama).
-   2) Di ABSENSI_DATA, untuk tiap nomor pertemuan, isi NIM
-      mahasiswa yang HADIR saja. Mahasiswa yang NIM-nya tidak
-      dicantumkan pada pertemuan tsb otomatis dianggap TIDAK HADIR.
+   2) Di ABSENSI_DATA, untuk tiap nomor pertemuan, isi status
+      TIAP mahasiswa yang HADIR atau IZIN saja (pakai NIM sebagai
+      key). Status yang bisa dipakai:
+        "hadir" -> hadir
+        "izin"  -> izin (ada surat/keterangan)
+      Mahasiswa yang NIM-nya TIDAK dicantumkan pada pertemuan
+      tsb otomatis dianggap "alpha" (tidak hadir tanpa keterangan).
 ============================================================ */
 
 /* 1) DAFTAR MASTER MAHASISWA (isi sekali, dipakai di semua pertemuan) */
@@ -23,18 +27,21 @@ window.MAHASISWA_DATA = [
 ];
 
 /* 2) ABSENSI PER PERTEMUAN
-   key = nomor pertemuan (harus sama dengan "nomor" di data-pertemuan.js)
-   value = array berisi NIM mahasiswa yang HADIR pada pertemuan itu */
+   key   = nomor pertemuan (harus sama dengan "nomor" di data-pertemuan.js)
+   value = objek { NIM: "hadir" atau "izin", ... }
+   NIM yang tidak disebutkan di sini otomatis dianggap "alpha". */
 window.ABSENSI_DATA = {
-  1: [
-    "2201010001",
-    "2201010002",
-  ],
-  2: [
-    "2201010001",
-    "2201010002",
-    "2201010003",
-  ],
+  1: {
+    "2201010001": "hadir",
+    "2201010002": "hadir",
+    "2201010003": "izin",
+    // "2201010004" tidak dicantumkan -> otomatis alpha
+  },
+  2: {
+    "2201010001": "hadir",
+    "2201010002": "hadir",
+    "2201010003": "hadir",
+  },
   // tambahkan pertemuan lain di sini, format:
-  // NOMOR_PERTEMUAN: [ "NIM_YANG_HADIR", "NIM_YANG_HADIR", ... ],
+  // NOMOR_PERTEMUAN: { "NIM": "hadir", "NIM_LAIN": "izin", ... },
 };
