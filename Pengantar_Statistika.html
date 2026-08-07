@@ -130,6 +130,15 @@ body{
 .pertemuan-meta{font-size:11px;color:var(--gray);margin-top:3px;}
 .pertemuan-chevron{color:#B0BEC5;font-size:18px;align-self:center;flex-shrink:0;}
 
+/* diskusi */
+.diskusi-item{background:#fff;border-radius:var(--radius-sm);box-shadow:var(--shadow);padding:12px 14px;margin-bottom:10px;display:flex;gap:10px;}
+.diskusi-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#1565C0,#42A5F5);color:#fff;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.diskusi-body{flex:1;min-width:0;}
+.diskusi-head{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;}
+.diskusi-name{font-size:12.5px;font-weight:700;color:var(--dark);}
+.diskusi-time{font-size:10.5px;color:#B0BEC5;}
+.diskusi-text{font-size:13px;color:var(--dark);line-height:1.5;margin-top:3px;white-space:pre-wrap;word-break:break-word;}
+
 /* file item */
 .file-item{background:#fff;border-radius:var(--radius-sm);box-shadow:var(--shadow);margin-bottom:12px;overflow:hidden;}
 .file-item-top{display:flex;align-items:center;gap:10px;padding:12px 14px;}
@@ -422,6 +431,14 @@ body{
     <div class="card">
       <div id="mhsListWrap"></div>
     </div>
+    <div style="height:10px;"></div>
+
+    <div class="section-title" style="padding:0 0 10px;">💬 Diskusi</div>
+    <div class="card" style="padding:14px;">
+      <textarea id="diskusiInput" rows="2" maxlength="500" placeholder="Tulis pertanyaan atau tanggapan..." style="width:100%;border:1px solid var(--border);border-radius:10px;padding:10px;font-size:13px;font-family:inherit;resize:vertical;box-sizing:border-box;"></textarea>
+      <button class="btn-primary" style="margin-top:8px;" onclick="kirimDiskusi(event)">Kirim</button>
+    </div>
+    <div id="diskusiListWrap" style="margin-top:12px;"></div>
   </div>
 </div>
 
@@ -563,6 +580,13 @@ body{
 /* ============================================================
    STORAGE HELPERS
 ============================================================ */
+/* ============================================================
+   FORUM DISKUSI (Google Apps Script + Google Sheet)
+   Ganti URL di bawah dengan URL Web App hasil Deploy Apps Script.
+   Lihat panduan setup di PANDUAN_SETUP_FORUM.md
+============================================================ */
+const GAS_DISKUSI_URL = 'PASTE_URL_WEB_APP_APPS_SCRIPT_DI_SINI';
+
 const LS_USER='kd_user', LS_NOTIF='kd_notif';
 
 function getUser(){return localStorage.getItem(LS_USER)||'';}
@@ -775,6 +799,7 @@ function openPertemuanDetail(id){
   document.getElementById('pdMeta').innerHTML=`<strong>${escapeHtml(p.judul)}</strong>${p.tanggal?' · '+formatTanggal(p.tanggal):''}`;
   renderFileList();
   renderMhsList();
+  loadDiskusi(id);
   goTo('pertemuanDetailPage');
   markMenuVisited('pertemuanDetailPage');
   markPertemuanVisited(id);
@@ -880,6 +905,72 @@ function renderMhsList(){
       <span class="hadir-toggle ${m.status}">${STATUS_LABEL[m.status]}</span>
     </div>`;
   }).join('');
+}
+
+/* --- Diskusi (Google Apps Script) --- */
+function gasReady(){
+  return GAS_DISKUSI_URL && !GAS_DISKUSI_URL.includes('PASTE_URL');
+}
+function loadDiskusi(nomor){
+  const wrap=document.getElementById('diskusiListWrap');
+  if(!gasReady()){
+    wrap.innerHTML=`<div class="empty-state"><div class="es-icon">💬</div><p>Forum diskusi belum diaktifkan.<br>Isi GAS_DISKUSI_URL di file HTML dengan URL Web App Apps Script (lihat PANDUAN_SETUP_FORUM.md).</p></div>`;
+    return;
+  }
+  wrap.innerHTML=`<div class="empty-state"><div class="es-icon">⏳</div><p>Memuat diskusi...</p></div>`;
+  fetch(GAS_DISKUSI_URL+'?pertemuan='+encodeURIComponent(nomor))
+    .then(r=>r.json())
+    .then(res=>{
+      if(!res.ok){wrap.innerHTML=`<div class="empty-state"><p>⚠️ Gagal memuat diskusi.</p></div>`;return;}
+      renderDiskusiList(res.data||[]);
+    })
+    .catch(()=>{wrap.innerHTML=`<div class="empty-state"><p>⚠️ Gagal terhubung ke server diskusi. Cek koneksi internet.</p></div>`;});
+}
+function renderDiskusiList(items){
+  const wrap=document.getElementById('diskusiListWrap');
+  const visible=items.filter(it=>it.status!=='dihapus');
+  if(!visible.length){
+    wrap.innerHTML=`<div class="empty-state"><div class="es-icon">💬</div><p>Belum ada diskusi di pertemuan ini.<br>Jadilah yang pertama bertanya!</p></div>`;
+    return;
+  }
+  visible.sort((a,b)=>new Date(b.waktu)-new Date(a.waktu));
+  wrap.innerHTML=visible.map(it=>`
+    <div class="diskusi-item">
+      <div class="diskusi-avatar">${escapeHtml((it.nama||'?').charAt(0).toUpperCase())}</div>
+      <div class="diskusi-body">
+        <div class="diskusi-head"><span class="diskusi-name">${escapeHtml(it.nama||'Anonim')}</span><span class="diskusi-time">${timeAgo(it.waktu)}</span></div>
+        <div class="diskusi-text">${escapeHtml(it.isi||'')}</div>
+      </div>
+    </div>`).join('');
+}
+function kirimDiskusi(ev){
+  const input=document.getElementById('diskusiInput');
+  const isi=input.value.trim();
+  if(!isi){alert('Tulis pesan dulu ya.');return;}
+  if(isi.length>500){alert('Pesan maksimal 500 karakter.');return;}
+  if(!gasReady()){alert('Forum diskusi belum diaktifkan. Isi GAS_DISKUSI_URL terlebih dahulu.');return;}
+  const nama=getUser()||'Anonim';
+  const btn=ev&&ev.target;
+  if(btn){btn.disabled=true;btn.textContent='Mengirim...';}
+  fetch(GAS_DISKUSI_URL,{
+    method:'POST',
+    headers:{'Content-Type':'text/plain;charset=utf-8'},
+    body:JSON.stringify({pertemuan:currentPertemuanId,nama,isi})
+  })
+  .then(r=>r.json())
+  .then(res=>{
+    if(btn){btn.disabled=false;btn.textContent='Kirim';}
+    if(res.ok){
+      input.value='';
+      loadDiskusi(currentPertemuanId);
+    } else {
+      alert(res.error||'Gagal mengirim pesan.');
+    }
+  })
+  .catch(()=>{
+    if(btn){btn.disabled=false;btn.textContent='Kirim';}
+    alert('⚠️ Gagal terhubung ke server diskusi. Cek koneksi internet.');
+  });
 }
 
 /* ============================================================
