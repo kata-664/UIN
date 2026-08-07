@@ -143,7 +143,32 @@ body{
 .diskusi-reply-btn{background:none;border:none;color:var(--blue);font-size:11.5px;font-weight:700;cursor:pointer;padding:0;margin-top:6px;}
 .diskusi-item.diskusi-highlight{animation:diskusiFlash 1.4s ease;}
 @keyframes diskusiFlash{0%{background:#FFF3CD;}100%{background:#fff;}}
-.diskusi-thread-body{padding-bottom:150px !important;}
+.diskusi-thread-body{padding-bottom:150px !important;background:#E9EEF6;margin:-16px -16px 0;padding-left:12px;padding-right:12px;padding-top:12px;}
+
+/* ===== CHAT BUBBLES (diskusi) ===== */
+.chat-row{display:flex;align-items:flex-end;gap:7px;margin-bottom:10px;}
+.chat-row.me{justify-content:flex-end;}
+.chat-row.other{justify-content:flex-start;}
+.chat-avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#1565C0,#42A5F5);color:#fff;font-weight:800;font-size:11.5px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-bottom:2px;}
+.chat-bubble-col{display:flex;flex-direction:column;max-width:78%;}
+.chat-row.me .chat-bubble-col{align-items:flex-end;}
+.chat-row.other .chat-bubble-col{align-items:flex-start;}
+.chat-bubble{padding:7px 10px 6px;border-radius:14px;box-shadow:0 1px 2px rgba(0,0,0,.08);position:relative;}
+.chat-bubble.me{background:#DCF8C6;border-bottom-right-radius:3px;}
+.chat-bubble.other{background:#fff;border-bottom-left-radius:3px;}
+.chat-name{font-size:11.5px;font-weight:800;color:var(--blue);margin-bottom:2px;}
+.chat-text{font-size:13.5px;color:var(--dark);line-height:1.42;white-space:pre-wrap;word-break:break-word;}
+.chat-meta{display:flex;justify-content:flex-end;margin-top:2px;}
+.chat-time{font-size:10px;color:#8696a0;}
+.chat-quote{border-radius:7px;padding:5px 8px;margin-bottom:5px;font-size:11.5px;line-height:1.4;cursor:pointer;border-left:3px solid var(--blue);background:rgba(21,101,192,.07);color:var(--gray);}
+.chat-quote b{display:block;color:var(--blue);font-size:11px;margin-bottom:1px;}
+.chat-quote.quote-me{border-left-color:#4CAF50;background:rgba(76,175,80,.10);}
+.chat-quote.quote-me b{color:#2E7D32;}
+.chat-reply-btn{background:none;border:none;color:var(--gray);font-size:11px;font-weight:700;cursor:pointer;padding:3px 2px 0;}
+.chat-reply-btn.me{color:var(--blue);}
+.chat-row.chat-highlight .chat-bubble{animation:chatFlash 1.4s ease;}
+@keyframes chatFlash{0%{box-shadow:0 0 0 3px #FFD54F;}100%{box-shadow:0 1px 2px rgba(0,0,0,.08);}}
+.diskusi-date-sep{text-align:center;font-size:11px;color:var(--gray);font-weight:700;margin:14px 0 10px;}
 .diskusi-input-bar{position:fixed;bottom:56px;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:#fff;border-top:1px solid var(--border);box-shadow:0 -2px 8px rgba(0,0,0,.05);padding:8px 12px;box-sizing:border-box;z-index:90;}
 .diskusi-reply-indicator{display:none;align-items:center;justify-content:space-between;background:#F0F7FF;border-radius:8px;padding:6px 10px;margin-bottom:6px;font-size:12px;color:var(--blue);}
 .diskusi-reply-indicator.show{display:flex;}
@@ -403,10 +428,10 @@ body{
       <div class="menu-item-name">Latihan</div>
       <div class="menu-item-desc">Soal latihan tiap pertemuan</div>
     </div>
-    <div class="menu-item" onclick="navTo('diskusiListPage','navDiskusi')">
+    <div class="menu-item" onclick="navTo('diskusiThreadPage','navDiskusi')">
       <div class="menu-icon-wrap blue">💬</div>
       <div class="menu-item-name">Diskusi</div>
-      <div class="menu-item-desc">Tanya jawab tiap pertemuan</div>
+      <div class="menu-item-desc">Ngobrol &amp; tanya jawab kelas</div>
     </div>
     <div class="menu-item" onclick="goTo('pencapaianPage');renderPencapaian();markMenuVisited('pencapaianPage')">
       <div class="menu-icon-wrap yellow">🏆</div>
@@ -453,25 +478,13 @@ body{
   </div>
 </div>
 
-<!-- =========== DISKUSI LIST =========== -->
-<div id="diskusiListPage" class="page">
-  <div class="page-header">
-    <button class="btn-back" onclick="goTo('homePage')">←</button>
-    <h2>💬 Diskusi</h2>
-  </div>
-  <div class="page-body">
-    <div id="diskusiPertemuanListWrap"></div>
-  </div>
-</div>
-
-<!-- =========== DISKUSI THREAD =========== -->
+<!-- =========== DISKUSI (chat kelas, tidak per pertemuan) =========== -->
 <div id="diskusiThreadPage" class="page">
   <div class="page-header">
-    <button class="btn-back" onclick="goTo('diskusiListPage')">←</button>
-    <h2 id="diskusiThreadTitle">Diskusi</h2>
+    <button class="btn-back" onclick="goTo('homePage')">←</button>
+    <h2>💬 Diskusi Kelas</h2>
   </div>
   <div class="page-body diskusi-thread-body">
-    <div id="diskusiThreadMeta" style="font-size:12px;color:var(--gray);margin-bottom:16px;"></div>
     <div id="diskusiListWrap"></div>
     <div id="diskusiScrollAnchor"></div>
   </div>
@@ -590,7 +603,7 @@ body{
   <button class="nav-item" id="navPertemuan" onclick="navTo('pertemuanListPage','navPertemuan')">
     <div class="nav-icon">📅</div><div class="nav-label">Pertemuan</div>
   </button>
-  <button class="nav-item" id="navDiskusi" onclick="navTo('diskusiListPage','navDiskusi')">
+  <button class="nav-item" id="navDiskusi" onclick="navTo('diskusiThreadPage','navDiskusi')">
     <div class="nav-icon">💬</div><div class="nav-label">Diskusi</div>
   </button>
   <button class="nav-item" id="navProfil" onclick="navTo('akunPage','navProfil')">
@@ -631,6 +644,10 @@ body{
    Lihat panduan setup di PANDUAN_SETUP_FORUM.md
 ============================================================ */
 const GAS_DISKUSI_URL = 'https://script.google.com/macros/s/AKfycbxv7r5va2ViYv4CX0KNPp4M4XaoiQ1CL6us2nPHeCm4yCxEgkwWic8BrI1dKatJ2Aml2w/exec';
+/* Diskusi sekarang jadi satu ruang obrolan kelas (bukan per pertemuan lagi).
+   Nilai konstan ini dikirim sebagai parameter "pertemuan" ke Apps Script supaya
+   semua pesan tersimpan & dimuat dari satu ruang yang sama. */
+const DISKUSI_THREAD_ID = 'kelas';
 
 const LS_USER='kd_user', LS_NOTIF='kd_notif';
 
@@ -695,7 +712,7 @@ function isLatihanLocked(nomor){
 /* ============================================================
    PAGE ROUTER
 ============================================================ */
-const MAIN_PAGES={homePage:'navHome',pertemuanListPage:'navPertemuan',diskusiListPage:'navDiskusi',akunPage:'navProfil'};
+const MAIN_PAGES={homePage:'navHome',pertemuanListPage:'navPertemuan',diskusiThreadPage:'navDiskusi',akunPage:'navProfil'};
 
 function goTo(pageId){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
@@ -719,7 +736,7 @@ function navTo(pageId,navId){
   if(pageId==='homePage'){refreshHomeStats();refreshProgressBelajar();refreshNextPertemuan();}
   if(pageId==='pertemuanListPage')renderPertemuanList();
   if(pageId==='latihanListPage')renderLatihanList();
-  if(pageId==='diskusiListPage')renderDiskusiPertemuanList();
+  if(pageId==='diskusiThreadPage')openDiskusiChat();
   if(pageId==='akunPage')renderAkun();
   markMenuVisited(pageId);
 }
@@ -956,14 +973,14 @@ function renderMhsList(){
 function gasReady(){
   return GAS_DISKUSI_URL && !GAS_DISKUSI_URL.includes('PASTE_URL');
 }
-function loadDiskusi(nomor){
+function loadDiskusi(){
   const wrap=document.getElementById('diskusiListWrap');
   if(!gasReady()){
     wrap.innerHTML=`<div class="empty-state"><div class="es-icon">💬</div><p>Forum diskusi belum diaktifkan.<br>Isi GAS_DISKUSI_URL di file HTML dengan URL Web App Apps Script (lihat PANDUAN_SETUP_FORUM.md).</p></div>`;
     return;
   }
   wrap.innerHTML=`<div class="empty-state"><div class="es-icon">⏳</div><p>Memuat diskusi...</p></div>`;
-  fetch(GAS_DISKUSI_URL+'?pertemuan='+encodeURIComponent(nomor))
+  fetch(GAS_DISKUSI_URL+'?pertemuan='+encodeURIComponent(DISKUSI_THREAD_ID))
     .then(r=>r.json())
     .then(res=>{
       if(!res.ok){wrap.innerHTML=`<div class="empty-state"><p>⚠️ Gagal memuat diskusi.</p></div>`;return;}
@@ -975,28 +992,55 @@ function renderDiskusiList(items){
   const wrap=document.getElementById('diskusiListWrap');
   const visible=items.filter(it=>it.status!=='dihapus');
   if(!visible.length){
-    wrap.innerHTML=`<div class="empty-state"><div class="es-icon">💬</div><p>Belum ada diskusi di pertemuan ini.<br>Jadilah yang pertama bertanya!</p></div>`;
+    wrap.innerHTML=`<div class="empty-state"><div class="es-icon">💬</div><p>Belum ada diskusi.<br>Jadilah yang pertama menulis pesan!</p></div>`;
     scrollDiskusiToBottom();
     return;
   }
   const byId={};
   visible.forEach(it=>{byId[it.id]=it;});
   visible.sort((a,b)=>new Date(a.waktu)-new Date(b.waktu)); // lama -> baru, seperti chat
-  wrap.innerHTML=visible.map(it=>{
+  const myName=(getUser()||'').trim().toLowerCase();
+  let lastDate=null,html='';
+  visible.forEach(it=>{
+    const d=new Date(it.waktu);
+    const dateKey=d.toDateString();
+    if(dateKey!==lastDate){
+      lastDate=dateKey;
+      html+=`<div class="diskusi-date-sep">${formatDiskusiDate(d)}</div>`;
+    }
+    const isMe=!!myName&&(it.nama||'').trim().toLowerCase()===myName;
     const parent=it.balasan_untuk?byId[it.balasan_untuk]:null;
-    const quoteHtml=parent?`<div class="diskusi-quote" onclick="highlightDiskusiMsg('${parent.id}')">↪ Membalas <b>${escapeHtml(parent.nama||'Anonim')}</b>: ${escapeHtml((parent.isi||'').slice(0,60))}${(parent.isi||'').length>60?'…':''}</div>`:'';
-    return `
-    <div class="diskusi-item" id="msg-${it.id}">
-      <div class="diskusi-avatar">${escapeHtml((it.nama||'?').charAt(0).toUpperCase())}</div>
-      <div class="diskusi-body">
-        <div class="diskusi-head"><span class="diskusi-name">${escapeHtml(it.nama||'Anonim')}</span><span class="diskusi-time">${timeAgo(it.waktu)}</span></div>
-        ${quoteHtml}
-        <div class="diskusi-text">${escapeHtml(it.isi||'')}</div>
-        <button class="diskusi-reply-btn" onclick="balasKomentar('${it.id}','${escapeHtml(it.nama||'Anonim').replace(/'/g,"\\'")}')">↩ Balas</button>
+    let quoteHtml='';
+    if(parent){
+      const parentIsMe=!!myName&&(parent.nama||'').trim().toLowerCase()===myName;
+      quoteHtml=`<div class="chat-quote ${parentIsMe?'quote-me':''}" onclick="highlightDiskusiMsg('${parent.id}')"><b>${escapeHtml(parentIsMe?'Anda':(parent.nama||'Anonim'))}</b>${escapeHtml((parent.isi||'').slice(0,70))}${(parent.isi||'').length>70?'…':''}</div>`;
+    }
+    const avatarHtml=!isMe?`<div class="chat-avatar">${escapeHtml((it.nama||'?').charAt(0).toUpperCase())}</div>`:'';
+    const nameHtml=!isMe?`<div class="chat-name">${escapeHtml(it.nama||'Anonim')}</div>`:'';
+    html+=`
+    <div class="chat-row ${isMe?'me':'other'}" id="msg-${it.id}">
+      ${avatarHtml}
+      <div class="chat-bubble-col">
+        <div class="chat-bubble ${isMe?'me':'other'}">
+          ${nameHtml}
+          ${quoteHtml}
+          <div class="chat-text">${escapeHtml(it.isi||'')}</div>
+          <div class="chat-meta"><span class="chat-time">${timeAgo(it.waktu)}</span></div>
+        </div>
+        <button class="chat-reply-btn ${isMe?'me':'other'}" onclick="balasKomentar('${it.id}','${escapeHtml(it.nama||'Anonim').replace(/'/g,"\\'")}')">↩ Balas</button>
       </div>
     </div>`;
-  }).join('');
+  });
+  wrap.innerHTML=html;
   scrollDiskusiToBottom();
+}
+function formatDiskusiDate(d){
+  const today=new Date();today.setHours(0,0,0,0);
+  const that=new Date(d);that.setHours(0,0,0,0);
+  const diffDays=Math.round((today-that)/86400000);
+  if(diffDays===0)return 'Hari ini';
+  if(diffDays===1)return 'Kemarin';
+  return d.toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'});
 }
 function scrollDiskusiToBottom(){
   const anchor=document.getElementById('diskusiScrollAnchor');
@@ -1006,10 +1050,10 @@ function highlightDiskusiMsg(id){
   const el=document.getElementById('msg-'+id);
   if(!el)return;
   el.scrollIntoView({behavior:'smooth',block:'center'});
-  el.classList.remove('diskusi-highlight');
+  el.classList.remove('chat-highlight');
   void el.offsetWidth; // restart animasi kalau diklik berkali-kali
-  el.classList.add('diskusi-highlight');
-  setTimeout(()=>el.classList.remove('diskusi-highlight'),1400);
+  el.classList.add('chat-highlight');
+  setTimeout(()=>el.classList.remove('chat-highlight'),1400);
 }
 
 let diskusiReplyTarget=null;
@@ -1041,7 +1085,7 @@ function kirimDiskusi(ev){
   fetch(GAS_DISKUSI_URL,{
     method:'POST',
     headers:{'Content-Type':'text/plain;charset=utf-8'},
-    body:JSON.stringify({pertemuan:currentPertemuanId,nama,isi,balasan_untuk:balasanUntuk})
+    body:JSON.stringify({pertemuan:DISKUSI_THREAD_ID,nama,isi,balasan_untuk:balasanUntuk})
   })
   .then(r=>r.json())
   .then(res=>{
@@ -1050,7 +1094,7 @@ function kirimDiskusi(ev){
       input.value='';
       autoGrow(input);
       batalBalas();
-      loadDiskusi(currentPertemuanId);
+      loadDiskusi();
     } else {
       alert(res.error||'Gagal mengirim pesan.');
     }
@@ -1062,34 +1106,12 @@ function kirimDiskusi(ev){
 }
 
 /* ============================================================
-   DISKUSI LIST & THREAD
+   DISKUSI (satu ruang obrolan kelas, tidak per pertemuan)
 ============================================================ */
-function renderDiskusiPertemuanList(){
-  const list=getPertemuan();
-  const wrap=document.getElementById('diskusiPertemuanListWrap');
-  if(list.length===0){
-    wrap.innerHTML=`<div class="empty-state"><div class="es-icon">💬</div><p>Belum ada pertemuan.<br>Tambahkan pertemuan di file data-pertemuan.js.</p></div>`;
-    return;
-  }
-  wrap.innerHTML=list.map(p=>`
-    <div class="pertemuan-card" onclick="openDiskusiThread(${p.nomor})">
-      <div class="pertemuan-num">${p.nomor}</div>
-      <div class="pertemuan-info">
-        <div class="pertemuan-title">${escapeHtml(p.judul)}</div>
-        <div class="pertemuan-meta">Pertemuan ${p.nomor}${p.tanggal?' · '+formatTanggal(p.tanggal):''}</div>
-      </div>
-      <div class="pertemuan-chevron">›</div>
-    </div>`).join('');
-}
-function openDiskusiThread(nomor){
-  currentPertemuanId=nomor;
-  const p=getPertemuan().find(x=>x.nomor===nomor);
-  document.getElementById('diskusiThreadTitle').textContent='Diskusi Pertemuan '+nomor;
-  document.getElementById('diskusiThreadMeta').innerHTML=p?`<strong>${escapeHtml(p.judul)}</strong>`:'';
+function openDiskusiChat(){
   document.getElementById('diskusiInput').value='';
   batalBalas();
-  goTo('diskusiThreadPage');
-  loadDiskusi(nomor);
+  loadDiskusi();
 }
 
 /* ============================================================
