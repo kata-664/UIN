@@ -1283,41 +1283,19 @@ function isDiskusiNearBottom(threshold){
   const sisaBawah=doc.scrollHeight-window.scrollY-window.innerHeight;
   return sisaBawah<(threshold||120);
 }
-function renderDiskusiList(items,isInitialOpen){
-  const wrap=document.getElementById('diskusiListWrap');
-  const wasNearBottom=isDiskusiNearBottom();
-  const deletedLocal=getDeletedDiskusiIds();
-  const visible=items.filter(it=>it.status!=='dihapus'&&!deletedLocal.includes(String(it.id)));
-  if(!visible.length){
-    wrap.innerHTML=`<div class="empty-state"><div class="es-icon"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></div><p>Belum ada diskusi.<br>Jadilah yang pertama menulis pesan!</p></div>`;
-    scrollDiskusiToBottom();
-    return;
+function buildDiskusiRowHtml(it,byId,myName){
+  const isMe=!!myName&&(it.nama||'').trim().toLowerCase()===myName;
+  const parent=it.balasan_untuk?byId[String(it.balasan_untuk)]:null;
+  let quoteHtml='';
+  if(parent){
+    const parentIsMe=!!myName&&(parent.nama||'').trim().toLowerCase()===myName;
+    quoteHtml=`<div class="chat-quote ${parentIsMe?'quote-me':''}" onclick="highlightDiskusiMsg('${parent.id}')"><b>${escapeHtml(parentIsMe?'Anda':(parent.nama||'Anonim'))}</b>${escapeHtml((parent.isi||'').slice(0,70))}${(parent.isi||'').length>70?'…':''}</div>`;
+  }else if(it.balasan_untuk){
+    quoteHtml=`<div class="chat-quote"><b><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><polyline points="15 10 20 15 15 20"/><path d="M4 4v7a4 4 0 0 0 4 4h12"/></svg> Membalas pesan</b>Pesan asli tidak tersedia</div>`;
   }
-  const byId={};
-  visible.forEach(it=>{byId[String(it.id)]=it;});
-  visible.sort((a,b)=>new Date(a.waktu)-new Date(b.waktu)); // lama -> baru, seperti chat
-  const myName=(getUser()||'').trim().toLowerCase();
-  let lastDate=null,html='';
-  visible.forEach(it=>{
-    const d=new Date(it.waktu);
-    const dateKey=d.toDateString();
-    if(dateKey!==lastDate){
-      lastDate=dateKey;
-      html+=`<div class="diskusi-date-sep">${formatDiskusiDate(d)}</div>`;
-    }
-    const isMe=!!myName&&(it.nama||'').trim().toLowerCase()===myName;
-    const parent=it.balasan_untuk?byId[String(it.balasan_untuk)]:null;
-    let quoteHtml='';
-    if(parent){
-      const parentIsMe=!!myName&&(parent.nama||'').trim().toLowerCase()===myName;
-      quoteHtml=`<div class="chat-quote ${parentIsMe?'quote-me':''}" onclick="highlightDiskusiMsg('${parent.id}')"><b>${escapeHtml(parentIsMe?'Anda':(parent.nama||'Anonim'))}</b>${escapeHtml((parent.isi||'').slice(0,70))}${(parent.isi||'').length>70?'…':''}</div>`;
-    }else if(it.balasan_untuk){
-      // pesan asli tidak ditemukan (mis. sudah dihapus) — tetap tampilkan tanda balasan
-      quoteHtml=`<div class="chat-quote"><b><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><polyline points="15 10 20 15 15 20"/><path d="M4 4v7a4 4 0 0 0 4 4h12"/></svg> Membalas pesan</b>Pesan asli tidak tersedia</div>`;
-    }
-    const avatarHtml=!isMe?`<div class="chat-avatar">${escapeHtml((it.nama||'?').charAt(0).toUpperCase())}</div>`:'';
-    const nameHtml=!isMe?`<div class="chat-name">${escapeHtml(it.nama||'Anonim')}</div>`:'';
-    html+=`
+  const avatarHtml=!isMe?`<div class="chat-avatar">${escapeHtml((it.nama||'?').charAt(0).toUpperCase())}</div>`:'';
+  const nameHtml=!isMe?`<div class="chat-name">${escapeHtml(it.nama||'Anonim')}</div>`:'';
+  return `
     <div class="chat-row ${isMe?'me':'other'}" id="msg-${it.id}">
       ${avatarHtml}
       <div class="chat-bubble-col">
@@ -1333,8 +1311,72 @@ function renderDiskusiList(items,isInitialOpen){
         </div>
       </div>
     </div>`;
-  });
-  wrap.innerHTML=html;
+}
+// Menyimpan urutan id pesan yang sedang tampil di layar, dipakai untuk
+// membedakan "ada pesan baru nempel di bawah" (bisa cukup ditambahkan/append
+// saja) vs "susunan berubah total" (mis. baru buka halaman / ada yang
+// terhapus) yang baru perlu render ulang semuanya dari nol.
+let _diskusiRenderedIds=[];
+function renderDiskusiList(items,isInitialOpen){
+  const wrap=document.getElementById('diskusiListWrap');
+  const wasNearBottom=isDiskusiNearBottom();
+  const deletedLocal=getDeletedDiskusiIds();
+  const visible=items.filter(it=>it.status!=='dihapus'&&!deletedLocal.includes(String(it.id)));
+  if(!visible.length){
+    wrap.innerHTML=`<div class="empty-state"><div class="es-icon"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></div><p>Belum ada diskusi.<br>Jadilah yang pertama menulis pesan!</p></div>`;
+    _diskusiRenderedIds=[];
+    scrollDiskusiToBottom();
+    return;
+  }
+  const byId={};
+  visible.forEach(it=>{byId[String(it.id)]=it;});
+  visible.sort((a,b)=>new Date(a.waktu)-new Date(b.waktu)); // lama -> baru, seperti chat
+  const myName=(getUser()||'').trim().toLowerCase();
+  const newIds=visible.map(it=>String(it.id));
+
+  // Cek apakah ini murni "pesan baru nempel di ujung bawah" — yaitu semua
+  // pesan yang sebelumnya tampil masih ada, di urutan yang sama persis,
+  // cuma ditambah beberapa pesan baru di akhir. Kalau iya, cukup APPEND
+  // pesan barunya saja tanpa membongkar ulang seluruh DOM. Ini penting
+  // supaya polling tiap 5 detik tidak menghancurkan & membangun ulang
+  // baris-baris pesan yang sudah ada — sebab itulah yang bikin posisi
+  // scroll user "terganggu"/melompat kalau kebetulan sedang di-scroll
+  // pas polling menyala (browser kehilangan titik acuan scroll-nya
+  // begitu semua elemen lama dibuang & diganti elemen baru).
+  const canAppendOnly=!isInitialOpen&&_diskusiRenderedIds.length>0
+    &&newIds.length>_diskusiRenderedIds.length
+    &&_diskusiRenderedIds.every((id,idx)=>id===newIds[idx]);
+
+  if(canAppendOnly){
+    const tail=visible.slice(_diskusiRenderedIds.length);
+    let lastDate=null;
+    const lastOld=visible[_diskusiRenderedIds.length-1];
+    if(lastOld)lastDate=new Date(lastOld.waktu).toDateString();
+    let html='';
+    tail.forEach(it=>{
+      const d=new Date(it.waktu);
+      const dateKey=d.toDateString();
+      if(dateKey!==lastDate){
+        lastDate=dateKey;
+        html+=`<div class="diskusi-date-sep">${formatDiskusiDate(d)}</div>`;
+      }
+      html+=buildDiskusiRowHtml(it,byId,myName);
+    });
+    wrap.insertAdjacentHTML('beforeend',html);
+  }else{
+    let lastDate=null,html='';
+    visible.forEach(it=>{
+      const d=new Date(it.waktu);
+      const dateKey=d.toDateString();
+      if(dateKey!==lastDate){
+        lastDate=dateKey;
+        html+=`<div class="diskusi-date-sep">${formatDiskusiDate(d)}</div>`;
+      }
+      html+=buildDiskusiRowHtml(it,byId,myName);
+    });
+    wrap.innerHTML=html;
+  }
+  _diskusiRenderedIds=newIds;
   bindChatOutsideClose();
   const newest=visible[visible.length-1]; // sudah diurutkan lama -> baru di atas
   if(isInitialOpen){
@@ -1360,6 +1402,7 @@ function renderDiskusiList(items,isInitialOpen){
   // Kalau user sedang scroll baca pesan lama (bukan initial open & tidak
   // dekat bawah), posisi & status belum-terbaca dibiarkan apa adanya.
 }
+
 function formatDiskusiDate(d){
   const today=new Date();today.setHours(0,0,0,0);
   const that=new Date(d);that.setHours(0,0,0,0);
@@ -1368,11 +1411,23 @@ function formatDiskusiDate(d){
   if(diffDays===1)return 'Kemarin';
   return d.toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'});
 }
+let _diskusiScrollToken=0;
 function scrollDiskusiToBottom(){
   const anchor=document.getElementById('diskusiScrollAnchor');
   if(!anchor)return;
   const inputBar=document.querySelector('.diskusi-input-bar');
-  const doScroll=()=>{
+  // Token dipakai supaya koreksi-koreksi tertunda (150ms/400ms) di bawah
+  // ini tidak "membajak" scroll milik user kalau di tengah jeda itu dia
+  // sendiri sedang aktif scroll manual menjauhi bawah — itulah yang bikin
+  // pesan terakhir terkesan "lompat sendiri" waktu user scroll ke bawah:
+  // koreksi lama dari pemanggilan sebelumnya masih tertunda lalu tiba-tiba
+  // menarik paksa layar balik ke posisi bawah di tengah gestur scroll user.
+  const myToken=++_diskusiScrollToken;
+  const doScroll=(isDelayedCorrection)=>{
+    if(isDelayedCorrection){
+      if(myToken!==_diskusiScrollToken)return; // sudah ada pemanggilan scroll yang lebih baru
+      if(!isDiskusiNearBottom(300))return; // user sudah scroll menjauh dari bawah, jangan dipaksa balik
+    }
     anchor.scrollIntoView({block:'end'});
     if(!inputBar)return;
     // Ukur langsung posisi pesan terakhir vs kotak input yang fixed di
@@ -1385,10 +1440,10 @@ function scrollDiskusiToBottom(){
       window.scrollBy(0,selisih+8);
     }
   };
-  doScroll();
-  requestAnimationFrame(()=>requestAnimationFrame(doScroll));
-  setTimeout(doScroll,150);
-  setTimeout(doScroll,400);
+  doScroll(false);
+  requestAnimationFrame(()=>requestAnimationFrame(()=>doScroll(true)));
+  setTimeout(()=>doScroll(true),150);
+  setTimeout(()=>doScroll(true),400);
 }
 function scrollToDiskusiMsg(id){
   // Sama seperti scrollDiskusiToBottom, tapi menuju pesan tertentu — dipakai
