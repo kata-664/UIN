@@ -46,8 +46,15 @@ body{
 .field-wrap input::placeholder{color:#B0BEC5;}
 .login-error{background:#FFEBEE;border:1px solid #FFCDD2;color:#B71C1C;padding:10px 14px;border-radius:10px;font-size:13px;font-weight:600;margin-bottom:14px;display:none;text-align:center;}
 .login-error.show{display:block;}
-.btn-masuk{width:100%;padding:15px;border:none;border-radius:14px;background:linear-gradient(135deg,#1565C0,#1976D2);color:#fff;font-size:16px;font-weight:700;cursor:pointer;transition:.2s;margin-top:6px;box-shadow:0 4px 16px rgba(21,101,192,.35);}
+.btn-masuk{width:100%;padding:15px;border:none;border-radius:14px;background:linear-gradient(135deg,#1565C0,#1976D2);color:#fff;font-size:16px;font-weight:700;cursor:pointer;transition:.2s;margin-top:6px;box-shadow:0 4px 16px rgba(21,101,192,.35);display:flex;align-items:center;justify-content:center;gap:8px;}
 .btn-masuk:active{transform:scale(.98);}
+.btn-masuk:disabled{opacity:.7;cursor:not-allowed;}
+.btn-spinner{width:16px;height:16px;border-radius:50%;border:2.5px solid rgba(255,255,255,.4);border-top-color:#fff;animation:_spin .7s linear infinite;display:none;}
+.btn-spinner.show{display:inline-block;}
+@keyframes _spin{to{transform:rotate(360deg);}}
+.pw-wrap{position:relative;}
+.pw-toggle{position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;font-size:16px;cursor:pointer;color:var(--gray);padding:4px;}
+.login-help{font-size:11px;color:#90A4AE;margin-top:-8px;margin-bottom:14px;line-height:1.4;}
 .login-foot{text-align:center;margin-top:18px;font-size:11px;color:#90A4AE;}
 
 /* ===== TOP HEADER ===== */
@@ -358,18 +365,28 @@ body{
     <div class="login-icon-wrap">
       <span class="big-icon">🎓</span>
       <h1>Kelas Digital</h1>
-      <p>Masukkan nama Anda untuk mulai mengakses kelas</p>
+      <p>Masuk dengan NIM dan password Anda</p>
     </div>
-    <div id="loginError" class="login-error">⚠️ Nama tidak boleh kosong!</div>
+    <div id="loginError" class="login-error">⚠️ NIM dan Password wajib diisi!</div>
     <div class="field-group">
-      <label>Nama Anda</label>
+      <label>NIM</label>
       <div class="field-wrap">
-        <input type="text" id="inputNama" placeholder="Contoh: Budi Santoso, S.Kom"
-          autocomplete="name" autocapitalize="words" spellcheck="false"
-          onkeydown="if(event.key==='Enter')doLogin()">
+        <input type="text" id="inputNim" placeholder="Contoh: 21030120..."
+          autocomplete="username" inputmode="numeric" spellcheck="false"
+          onkeydown="if(event.key==='Enter')document.getElementById('inputPassword').focus()">
       </div>
     </div>
-    <button class="btn-masuk" onclick="doLogin()">Masuk →</button>
+    <div class="field-group">
+      <label>Password</label>
+      <div class="field-wrap pw-wrap">
+        <input type="password" id="inputPassword" placeholder="Password"
+          autocomplete="current-password" spellcheck="false"
+          onkeydown="if(event.key==='Enter')doLogin()">
+        <button type="button" class="pw-toggle" onclick="togglePw('inputPassword',this)">👁️</button>
+      </div>
+    </div>
+    <div class="login-help">Belum pernah login? Password awal Anda adalah NIM Anda sendiri. Anda bisa menggantinya nanti di halaman Profil.</div>
+    <button class="btn-masuk" id="btnMasuk" onclick="doLogin()"><span id="btnMasukText">Masuk →</span><span class="btn-spinner" id="btnMasukSpinner"></span></button>
     <div class="login-foot">Kelas Digital · Manajemen Pertemuan &amp; Latihan</div>
   </div>
 </div>
@@ -576,26 +593,41 @@ body{
       <div class="akun-row"><span class="akun-row-left">Total Mahasiswa Terdaftar</span><span class="akun-row-val" id="akunMhsCount">0</span></div>
       <div class="akun-row"><span class="akun-row-left">Latihan Dikerjakan</span><span class="akun-row-val" id="akunLatihanCount">0</span></div>
     </div>
-    <button class="btn-outline" style="margin-bottom:10px;" onclick="openEditNama()">✏️ Ubah Nama</button>
+    <button class="btn-outline" style="margin-bottom:10px;" onclick="openGantiPassword()">🔒 Ubah Password</button>
     <button class="btn-logout" onclick="doLogout()">🚪 Logout</button>
   </div>
 </div>
 
-<!-- =========== MODAL EDIT NAMA =========== -->
-<div class="modal-overlay" id="modalEditNama">
+<!-- =========== MODAL UBAH PASSWORD =========== -->
+<div class="modal-overlay" id="modalGantiPassword">
   <div class="modal-box">
-    <h3>✏️ Ubah Nama</h3>
+    <h3>🔒 Ubah Password</h3>
+    <div id="gantiPwError" class="login-error">⚠️ Terjadi kesalahan</div>
     <div class="field-group">
-      <label>Nama Anda</label>
-      <div class="field-wrap">
-        <input type="text" id="editNamaInput" placeholder="Masukkan nama baru"
-          autocomplete="name" autocapitalize="words" spellcheck="false"
-          onkeydown="if(event.key==='Enter')saveEditNama()">
+      <label>Password Lama</label>
+      <div class="field-wrap pw-wrap">
+        <input type="password" id="pwLama" placeholder="Password saat ini" autocomplete="current-password" spellcheck="false">
+        <button type="button" class="pw-toggle" onclick="togglePw('pwLama',this)">👁️</button>
+      </div>
+    </div>
+    <div class="field-group">
+      <label>Password Baru</label>
+      <div class="field-wrap pw-wrap">
+        <input type="password" id="pwBaru" placeholder="Minimal 4 karakter" autocomplete="new-password" spellcheck="false">
+        <button type="button" class="pw-toggle" onclick="togglePw('pwBaru',this)">👁️</button>
+      </div>
+    </div>
+    <div class="field-group">
+      <label>Ulangi Password Baru</label>
+      <div class="field-wrap pw-wrap">
+        <input type="password" id="pwBaruUlang" placeholder="Ulangi password baru" autocomplete="new-password" spellcheck="false"
+          onkeydown="if(event.key==='Enter')saveGantiPassword()">
+        <button type="button" class="pw-toggle" onclick="togglePw('pwBaruUlang',this)">👁️</button>
       </div>
     </div>
     <div class="modal-actions">
-      <button class="btn-outline" onclick="closeModal('modalEditNama')">Batal</button>
-      <button class="btn-primary" onclick="saveEditNama()">Simpan</button>
+      <button class="btn-outline" onclick="closeModal('modalGantiPassword')">Batal</button>
+      <button class="btn-primary" id="btnSimpanPw" onclick="saveGantiPassword()">Simpan</button>
     </div>
   </div>
 </div>
@@ -671,10 +703,20 @@ const GAS_DISKUSI_URL = 'https://script.google.com/macros/s/AKfycbxQNwRnKxPTVz_B
    pesan tidak pernah benar-benar tersimpan. */
 const DISKUSI_THREAD_ID = 'ruang_kelas';
 
-const LS_USER='kd_user', LS_NOTIF='kd_notif';
+/* ============================================================
+   LOGIN (Google Apps Script + Google Sheet)
+   Ganti URL di bawah dengan URL Web App hasil Deploy Apps Script
+   yang menangani login & ganti password. Lihat PANDUAN_SETUP_LOGIN.md
+============================================================ */
+const GAS_AUTH_URL = 'https://script.google.com/macros/s/AKfycbyCsl-Hh-Ki9XQg7OQGvkHbheg7OINXGgAodsdpnK5j9AWamI0WJfB_XUzgf_cwP0M1kQ/exec';
+function authReady(){ return GAS_AUTH_URL && !GAS_AUTH_URL.includes('PASTE_URL'); }
+
+const LS_USER='kd_user', LS_NIM='kd_nim', LS_NOTIF='kd_notif';
 
 function getUser(){return localStorage.getItem(LS_USER)||'';}
 function setUser(v){localStorage.setItem(LS_USER,v);}
+function getNim(){return localStorage.getItem(LS_NIM)||'';}
+function setNim(v){localStorage.setItem(LS_NIM,v);}
 
 /* Pertemuan, file materi, DAN daftar mahasiswa/absensi sekarang berasal dari
    data-pertemuan.js dan daftar-mahasiswa.js (diedit di file, bukan lewat web)
@@ -766,21 +808,118 @@ function navTo(pageId,navId){
 /* ============================================================
    LOGIN / LOGOUT
 ============================================================ */
+function togglePw(inputId,btn){
+  const el=document.getElementById(inputId);
+  const show=el.type==='password';
+  el.type=show?'text':'password';
+  btn.textContent=show?'🙈':'👁️';
+}
+function findNamaByNim(nim){
+  const m=(window.MAHASISWA_DATA||[]).find(x=>String(x.nim).trim()===String(nim).trim());
+  return m?m.nama:'';
+}
+function setLoginLoading(loading){
+  const btn=document.getElementById('btnMasuk');
+  document.getElementById('btnMasukText').textContent=loading?'Memeriksa...':'Masuk →';
+  document.getElementById('btnMasukSpinner').classList.toggle('show',loading);
+  btn.disabled=loading;
+}
 function doLogin(){
-  const val=document.getElementById('inputNama').value.trim();
+  const nim=document.getElementById('inputNim').value.trim();
+  const password=document.getElementById('inputPassword').value;
   const err=document.getElementById('loginError');
-  if(!val){err.classList.add('show');return;}
   err.classList.remove('show');
-  setUser(val);
-  initHome();
-  goTo('homePage');
-  updateHeaderAnim();
+  if(!nim||!password){
+    err.textContent='⚠️ NIM dan Password wajib diisi!';
+    err.classList.add('show');
+    return;
+  }
+  if(!authReady()){
+    err.textContent='⚠️ Sistem login belum diaktifkan. Isi GAS_AUTH_URL terlebih dahulu (lihat PANDUAN_SETUP_LOGIN.md).';
+    err.classList.add('show');
+    return;
+  }
+  setLoginLoading(true);
+  fetch(GAS_AUTH_URL,{
+    method:'POST',
+    headers:{'Content-Type':'text/plain;charset=utf-8'},
+    body:JSON.stringify({aksi:'login',nim,password})
+  })
+  .then(r=>r.json())
+  .then(res=>{
+    setLoginLoading(false);
+    if(res.ok){
+      setNim(nim);
+      const nama=findNamaByNim(nim)||nim;
+      setUser(nama);
+      document.getElementById('inputPassword').value='';
+      initHome();
+      goTo('homePage');
+      updateHeaderAnim();
+    }else{
+      err.textContent='⚠️ '+(res.error||'NIM atau password salah.');
+      err.classList.add('show');
+    }
+  })
+  .catch(()=>{
+    setLoginLoading(false);
+    err.textContent='⚠️ Gagal terhubung ke server login. Cek koneksi internet.';
+    err.classList.add('show');
+  });
 }
 function doLogout(){
   if(confirm('Yakin ingin logout?')){
     localStorage.removeItem(LS_USER);
+    localStorage.removeItem(LS_NIM);
     goTo('loginPage');
   }
+}
+
+/* ============================================================
+   GANTI PASSWORD
+============================================================ */
+function openGantiPassword(){
+  document.getElementById('pwLama').value='';
+  document.getElementById('pwBaru').value='';
+  document.getElementById('pwBaruUlang').value='';
+  document.getElementById('gantiPwError').classList.remove('show');
+  openModal('modalGantiPassword');
+}
+function saveGantiPassword(){
+  const nim=getNim();
+  const pwLama=document.getElementById('pwLama').value;
+  const pwBaru=document.getElementById('pwBaru').value;
+  const pwBaruUlang=document.getElementById('pwBaruUlang').value;
+  const err=document.getElementById('gantiPwError');
+  err.classList.remove('show');
+  if(!nim){err.textContent='⚠️ Sesi tidak valid, silakan login ulang.';err.classList.add('show');return;}
+  if(!pwLama||!pwBaru||!pwBaruUlang){err.textContent='⚠️ Semua kolom wajib diisi.';err.classList.add('show');return;}
+  if(pwBaru.length<4){err.textContent='⚠️ Password baru minimal 4 karakter.';err.classList.add('show');return;}
+  if(pwBaru!==pwBaruUlang){err.textContent='⚠️ Konfirmasi password baru tidak cocok.';err.classList.add('show');return;}
+  if(!authReady()){err.textContent='⚠️ Sistem login belum diaktifkan.';err.classList.add('show');return;}
+  const btn=document.getElementById('btnSimpanPw');
+  btn.disabled=true;btn.textContent='Menyimpan...';
+  fetch(GAS_AUTH_URL,{
+    method:'POST',
+    headers:{'Content-Type':'text/plain;charset=utf-8'},
+    body:JSON.stringify({aksi:'gantiPassword',nim,oldPassword:pwLama,newPassword:pwBaru})
+  })
+  .then(r=>r.json())
+  .then(res=>{
+    btn.disabled=false;btn.textContent='Simpan';
+    if(res.ok){
+      closeModal('modalGantiPassword');
+      alert('✅ Password berhasil diubah.');
+    }else{
+      err.textContent='⚠️ '+(res.error||'Gagal mengubah password.');
+      err.classList.add('show');
+    }
+  })
+  .catch(()=>{
+    btn.disabled=false;btn.textContent='Simpan';
+    err.textContent='⚠️ Gagal terhubung ke server. Cek koneksi internet.';
+    err.classList.add('show');
+  });
 }
 
 /* ============================================================
@@ -1413,18 +1552,11 @@ function renderAkun(){
   document.getElementById('akunIzinCount').textContent=izin;
   document.getElementById('akunAlphaCount').textContent=alpha;
 }
-function openEditNama(){
-  document.getElementById('editNamaInput').value=getUser();
-  openModal('modalEditNama');
-}
-function saveEditNama(){
-  const val=document.getElementById('editNamaInput').value.trim();
-  if(!val){alert('Nama tidak boleh kosong');return;}
-  setUser(val);
-  renderAkun();
-  document.getElementById('homeUsernameStrip').textContent=val;
-  closeModal('modalEditNama');
-}
+/* Catatan: fitur ubah nama sengaja dihapus. Nama mahasiswa mengikuti data
+   di daftar-mahasiswa.js (dicocokkan lewat NIM saat login) karena nama ini
+   juga dipakai sebagai identitas pengirim pesan di Forum Diskusi (Google
+   Sheet). Kalau nama bisa diubah bebas, riwayat pesan diskusi jadi tidak
+   konsisten dengan pengirim aslinya. */
 
 /* ============================================================
    MODAL HELPERS
@@ -1804,10 +1936,13 @@ function _applySkyPhase(h){
 ============================================================ */
 window.addEventListener('DOMContentLoaded',()=>{
   const nama=getUser();
-  if(nama){
+  const nim=getNim();
+  if(nama&&nim){
     initHome();
     goTo('homePage');
   }else{
+    localStorage.removeItem(LS_USER);
+    localStorage.removeItem(LS_NIM);
     goTo('loginPage');
   }
 });
