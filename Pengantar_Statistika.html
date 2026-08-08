@@ -1160,7 +1160,7 @@ function renderFileList(){
         </div>
       </div>
       <iframe class="file-preview" src="${previewUrl(f.url,f.tipe)}" loading="lazy"></iframe>
-      <a class="file-open-link" href="${driveDownloadUrl(f.url)}" target="_blank" rel="noopener"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3"/><path d="M9 17H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"/><line x1="8" y1="12" x2="16" y2="12"/></svg> Buka di Tab Baru</a>
+      <a class="file-open-link" href="${driveDownloadUrl(f.url)}" target="_blank" rel="noopener"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3"/><path d="M9 17H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"/><line x1="8" y1="12" x2="16" y2="12"/></svg> Unduh File</a>
     </div>`;
   }).join('');
   markFilesSeen(files.map(f=>f.id));
@@ -2123,7 +2123,7 @@ function renderRps(){
   }else if(rps.url){
     mediaHtml=`<iframe class="file-preview" style="height:70vh;border-radius:12px;" src="${previewUrl(rps.url,'pdf')}" loading="lazy"></iframe>`;
   }
-  const openLink=rps.url?`<a class="file-open-link" href="${driveDownloadUrl(rps.url)}" target="_blank" rel="noopener"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3"/><path d="M9 17H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"/><line x1="8" y1="12" x2="16" y2="12"/></svg> Buka di Tab Baru</a>`:'';
+  const openLink=rps.url?`<a class="file-open-link" href="${driveDownloadUrl(rps.url)}" target="_blank" rel="noopener"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3"/><path d="M9 17H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"/><line x1="8" y1="12" x2="16" y2="12"/></svg> Unduh File</a>`:'';
   wrap.innerHTML=`
     <div class="file-item" style="padding:0;">
       <div class="file-item-top" style="padding:14px 14px 10px;">
