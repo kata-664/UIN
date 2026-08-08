@@ -849,13 +849,23 @@ function goTo(pageId){
   document.getElementById(pageId).classList.add('active');
   window.scrollTo(0,0);
   const bn=document.getElementById('bottomNav');
+  const appRoot=document.getElementById('appRoot');
   if(pageId==='loginPage'){
     bn.style.display='none';
-    document.getElementById('appRoot').classList.add('no-bottom-nav');
+    appRoot.classList.add('no-bottom-nav');
   }else{
     bn.style.display='flex';
-    document.getElementById('appRoot').classList.remove('no-bottom-nav');
+    appRoot.classList.remove('no-bottom-nav');
   }
+  // Halaman Diskusi punya kotak input sendiri yang mengatur jarak ruang
+  // bawahnya sendiri secara presisi lewat syncDiskusiBodyPadding() (pas
+  // dengan tinggi kotak input + bottom-nav). Padding-bottom:80px bawaan
+  // .app di bawah ini sebenarnya untuk halaman BIASA (yang cuma perlu
+  // clearance bottom-nav saja) — kalau tetap dipakai juga di halaman
+  // Diskusi, jadinya numpuk dobel dengan ruang yang sudah disisakan
+  // .diskusi-thread-body, dan itulah sumber sisa celah kosong yang masih
+  // bisa di-scroll padahal pesan terakhir sudah kelihatan.
+  appRoot.style.paddingBottom=(pageId==='diskusiThreadPage')?'0px':'';
   if(MAIN_PAGES[pageId]){
     document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
     document.getElementById(MAIN_PAGES[pageId]).classList.add('active');
