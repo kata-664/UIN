@@ -1617,9 +1617,24 @@ function bindDiskusiReadTracking(){
     },300);
   },{passive:true});
 }
+function restoreDiskusiScrollPosition(){
+  // Dipanggil SEBELUM fetch ke server selesai, memakai chat yang masih
+  // ter-render di DOM dari kunjungan sebelumnya (kalau ada) — supaya
+  // begitu halaman Diskusi dibuka, posisi langsung benar tanpa jeda
+  // "kelihatan di atas dulu baru lompat ke bawah" saat menunggu network.
+  const wrap=document.getElementById('diskusiListWrap');
+  if(!wrap||!wrap.querySelector('.chat-row'))return;
+  const lastRead=getDiskusiLastRead();
+  if(lastRead&&document.getElementById('msg-'+lastRead.id)){
+    scrollToDiskusiMsg(lastRead.id);
+  }else{
+    scrollDiskusiToBottom();
+  }
+}
 function openDiskusiChat(){
   document.getElementById('diskusiInput').value='';
   batalBalas();
+  restoreDiskusiScrollPosition();
   loadDiskusi(false,true);
   startDiskusiPolling();
   bindDiskusiReadTracking();
