@@ -53,7 +53,7 @@ body{
 .btn-spinner.show{display:inline-block;}
 @keyframes _spin{to{transform:rotate(360deg);}}
 .pw-wrap{position:relative;}
-.pw-toggle{position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;font-size:16px;cursor:pointer;color:var(--gray);padding:4px;}
+.pw-toggle{position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;font-size:16px;cursor:pointer;color:var(--gray);padding:4px;display:flex;align-items:center;justify-content:center;}
 .login-help{font-size:11px;color:#90A4AE;margin-top:-8px;margin-bottom:14px;line-height:1.4;}
 .login-foot{text-align:center;margin-top:18px;font-size:11px;color:#90A4AE;}
 
@@ -106,11 +106,11 @@ body{
 .progress-belajar-head span:first-child{font-size:12px;font-weight:700;color:var(--dark);}
 .progress-belajar-pct{font-size:12px;font-weight:800;color:var(--blue);}
 .progress-belajar-sub{font-size:11px;color:var(--gray);margin-top:6px;}
-.menu-icon-wrap.blue{background:#E3F2FD;}
-.menu-icon-wrap.purple{background:#F3E5F5;}
+.menu-icon-wrap.blue{background:#E3F2FD;color:var(--blue);}
+.menu-icon-wrap.purple{background:#F3E5F5;color:var(--purple);}
 .menu-icon-wrap.yellow{background:#FFF8E1;}
-.menu-icon-wrap.green{background:#E0F2F1;}
-.menu-icon-wrap.orange{background:#FFF3E0;}
+.menu-icon-wrap.green{background:#E0F2F1;color:var(--green);}
+.menu-icon-wrap.orange{background:#FFF3E0;color:var(--orange);}
 .menu-item-name{font-size:14px;font-weight:700;color:var(--dark);}
 .menu-item-desc{font-size:11px;color:var(--gray);line-height:1.4;margin-top:4px;}
 
@@ -384,7 +384,7 @@ body{
         <input type="password" id="inputPassword" placeholder="Password"
           autocomplete="current-password" spellcheck="false"
           onkeydown="if(event.key==='Enter')doLogin()">
-        <button type="button" class="pw-toggle" onclick="togglePw('inputPassword',this)">👁️</button>
+        <button type="button" class="pw-toggle" onclick="togglePw('inputPassword',this)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
       </div>
     </div>
     <div class="login-help">Belum pernah login? Password awal Anda adalah NIM Anda sendiri. Anda bisa menggantinya nanti di halaman Profil.</div>
@@ -452,17 +452,17 @@ body{
   <div class="section-title">Menu Utama</div>
   <div class="menu-grid">
     <div class="menu-item" onclick="navTo('pertemuanListPage','navPertemuan')">
-      <div class="menu-icon-wrap blue">📅<span class="notif-dot" id="pertemuanUnreadDot" style="border-color:#fff;"></span></div>
+      <div class="menu-icon-wrap blue"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span class="notif-dot" id="pertemuanUnreadDot" style="border-color:#fff;"></span></div>
       <div class="menu-item-name">Pertemuan</div>
       <div class="menu-item-desc">Lihat pertemuan, materi &amp; absensi</div>
     </div>
     <div class="menu-item" onclick="goTo('latihanListPage');renderLatihanList();markMenuVisited('latihanListPage')">
-      <div class="menu-icon-wrap purple">📝</div>
+      <div class="menu-icon-wrap purple"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></div>
       <div class="menu-item-name">Latihan</div>
       <div class="menu-item-desc">Soal latihan tiap pertemuan</div>
     </div>
     <div class="menu-item" onclick="navTo('diskusiThreadPage','navDiskusi')">
-      <div class="menu-icon-wrap blue">💬</div>
+      <div class="menu-icon-wrap blue"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></div>
       <div class="menu-item-name">Diskusi</div>
       <div class="menu-item-desc">Ngobrol &amp; tanya jawab kelas</div>
     </div>
@@ -472,12 +472,12 @@ body{
       <div class="menu-item-desc">Kumpulkan badge dari belajarmu</div>
     </div>
     <div class="menu-item" onclick="openRps()">
-      <div class="menu-icon-wrap green">📄</div>
+      <div class="menu-icon-wrap green"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div>
       <div class="menu-item-name">RPS</div>
       <div class="menu-item-desc">Rencana Pembelajaran Semester</div>
     </div>
     <div class="menu-item" onclick="goTo('tentangPage');markMenuVisited('tentangPage')">
-      <div class="menu-icon-wrap orange">ℹ️</div>
+      <div class="menu-icon-wrap orange"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></div>
       <div class="menu-item-name">Tentang</div>
       <div class="menu-item-desc">Tentang aplikasi ini</div>
     </div>
@@ -619,14 +619,14 @@ body{
       <label>Password Lama</label>
       <div class="field-wrap pw-wrap">
         <input type="password" id="pwLama" placeholder="Password saat ini" autocomplete="current-password" spellcheck="false">
-        <button type="button" class="pw-toggle" onclick="togglePw('pwLama',this)">👁️</button>
+        <button type="button" class="pw-toggle" onclick="togglePw('pwLama',this)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
       </div>
     </div>
     <div class="field-group">
       <label>Password Baru</label>
       <div class="field-wrap pw-wrap">
         <input type="password" id="pwBaru" placeholder="Minimal 4 karakter" autocomplete="new-password" spellcheck="false">
-        <button type="button" class="pw-toggle" onclick="togglePw('pwBaru',this)">👁️</button>
+        <button type="button" class="pw-toggle" onclick="togglePw('pwBaru',this)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
       </div>
     </div>
     <div class="field-group">
@@ -634,7 +634,7 @@ body{
       <div class="field-wrap pw-wrap">
         <input type="password" id="pwBaruUlang" placeholder="Ulangi password baru" autocomplete="new-password" spellcheck="false"
           onkeydown="if(event.key==='Enter')saveGantiPassword()">
-        <button type="button" class="pw-toggle" onclick="togglePw('pwBaruUlang',this)">👁️</button>
+        <button type="button" class="pw-toggle" onclick="togglePw('pwBaruUlang',this)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
       </div>
     </div>
     <div class="modal-actions">
@@ -874,11 +874,13 @@ function navTo(pageId,navId){
 /* ============================================================
    LOGIN / LOGOUT
 ============================================================ */
+const ICON_EYE='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+const ICON_EYE_OFF='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a18.4 18.4 0 0 1 5.06-5.94"/><path d="M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><path d="M14.12 14.12a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
 function togglePw(inputId,btn){
   const el=document.getElementById(inputId);
   const show=el.type==='password';
   el.type=show?'text':'password';
-  btn.textContent=show?'🙈':'👁️';
+  btn.innerHTML=show?ICON_EYE_OFF:ICON_EYE;
 }
 function findNamaByNim(nim){
   const m=(window.MAHASISWA_DATA||[]).find(x=>String(x.nim).trim()===String(nim).trim());
