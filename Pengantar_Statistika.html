@@ -1319,11 +1319,21 @@ function formatDiskusiDate(d){
 function scrollDiskusiToBottom(){
   const anchor=document.getElementById('diskusiScrollAnchor');
   if(!anchor)return;
-  // Tunggu 1 frame supaya tinggi halaman sudah diperbarui browser setelah
-  // innerHTML diganti, baru discroll — kalau langsung dipanggil, posisi
-  // scroll masih dihitung pakai tinggi halaman yang lama (sebelum pesan
-  // baru ditambahkan), jadi scroll ke bawah gagal / posisinya salah.
-  requestAnimationFrame(()=>anchor.scrollIntoView({block:'end'}));
+  const doScroll=()=>{
+    anchor.scrollIntoView({block:'end'});
+    // Cara kedua sebagai jaga-jaga: langsung set posisi scroll ke paling
+    // bawah. Dipakai berbarengan karena scrollIntoView saja kadang gagal
+    // kalau dipanggil pas halaman diskusi baru saja dimunculkan (browser
+    // belum selesai menghitung ulang tinggi halaman yang sebenarnya).
+    const se=document.scrollingElement||document.documentElement;
+    se.scrollTop=se.scrollHeight;
+  };
+  // Coba beberapa kali di titik waktu berbeda supaya tetap kena sasaran
+  // walau tinggi halaman masih berubah-ubah (render baru / keyboard HP).
+  doScroll();
+  requestAnimationFrame(()=>requestAnimationFrame(doScroll));
+  setTimeout(doScroll,150);
+  setTimeout(doScroll,400);
 }
 function highlightDiskusiMsg(id){
   const el=document.getElementById('msg-'+id);
@@ -1406,6 +1416,7 @@ function kirimDiskusi(ev){
       input.value='';
       autoGrow(input);
       batalBalas();
+      scrollDiskusiToBottom();
       loadDiskusi(true);
       try{const c=parseInt(localStorage.getItem('kd_diskusi_sent')||'0');localStorage.setItem('kd_diskusi_sent',String(c+1));}catch(e){}
     } else {
