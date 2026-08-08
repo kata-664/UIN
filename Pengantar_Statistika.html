@@ -1319,9 +1319,20 @@ function formatDiskusiDate(d){
 function scrollDiskusiToBottom(){
   const anchor=document.getElementById('diskusiScrollAnchor');
   if(!anchor)return;
-  const doScroll=()=>anchor.scrollIntoView({block:'end'});
-  // Coba beberapa kali di titik waktu berbeda supaya tetap kena sasaran
-  // walau tinggi halaman masih berubah-ubah (render baru / keyboard HP).
+  const inputBar=document.querySelector('.diskusi-input-bar');
+  const doScroll=()=>{
+    anchor.scrollIntoView({block:'end'});
+    if(!inputBar)return;
+    // Ukur langsung posisi pesan terakhir vs kotak input yang fixed di
+    // bawah, lalu koreksi sisa selisihnya — supaya presisi pas menempel,
+    // tidak ketutup kotak input dan tidak menyisakan gap kosong.
+    const anchorBottom=anchor.getBoundingClientRect().bottom;
+    const barTop=inputBar.getBoundingClientRect().top;
+    const selisih=anchorBottom-barTop;
+    if(Math.abs(selisih)>2){
+      window.scrollBy(0,selisih+8);
+    }
+  };
   doScroll();
   requestAnimationFrame(()=>requestAnimationFrame(doScroll));
   setTimeout(doScroll,150);
