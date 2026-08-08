@@ -1318,7 +1318,12 @@ function formatDiskusiDate(d){
 }
 function scrollDiskusiToBottom(){
   const anchor=document.getElementById('diskusiScrollAnchor');
-  if(anchor)anchor.scrollIntoView({block:'end'});
+  if(!anchor)return;
+  // Tunggu 1 frame supaya tinggi halaman sudah diperbarui browser setelah
+  // innerHTML diganti, baru discroll — kalau langsung dipanggil, posisi
+  // scroll masih dihitung pakai tinggi halaman yang lama (sebelum pesan
+  // baru ditambahkan), jadi scroll ke bawah gagal / posisinya salah.
+  requestAnimationFrame(()=>anchor.scrollIntoView({block:'end'}));
 }
 function highlightDiskusiMsg(id){
   const el=document.getElementById('msg-'+id);
