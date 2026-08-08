@@ -1543,7 +1543,16 @@ function syncDiskusiBodyPadding(){
   const body=document.querySelector('.diskusi-thread-body');
   const inputBar=document.querySelector('.diskusi-input-bar');
   if(!body||!inputBar)return;
-  body.style.paddingBottom=(inputBar.offsetHeight+16)+'px';
+  // PENTING: kotak input itu sendiri (position:fixed) "melayang" 56px dari
+  // dasar layar supaya tidak menutupi bottom-nav (Home/Pertemuan/Diskusi/
+  // Profil) yang juga fixed di paling bawah. Jadi ruang yang perlu
+  // disisakan bukan cuma tinggi kotak input, tapi tinggi kotak input DITAMBAH
+  // tinggi bottom-nav di bawahnya. Sebelumnya bottom-nav ini kelupaan
+  // dihitung, jadi ruang yang disisakan sedikit kurang pas — itu sumber sisa
+  // celah "masih ada sedikit" yang keliatan waktu di-scroll mentok ke bawah.
+  const nav=document.getElementById('bottomNav');
+  const navH=(nav&&nav.style.display!=='none')?nav.offsetHeight:0;
+  body.style.paddingBottom=(inputBar.offsetHeight+navH+8)+'px';
 }
 function renderOptimisticDiskusiMsg(tempId,isi,replyNama,replySnippet){
   const wrap=document.getElementById('diskusiListWrap');
