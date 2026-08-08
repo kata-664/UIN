@@ -1397,6 +1397,29 @@ function autoGrow(el){
   el.style.height='auto';
   el.style.height=Math.min(el.scrollHeight,100)+'px';
 }
+function renderOptimisticDiskusiMsg(tempId,isi,replyNama,replySnippet){
+  const wrap=document.getElementById('diskusiListWrap');
+  if(!wrap)return;
+  // Kalau sebelumnya belum ada pesan sama sekali, bersihkan dulu empty-state-nya
+  if(wrap.querySelector('.empty-state'))wrap.innerHTML='';
+  const quoteHtml=replyNama?`<div class="chat-quote quote-me"><b>${escapeHtml(replyNama)}</b>${escapeHtml(replySnippet||'')}</div>`:'';
+  const html=`
+  <div class="chat-row me" id="msg-${tempId}">
+    <div class="chat-bubble-col">
+      <div class="chat-bubble me">
+        ${quoteHtml}
+        <div class="chat-text">${escapeHtml(isi)}</div>
+        <div class="chat-meta"><span class="chat-time" id="status-${tempId}">Mengirim...</span></div>
+      </div>
+    </div>
+  </div>`;
+  wrap.insertAdjacentHTML('beforeend',html);
+  scrollDiskusiToBottom();
+}
+function markDiskusiMsgFailed(tempId){
+  const el=document.getElementById('status-'+tempId);
+  if(el){el.textContent='⚠️ Gagal terkirim';el.style.color='var(--red)';}
+}
 function kirimDiskusi(ev){
   const input=document.getElementById('diskusiInput');
   const isi=input.value.trim();
@@ -1405,8 +1428,22 @@ function kirimDiskusi(ev){
   if(!gasReady()){alert('Forum diskusi belum diaktifkan. Isi GAS_DISKUSI_URL terlebih dahulu.');return;}
   const nama=getUser()||'Anonim';
   const balasanUntuk=diskusiReplyTarget?diskusiReplyTarget.id:'';
+  const replyNama=diskusiReplyTarget?diskusiReplyTarget.nama:'';
+  const replySnippet=balasanUntuk?document.getElementById('diskusiReplySnippet').textContent:'';
   const btn=document.querySelector('.diskusi-send-btn');
   if(btn)btn.disabled=true;
+
+  // Tampilkan pesan ini SEKARANG JUGA (optimistic UI) sambil menandai
+  // "Mengirim..." — supaya tidak ada jeda yang terasa. Begitu server
+  // mengonfirmasi dan loadDiskusi(true) selesai, tampilan ini otomatis
+  // digantikan versi resmi dari server (status waktu "Baru saja").
+  const tempId='temp-'+Date.now();
+  renderOptimisticDiskusiMsg(tempId,isi,replyNama,replySnippet);
+
+  input.value='';
+  autoGrow(input);
+  batalBalas();
+
   fetch(GAS_DISKUSI_URL,{
     method:'POST',
     headers:{'Content-Type':'text/plain;charset=utf-8'},
@@ -1416,18 +1453,16 @@ function kirimDiskusi(ev){
   .then(res=>{
     if(btn)btn.disabled=false;
     if(res.ok){
-      input.value='';
-      autoGrow(input);
-      batalBalas();
-      scrollDiskusiToBottom();
       loadDiskusi(true);
       try{const c=parseInt(localStorage.getItem('kd_diskusi_sent')||'0');localStorage.setItem('kd_diskusi_sent',String(c+1));}catch(e){}
     } else {
+      markDiskusiMsgFailed(tempId);
       alert(res.error||'Gagal mengirim pesan.');
     }
   })
   .catch(()=>{
     if(btn)btn.disabled=false;
+    markDiskusiMsgFailed(tempId);
     alert('⚠️ Gagal terhubung ke server diskusi. Cek koneksi internet.');
   });
 }
