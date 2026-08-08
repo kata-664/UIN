@@ -1339,10 +1339,12 @@ function renderDiskusiList(items,isInitialOpen){
   const newest=visible[visible.length-1]; // sudah diurutkan lama -> baru di atas
   if(isInitialOpen){
     // Baru buka halaman Diskusi: kembalikan ke posisi pesan terakhir yang
-    // pernah dilihat user (kalau ada & masih tersedia). Kalau belum pernah
-    // baca sama sekali, langsung anggap sudah membaca sampai pesan terbaru.
+    // pernah dilihat user (kalau ada, masih tersedia, & memang bukan pesan
+    // paling baru). Kalau lastRead sudah sama dengan pesan terbaru (mis.
+    // baru saja kirim pesan sendiri), langsung nempel ke bawah seperti chat
+    // pada umumnya — supaya tidak ada celah kosong di bawah pesan terakhir.
     const lastRead=getDiskusiLastRead();
-    if(lastRead&&document.getElementById('msg-'+lastRead.id)){
+    if(lastRead&&String(lastRead.id)!==String(newest.id)&&document.getElementById('msg-'+lastRead.id)){
       scrollToDiskusiMsg(lastRead.id);
     }else{
       scrollDiskusiToBottom();
@@ -1623,9 +1625,11 @@ function restoreDiskusiScrollPosition(){
   // begitu halaman Diskusi dibuka, posisi langsung benar tanpa jeda
   // "kelihatan di atas dulu baru lompat ke bawah" saat menunggu network.
   const wrap=document.getElementById('diskusiListWrap');
-  if(!wrap||!wrap.querySelector('.chat-row'))return;
+  const rows=wrap?wrap.querySelectorAll('.chat-row'):null;
+  if(!rows||!rows.length)return;
+  const cachedNewestId=rows[rows.length-1].id.replace('msg-','');
   const lastRead=getDiskusiLastRead();
-  if(lastRead&&document.getElementById('msg-'+lastRead.id)){
+  if(lastRead&&String(lastRead.id)!==cachedNewestId&&document.getElementById('msg-'+lastRead.id)){
     scrollToDiskusiMsg(lastRead.id);
   }else{
     scrollDiskusiToBottom();
