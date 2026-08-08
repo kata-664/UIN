@@ -365,11 +365,11 @@ body{
 <div id="loginPage" class="page active">
   <div class="login-box">
     <div class="login-icon-wrap">
-      <span class="big-icon">🎓</span>
+      <span class="big-icon"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M22 10 12 4 2 10l10 6 10-6z"/><path d="M6 12v5c0 1.5 2.5 3 6 3s6-1.5 6-3v-5"/></svg></span>
       <h1>Kelas Digital</h1>
       <p>Masuk dengan NIM dan password Anda</p>
     </div>
-    <div id="loginError" class="login-error">⚠️ NIM dan Password wajib diisi!</div>
+    <div id="loginError" class="login-error"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> NIM dan Password wajib diisi!</div>
     <div class="field-group">
       <label>NIM</label>
       <div class="field-wrap">
@@ -388,7 +388,7 @@ body{
       </div>
     </div>
     <div class="login-help">Belum pernah login? Password awal Anda adalah NIM Anda sendiri. Anda bisa menggantinya nanti di halaman Profil.</div>
-    <button class="btn-masuk" id="btnMasuk" onclick="doLogin()"><span id="btnMasukText">Masuk →</span><span class="btn-spinner" id="btnMasukSpinner"></span></button>
+    <button class="btn-masuk" id="btnMasuk" onclick="doLogin()"><span id="btnMasukText">Masuk <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span><span class="btn-spinner" id="btnMasukSpinner"></span></button>
     <div class="login-foot">Kelas Digital · Manajemen Pertemuan &amp; Latihan</div>
   </div>
 </div>
@@ -399,7 +399,7 @@ body{
     <div class="header-anim-wrap" id="headerAnim"></div>
     <div class="header-row">
       <div class="user-info">
-        <div class="avatar">🎓</div>
+        <div class="avatar"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M22 10 12 4 2 10l10 6 10-6z"/><path d="M6 12v5c0 1.5 2.5 3 6 3s6-1.5 6-3v-5"/></svg></div>
         <div class="greeting-text">
           <div class="gday" id="homeGreetingDay">Selamat datang</div>
           <div class="gname" id="homeUsernameStrip">—</div>
@@ -407,7 +407,7 @@ body{
         </div>
       </div>
       <button class="notif-btn" onclick="toggleNotifPanel()">
-        🔔<span class="notif-dot" id="notifDot"></span>
+        <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><span class="notif-dot" id="notifDot"></span>
       </button>
     </div>
   </div>
@@ -428,7 +428,7 @@ body{
   <div class="hero-card-wrap" style="margin-top:12px;">
     <div class="card" style="margin-bottom:0;">
       <div class="progress-belajar-head">
-        <span>📘 Progress Belajar</span>
+        <span><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg> Progress Belajar</span>
         <span class="progress-belajar-pct" id="progressBelajarPct">0%</span>
       </div>
       <div class="pencapaian-progress-bar" style="margin:0;">
@@ -440,7 +440,7 @@ body{
 
   <div class="hero-card-wrap" id="nextPertemuanWrap" style="margin-top:12px;display:none;">
     <div class="card next-pertemuan-card" style="margin-bottom:0;">
-      <div class="next-pertemuan-icon">📌</div>
+      <div class="next-pertemuan-icon"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
       <div style="flex:1;min-width:0;">
         <div class="next-pertemuan-label">Pertemuan Berikutnya</div>
         <div class="next-pertemuan-title" id="nextPertemuanTitle"></div>
@@ -467,7 +467,7 @@ body{
       <div class="menu-item-desc">Ngobrol &amp; tanya jawab kelas</div>
     </div>
     <div class="menu-item" onclick="goTo('pencapaianPage');renderPencapaian();markMenuVisited('pencapaianPage')">
-      <div class="menu-icon-wrap yellow">🏆</div>
+      <div class="menu-icon-wrap yellow"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg></div>
       <div class="menu-item-name">Pencapaian</div>
       <div class="menu-item-desc">Kumpulkan badge dari belajarmu</div>
     </div>
@@ -488,8 +488,8 @@ body{
 <!-- =========== PERTEMUAN LIST =========== -->
 <div id="pertemuanListPage" class="page">
   <div class="page-header">
-    <button class="btn-back" onclick="goTo('homePage')">←</button>
-    <h2>📅 Pertemuan</h2>
+    <button class="btn-back" onclick="goTo('homePage')"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></button>
+    <h2><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> Pertemuan</h2>
   </div>
   <div class="page-body">
     <div id="pertemuanListWrap"></div>
@@ -499,17 +499,17 @@ body{
 <!-- =========== PERTEMUAN DETAIL =========== -->
 <div id="pertemuanDetailPage" class="page">
   <div class="page-header">
-    <button class="btn-back" onclick="goTo('pertemuanListPage')">←</button>
+    <button class="btn-back" onclick="goTo('pertemuanListPage')"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></button>
     <h2 id="pdTitle">Pertemuan</h2>
   </div>
   <div class="page-body">
     <div id="pdMeta" style="font-size:12px;color:var(--gray);margin-bottom:16px;"></div>
 
-    <div class="section-title" style="padding:0 0 10px;">📎 Berbagi File</div>
+    <div class="section-title" style="padding:0 0 10px;"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.20 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg> Berbagi File</div>
     <div id="fileListWrap"></div>
     <div style="height:10px;"></div>
 
-    <div class="section-title" style="padding:0 0 10px;">🧑‍🎓 Absensi Mahasiswa</div>
+    <div class="section-title" style="padding:0 0 10px;"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M22 10 12 4 2 10l10 6 10-6z"/><path d="M6 12v5c0 1.5 2.5 3 6 3s6-1.5 6-3v-5"/></svg> Absensi Mahasiswa</div>
     <div class="absensi-summary">
       <div class="abs-chip h"><b id="absHadirCount">0</b><span>Hadir</span></div>
       <div class="abs-chip i"><b id="absIzinCount">0</b><span>Izin</span></div>
@@ -524,9 +524,9 @@ body{
 <!-- =========== DISKUSI (chat kelas, tidak per pertemuan) =========== -->
 <div id="diskusiThreadPage" class="page">
   <div class="page-header">
-    <button class="btn-back" onclick="goTo('homePage')">←</button>
-    <h2>💬 Diskusi Kelas</h2>
-    <button class="btn-refresh" id="btnRefreshDiskusi" onclick="refreshDiskusi()" aria-label="Muat ulang diskusi">⟳</button>
+    <button class="btn-back" onclick="goTo('homePage')"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></button>
+    <h2><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg> Diskusi Kelas</h2>
+    <button class="btn-refresh" id="btnRefreshDiskusi" onclick="refreshDiskusi()" aria-label="Muat ulang diskusi"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg></button>
   </div>
   <div class="page-body diskusi-thread-body">
     <div id="diskusiListWrap"></div>
@@ -535,14 +535,14 @@ body{
   <div class="diskusi-input-bar">
     <div id="diskusiReplyIndicator" class="diskusi-reply-indicator">
       <div class="diskusi-reply-indicator-body">
-        <div>↪ Membalas <span class="diskusi-reply-indicator-name" id="diskusiReplyNama"></span></div>
+        <div><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><polyline points="15 10 20 15 15 20"/><path d="M4 4v7a4 4 0 0 0 4 4h12"/></svg> Membalas <span class="diskusi-reply-indicator-name" id="diskusiReplyNama"></span></div>
         <div class="diskusi-reply-indicator-snippet" id="diskusiReplySnippet"></div>
       </div>
-      <button onclick="batalBalas()" class="diskusi-reply-cancel">✕</button>
+      <button onclick="batalBalas()" class="diskusi-reply-cancel"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     </div>
     <div class="diskusi-input-row">
       <textarea id="diskusiInput" rows="1" maxlength="500" placeholder="Tulis pertanyaan atau tanggapan..." oninput="autoGrow(this)"></textarea>
-      <button class="diskusi-send-btn" onclick="kirimDiskusi(event)" aria-label="Kirim">➤</button>
+      <button class="diskusi-send-btn" onclick="kirimDiskusi(event)" aria-label="Kirim"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
     </div>
   </div>
 </div>
@@ -550,8 +550,8 @@ body{
 <!-- =========== LATIHAN LIST =========== -->
 <div id="latihanListPage" class="page">
   <div class="page-header">
-    <button class="btn-back" onclick="goTo('homePage')">←</button>
-    <h2>📝 Latihan</h2>
+    <button class="btn-back" onclick="goTo('homePage')"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></button>
+    <h2><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg> Latihan</h2>
   </div>
   <div class="page-body">
     <div id="latihanListWrap"></div>
@@ -561,7 +561,7 @@ body{
 <!-- =========== LATIHAN QUIZ =========== -->
 <div id="latihanQuizPage" class="page">
   <div class="page-header">
-    <button class="btn-back" onclick="exitQuiz()">←</button>
+    <button class="btn-back" onclick="exitQuiz()"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></button>
     <h2 id="quizTitle">Latihan</h2>
   </div>
   <div class="page-body">
@@ -572,7 +572,7 @@ body{
 <!-- =========== LATIHAN RESULT =========== -->
 <div id="latihanResultPage" class="page">
   <div class="page-header">
-    <button class="btn-back" onclick="goTo('latihanListPage')">←</button>
+    <button class="btn-back" onclick="goTo('latihanListPage')"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></button>
     <h2>Hasil Latihan</h2>
   </div>
   <div class="page-body">
@@ -583,16 +583,16 @@ body{
 <!-- =========== AKUN =========== -->
 <div id="akunPage" class="page">
   <div class="page-header">
-    <button class="btn-back" onclick="goTo('homePage')">←</button>
-    <h2>👤 Profil Saya</h2>
+    <button class="btn-back" onclick="goTo('homePage')"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></button>
+    <h2><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Profil Saya</h2>
   </div>
   <div class="page-body">
     <div class="akun-hero">
-      <div class="akun-avatar-big">🎓</div>
+      <div class="akun-avatar-big"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M22 10 12 4 2 10l10 6 10-6z"/><path d="M6 12v5c0 1.5 2.5 3 6 3s6-1.5 6-3v-5"/></svg></div>
       <div class="akun-name" id="akunUsername">—</div>
       <span class="akun-badge-pill">Mahasiswa</span>
     </div>
-    <div class="section-title" style="padding:0 0 10px;">📋 Rekap Kehadiran Saya</div>
+    <div class="section-title" style="padding:0 0 10px;"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg> Rekap Kehadiran Saya</div>
     <div class="absensi-summary">
       <div class="abs-chip h"><b id="akunHadirCount">0</b><span>Hadir</span></div>
       <div class="abs-chip i"><b id="akunIzinCount">0</b><span>Izin</span></div>
@@ -605,16 +605,16 @@ body{
       <div class="akun-row"><span class="akun-row-left">Total Mahasiswa Terdaftar</span><span class="akun-row-val" id="akunMhsCount">0</span></div>
       <div class="akun-row"><span class="akun-row-left">Latihan Dikerjakan</span><span class="akun-row-val" id="akunLatihanCount">0</span></div>
     </div>
-    <button class="btn-outline" style="margin-bottom:10px;" onclick="openGantiPassword()">🔒 Ubah Password</button>
-    <button class="btn-logout" onclick="doLogout()">🚪 Logout</button>
+    <button class="btn-outline" style="margin-bottom:10px;" onclick="openGantiPassword()"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Ubah Password</button>
+    <button class="btn-logout" onclick="doLogout()"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> Logout</button>
   </div>
 </div>
 
 <!-- =========== MODAL UBAH PASSWORD =========== -->
 <div class="modal-overlay" id="modalGantiPassword">
   <div class="modal-box">
-    <h3>🔒 Ubah Password</h3>
-    <div id="gantiPwError" class="login-error">⚠️ Terjadi kesalahan</div>
+    <h3><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Ubah Password</h3>
+    <div id="gantiPwError" class="login-error"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Terjadi kesalahan</div>
     <div class="field-group">
       <label>Password Lama</label>
       <div class="field-wrap pw-wrap">
@@ -647,8 +647,8 @@ body{
 <!-- =========== PENCAPAIAN =========== -->
 <div id="pencapaianPage" class="page">
   <div class="page-header">
-    <button class="btn-back" onclick="goTo('homePage')">←</button>
-    <h2>🏆 Pencapaian</h2>
+    <button class="btn-back" onclick="goTo('homePage')"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></button>
+    <h2><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg> Pencapaian</h2>
   </div>
   <div class="page-body">
     <p style="color:var(--gray);font-size:13px;margin-bottom:6px;">Kumpulkan semua badge dengan terus belajar &amp; berlatih!</p>
@@ -660,8 +660,8 @@ body{
 <!-- =========== RPS =========== -->
 <div id="rpsPage" class="page">
   <div class="page-header">
-    <button class="btn-back" onclick="goTo('homePage')">←</button>
-    <h2>📄 RPS</h2>
+    <button class="btn-back" onclick="goTo('homePage')"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></button>
+    <h2><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg> RPS</h2>
   </div>
   <div class="page-body">
     <div id="rpsWrap"></div>
@@ -671,12 +671,12 @@ body{
 <!-- =========== TENTANG =========== -->
 <div id="tentangPage" class="page">
   <div class="page-header">
-    <button class="btn-back" onclick="goTo('homePage')">←</button>
-    <h2>ℹ️ Tentang</h2>
+    <button class="btn-back" onclick="goTo('homePage')"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></button>
+    <h2>ℹ Tentang</h2>
   </div>
   <div class="page-body">
     <div class="akun-hero" style="margin-bottom:20px;">
-      <div class="akun-avatar-big">🎓</div>
+      <div class="akun-avatar-big"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M22 10 12 4 2 10l10 6 10-6z"/><path d="M6 12v5c0 1.5 2.5 3 6 3s6-1.5 6-3v-5"/></svg></div>
       <div class="akun-name">Kelas Digital</div>
       <span class="akun-badge-pill">Pengantar Statistika</span>
     </div>
@@ -685,20 +685,20 @@ body{
       <div class="akun-row"><span class="akun-row-left">Mata Kuliah</span><span class="akun-row-val">Pengantar Statistika</span></div>
       <div class="akun-row"><span class="akun-row-left">Versi</span><span class="akun-row-val">1.0.0</span></div>
     </div>
-    <div class="section-title" style="padding:16px 0 8px;">📖 Tentang Aplikasi</div>
+    <div class="section-title" style="padding:16px 0 8px;"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> Tentang Aplikasi</div>
     <div class="card" style="font-size:13px;color:var(--dark);line-height:1.6;">
       Kelas Digital adalah aplikasi pendamping perkuliahan yang memudahkan
       mahasiswa mengakses materi pertemuan, mengerjakan latihan, berdiskusi
       dengan sesama mahasiswa, memantau kehadiran, dan melihat Rencana
       Pembelajaran Semester (RPS) — semuanya dalam satu tempat.
     </div>
-    <div class="section-title" style="padding:16px 0 8px;">✨ Fitur Utama</div>
+    <div class="section-title" style="padding:16px 0 8px;"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14l-5-4.87 6.91-1.01L12 2z"/></svg> Fitur Utama</div>
     <div class="card" style="font-size:13px;color:var(--dark);line-height:1.8;">
-      📅 Materi &amp; absensi tiap pertemuan<br>
-      📝 Latihan soal per pertemuan<br>
-      💬 Forum diskusi kelas<br>
-      🏆 Sistem pencapaian &amp; badge<br>
-      📄 Rencana Pembelajaran Semester (RPS)
+      <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> Materi &amp; absensi tiap pertemuan<br>
+      <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg> Latihan soal per pertemuan<br>
+      <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg> Forum diskusi kelas<br>
+      <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg> Sistem pencapaian &amp; badge<br>
+      <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg> Rencana Pembelajaran Semester (RPS)
     </div>
   </div>
 </div>
@@ -723,7 +723,7 @@ body{
 <div class="overlay" id="overlay"></div>
 <div class="notif-panel" id="notifPanel">
   <div class="notif-panel-header">
-    <h3>🔔 Aktivitas</h3>
+    <h3><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg> Aktivitas</h3>
     <button onclick="toggleNotifPanel()">×</button>
   </div>
   <div class="notif-list" id="notifList"></div>
@@ -888,7 +888,7 @@ function findNamaByNim(nim){
 }
 function setLoginLoading(loading){
   const btn=document.getElementById('btnMasuk');
-  document.getElementById('btnMasukText').textContent=loading?'Memeriksa...':'Masuk →';
+  document.getElementById('btnMasukText').textContent=loading?'Memeriksa...':'Masuk <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>';
   document.getElementById('btnMasukSpinner').classList.toggle('show',loading);
   btn.disabled=loading;
 }
@@ -898,12 +898,12 @@ function doLogin(){
   const err=document.getElementById('loginError');
   err.classList.remove('show');
   if(!nim||!password){
-    err.textContent='⚠️ NIM dan Password wajib diisi!';
+    err.textContent='<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> NIM dan Password wajib diisi!';
     err.classList.add('show');
     return;
   }
   if(!authReady()){
-    err.textContent='⚠️ Sistem login belum diaktifkan. Isi GAS_AUTH_URL terlebih dahulu (lihat PANDUAN_SETUP_LOGIN.md).';
+    err.textContent='<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Sistem login belum diaktifkan. Isi GAS_AUTH_URL terlebih dahulu (lihat PANDUAN_SETUP_LOGIN.md).';
     err.classList.add('show');
     return;
   }
@@ -925,13 +925,13 @@ function doLogin(){
       goTo('homePage');
       updateHeaderAnim();
     }else{
-      err.textContent='⚠️ '+(res.error||'NIM atau password salah.');
+      err.textContent='<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> '+(res.error||'NIM atau password salah.');
       err.classList.add('show');
     }
   })
   .catch(()=>{
     setLoginLoading(false);
-    err.textContent='⚠️ Gagal terhubung ke server login. Cek koneksi internet.';
+    err.textContent='<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Gagal terhubung ke server login. Cek koneksi internet.';
     err.classList.add('show');
   });
 }
@@ -960,11 +960,11 @@ function saveGantiPassword(){
   const pwBaruUlang=document.getElementById('pwBaruUlang').value;
   const err=document.getElementById('gantiPwError');
   err.classList.remove('show');
-  if(!nim){err.textContent='⚠️ Sesi tidak valid, silakan login ulang.';err.classList.add('show');return;}
-  if(!pwLama||!pwBaru||!pwBaruUlang){err.textContent='⚠️ Semua kolom wajib diisi.';err.classList.add('show');return;}
-  if(pwBaru.length<4){err.textContent='⚠️ Password baru minimal 4 karakter.';err.classList.add('show');return;}
-  if(pwBaru!==pwBaruUlang){err.textContent='⚠️ Konfirmasi password baru tidak cocok.';err.classList.add('show');return;}
-  if(!authReady()){err.textContent='⚠️ Sistem login belum diaktifkan.';err.classList.add('show');return;}
+  if(!nim){err.textContent='<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Sesi tidak valid, silakan login ulang.';err.classList.add('show');return;}
+  if(!pwLama||!pwBaru||!pwBaruUlang){err.textContent='<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Semua kolom wajib diisi.';err.classList.add('show');return;}
+  if(pwBaru.length<4){err.textContent='<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Password baru minimal 4 karakter.';err.classList.add('show');return;}
+  if(pwBaru!==pwBaruUlang){err.textContent='<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Konfirmasi password baru tidak cocok.';err.classList.add('show');return;}
+  if(!authReady()){err.textContent='<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Sistem login belum diaktifkan.';err.classList.add('show');return;}
   const btn=document.getElementById('btnSimpanPw');
   btn.disabled=true;btn.textContent='Menyimpan...';
   fetch(GAS_AUTH_URL,{
@@ -977,15 +977,15 @@ function saveGantiPassword(){
     btn.disabled=false;btn.textContent='Simpan';
     if(res.ok){
       closeModal('modalGantiPassword');
-      alert('✅ Password berhasil diubah.');
+      alert('<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Password berhasil diubah.');
     }else{
-      err.textContent='⚠️ '+(res.error||'Gagal mengubah password.');
+      err.textContent='<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> '+(res.error||'Gagal mengubah password.');
       err.classList.add('show');
     }
   })
   .catch(()=>{
     btn.disabled=false;btn.textContent='Simpan';
-    err.textContent='⚠️ Gagal terhubung ke server. Cek koneksi internet.';
+    err.textContent='<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Gagal terhubung ke server. Cek koneksi internet.';
     err.classList.add('show');
   });
 }
@@ -1053,7 +1053,7 @@ function renderPertemuanList(){
   const list=getPertemuan();
   const wrap=document.getElementById('pertemuanListWrap');
   if(list.length===0){
-    wrap.innerHTML=`<div class="empty-state"><div class="es-icon">📅</div><p>Belum ada pertemuan.<br>Tambahkan pertemuan di file data-pertemuan.js.</p></div>`;
+    wrap.innerHTML=`<div class="empty-state"><div class="es-icon"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><p>Belum ada pertemuan.<br>Tambahkan pertemuan di file data-pertemuan.js.</p></div>`;
     return;
   }
   const visited=getPertemuanVisited();
@@ -1064,12 +1064,12 @@ function renderPertemuanList(){
     const total=(p.mahasiswa||[]).length;
     const unread=locked?0:(p.files||[]).filter(f=>!seen.has(f.id)).length;
     return `<div class="pertemuan-card ${locked?'locked':''}" onclick="openPertemuanDetail(${p.nomor})">
-      <div class="pertemuan-num">${locked?'🔒':p.nomor}</div>
+      <div class="pertemuan-num">${locked?'<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>':p.nomor}</div>
       <div class="pertemuan-info">
-        <div class="pertemuan-title">${escapeHtml(p.judul)}${locked?'<span class="tag-locked">🔒 Terkunci</span>':visited[p.nomor]?'<span class="tag-visited">✓ Dipelajari</span>':''}</div>
-        <div class="pertemuan-meta">${locked?'Belum dibuka dosen':`${p.tanggal?formatTanggal(p.tanggal)+' · ':''}${(p.files||[]).length} file${unread>0?` · <span class="tag-unread">🆕 ${unread} baru</span>`:''} · ${hadir}/${total} hadir`}</div>
+        <div class="pertemuan-title">${escapeHtml(p.judul)}${locked?'<span class="tag-locked"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Terkunci</span>':visited[p.nomor]?'<span class="tag-visited"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><polyline points="20 6 9 17 4 12"/></svg> Dipelajari</span>':''}</div>
+        <div class="pertemuan-meta">${locked?'Belum dibuka dosen':`${p.tanggal?formatTanggal(p.tanggal)+' · ':''}${(p.files||[]).length} file${unread>0?` · <span class="tag-unread"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> ${unread} baru</span>`:''} · ${hadir}/${total} hadir`}</div>
       </div>
-      <div class="pertemuan-chevron">${locked?'':'›'}</div>
+      <div class="pertemuan-chevron">${locked?'':'<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><polyline points="9 18 15 12 9 6"/></svg>'}</div>
     </div>`;
   }).join('');
 }
@@ -1081,7 +1081,7 @@ let currentPertemuanId=null;
 
 function openPertemuanDetail(id){
   if(isPertemuanLocked(id)){
-    alert('🔒 Pertemuan ini belum dibuka oleh dosen.');
+    alert('<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Pertemuan ini belum dibuka oleh dosen.');
     return;
   }
   currentPertemuanId=id;
@@ -1118,7 +1118,7 @@ function renderFileList(){
   const wrap=document.getElementById('fileListWrap');
   const files=p.files||[];
   if(files.length===0){
-    wrap.innerHTML=`<div class="empty-state"><div class="es-icon">📎</div><p>Belum ada file dibagikan di pertemuan ini.</p></div>`;
+    wrap.innerHTML=`<div class="empty-state"><div class="es-icon"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.20 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></div><p>Belum ada file dibagikan di pertemuan ini.</p></div>`;
     return;
   }
   const labels={ppt:'PPT',doc:'DOC',xlsx:'XLSX',pdf:'PDF'};
@@ -1130,12 +1130,12 @@ function renderFileList(){
       <div class="file-item-top">
         <div class="file-badge ${f.tipe}">${labels[f.tipe]}</div>
         <div style="flex:1;min-width:0;">
-          <div class="file-name">${escapeHtml(f.nama)}${isNew?'<span class="tag-new">🆕 BARU</span>':''}</div>
+          <div class="file-name">${escapeHtml(f.nama)}${isNew?'<span class="tag-new"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> BARU</span>':''}</div>
           <div class="file-type">${labels[f.tipe]}</div>
         </div>
       </div>
       <iframe class="file-preview" src="${previewUrl(f.url,f.tipe)}" loading="lazy"></iframe>
-      <a class="file-open-link" href="${f.url}" target="_blank" rel="noopener">🔗 Buka di Tab Baru</a>
+      <a class="file-open-link" href="${f.url}" target="_blank" rel="noopener"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3"/><path d="M9 17H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"/><line x1="8" y1="12" x2="16" y2="12"/></svg> Buka di Tab Baru</a>
     </div>`;
   }).join('');
   markFilesSeen(files.map(f=>f.id));
@@ -1156,7 +1156,7 @@ function saveFile(){
     p.files=p.files||[];
     p.files.push({id:uid(),nama,tipe,url});
   });
-  addNotif('📎','File dibagikan',nama);
+  addNotif('<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.20 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>','File dibagikan',nama);
   closeModal('modalFile');
   renderFileList();
   renderPertemuanList();
@@ -1171,7 +1171,7 @@ function deleteFile(fid){
 }
 
 /* --- Absensi --- */
-const STATUS_LABEL={hadir:'✓ Hadir',izin:'📄 Izin',alpha:'✕ Alpha'};
+const STATUS_LABEL={hadir:'<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><polyline points="20 6 9 17 4 12"/></svg> Hadir',izin:'<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg> Izin',alpha:'<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Alpha'};
 function renderMhsList(){
   const p=getCurrentPertemuan();
   const wrap=document.getElementById('mhsListWrap');
@@ -1180,7 +1180,7 @@ function renderMhsList(){
   document.getElementById('absIzinCount').textContent=list.filter(m=>m.status==='izin').length;
   document.getElementById('absAlphaCount').textContent=list.filter(m=>m.status==='alpha').length;
   if(list.length===0){
-    wrap.innerHTML=`<div class="empty-state"><div class="es-icon">🧑‍🎓</div><p>Belum ada data mahasiswa.<br>Tambahkan mahasiswa di file daftar-mahasiswa.js.</p></div>`;
+    wrap.innerHTML=`<div class="empty-state"><div class="es-icon"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M22 10 12 4 2 10l10 6 10-6z"/><path d="M6 12v5c0 1.5 2.5 3 6 3s6-1.5 6-3v-5"/></svg></div><p>Belum ada data mahasiswa.<br>Tambahkan mahasiswa di file daftar-mahasiswa.js.</p></div>`;
     return;
   }
   const myName=(getUser()||'').trim().toLowerCase();
@@ -1231,7 +1231,7 @@ function addDeletedDiskusiId(id){
 function loadDiskusi(silent){
   const wrap=document.getElementById('diskusiListWrap');
   if(!gasReady()){
-    wrap.innerHTML=`<div class="empty-state"><div class="es-icon">💬</div><p>Forum diskusi belum diaktifkan.<br>Isi GAS_DISKUSI_URL di file HTML dengan URL Web App Apps Script (lihat PANDUAN_SETUP_FORUM.md).</p></div>`;
+    wrap.innerHTML=`<div class="empty-state"><div class="es-icon"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></div><p>Forum diskusi belum diaktifkan.<br>Isi GAS_DISKUSI_URL di file HTML dengan URL Web App Apps Script (lihat PANDUAN_SETUP_FORUM.md).</p></div>`;
     return;
   }
   // Kalau sudah ada pesan tertampil (mis. reload setelah kirim pesan / auto-refresh),
@@ -1245,7 +1245,7 @@ function loadDiskusi(silent){
     .then(r=>r.json())
     .then(res=>{
       if(!res.ok){
-        if(!hasContent)wrap.innerHTML=`<div class="empty-state"><p>⚠️ Gagal memuat diskusi.</p></div>`;
+        if(!hasContent)wrap.innerHTML=`<div class="empty-state"><p><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Gagal memuat diskusi.</p></div>`;
         return;
       }
       console.log('[diskusi] data mentah dari server:',res.data);
@@ -1254,7 +1254,7 @@ function loadDiskusi(silent){
       renderDiskusiList(items);
     })
     .catch(()=>{
-      if(!hasContent)wrap.innerHTML=`<div class="empty-state"><p>⚠️ Gagal terhubung ke server diskusi. Cek koneksi internet.</p></div>`;
+      if(!hasContent)wrap.innerHTML=`<div class="empty-state"><p><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Gagal terhubung ke server diskusi. Cek koneksi internet.</p></div>`;
     });
 }
 function renderDiskusiList(items){
@@ -1262,7 +1262,7 @@ function renderDiskusiList(items){
   const deletedLocal=getDeletedDiskusiIds();
   const visible=items.filter(it=>it.status!=='dihapus'&&!deletedLocal.includes(String(it.id)));
   if(!visible.length){
-    wrap.innerHTML=`<div class="empty-state"><div class="es-icon">💬</div><p>Belum ada diskusi.<br>Jadilah yang pertama menulis pesan!</p></div>`;
+    wrap.innerHTML=`<div class="empty-state"><div class="es-icon"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></div><p>Belum ada diskusi.<br>Jadilah yang pertama menulis pesan!</p></div>`;
     scrollDiskusiToBottom();
     return;
   }
@@ -1286,7 +1286,7 @@ function renderDiskusiList(items){
       quoteHtml=`<div class="chat-quote ${parentIsMe?'quote-me':''}" onclick="highlightDiskusiMsg('${parent.id}')"><b>${escapeHtml(parentIsMe?'Anda':(parent.nama||'Anonim'))}</b>${escapeHtml((parent.isi||'').slice(0,70))}${(parent.isi||'').length>70?'…':''}</div>`;
     }else if(it.balasan_untuk){
       // pesan asli tidak ditemukan (mis. sudah dihapus) — tetap tampilkan tanda balasan
-      quoteHtml=`<div class="chat-quote"><b>↪ Membalas pesan</b>Pesan asli tidak tersedia</div>`;
+      quoteHtml=`<div class="chat-quote"><b><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><polyline points="15 10 20 15 15 20"/><path d="M4 4v7a4 4 0 0 0 4 4h12"/></svg> Membalas pesan</b>Pesan asli tidak tersedia</div>`;
     }
     const avatarHtml=!isMe?`<div class="chat-avatar">${escapeHtml((it.nama||'?').charAt(0).toUpperCase())}</div>`:'';
     const nameHtml=!isMe?`<div class="chat-name">${escapeHtml(it.nama||'Anonim')}</div>`:'';
@@ -1301,8 +1301,8 @@ function renderDiskusiList(items){
           <div class="chat-meta"><span class="chat-time">${timeAgo(it.waktu)}</span></div>
         </div>
         <div class="chat-bubble-actions">
-          <button class="chat-reply-btn ${isMe?'me':'other'}" onclick="balasKomentar('${it.id}','${escapeHtml(it.nama||'Anonim').replace(/'/g,"\\'")}','${escapeHtml((it.isi||'').slice(0,80)).replace(/'/g,"\\'")}')">↩ Balas</button>
-          ${isMe?`<button class="chat-delete-btn" onclick="hapusDiskusi('${it.id}')">🗑 Hapus</button>`:''}
+          <button class="chat-reply-btn ${isMe?'me':'other'}" onclick="balasKomentar('${it.id}','${escapeHtml(it.nama||'Anonim').replace(/'/g,"\\'")}','${escapeHtml((it.isi||'').slice(0,80)).replace(/'/g,"\\'")}')"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg> Balas</button>
+          ${isMe?`<button class="chat-delete-btn" onclick="hapusDiskusi('${it.id}')"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg> Hapus</button>`:''}
         </div>
       </div>
     </div>`;
@@ -1421,7 +1421,7 @@ function renderOptimisticDiskusiMsg(tempId,isi,replyNama,replySnippet){
 }
 function markDiskusiMsgFailed(tempId){
   const el=document.getElementById('status-'+tempId);
-  if(el){el.textContent='⚠️ Gagal terkirim';el.style.color='var(--red)';}
+  if(el){el.textContent='<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Gagal terkirim';el.style.color='var(--red)';}
 }
 function kirimDiskusi(ev){
   const input=document.getElementById('diskusiInput');
@@ -1466,7 +1466,7 @@ function kirimDiskusi(ev){
   .catch(()=>{
     if(btn)btn.disabled=false;
     markDiskusiMsgFailed(tempId);
-    alert('⚠️ Gagal terhubung ke server diskusi. Cek koneksi internet.');
+    alert('<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Gagal terhubung ke server diskusi. Cek koneksi internet.');
   });
 }
 
@@ -1541,7 +1541,7 @@ function renderLatihanList(){
   const list=getPertemuan();
   const wrap=document.getElementById('latihanListWrap');
   if(list.length===0){
-    wrap.innerHTML=`<div class="empty-state"><div class="es-icon">📝</div><p>Belum ada pertemuan.<br>Tambahkan pertemuan dahulu di menu Pertemuan.</p></div>`;
+    wrap.innerHTML=`<div class="empty-state"><div class="es-icon"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></div><p>Belum ada pertemuan.<br>Tambahkan pertemuan dahulu di menu Pertemuan.</p></div>`;
     return;
   }
   const bank=window.SOAL_PERTEMUAN||{};
@@ -1577,13 +1577,13 @@ function renderLatihanList(){
     const jumlah=soal?soal.length:0;
     return `<div class="latihan-card">
       <div class="latihan-top">
-        <div class="latihan-title">Pertemuan ${p.nomor} — ${escapeHtml(p.judul)}${locked?'<span class="tag-locked">🔒 Terkunci</span>':''}</div>
+        <div class="latihan-title">Pertemuan ${p.nomor} — ${escapeHtml(p.judul)}${locked?'<span class="tag-locked"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Terkunci</span>':''}</div>
         ${best?`<span class="score-pill">Terbaik: ${best}</span>`:`<span class="score-pill none">Belum</span>`}
       </div>
       ${!soal ? `
-        <div class="error-notice" style="margin-bottom:0;">⚠️ Soal untuk pertemuan ini belum tersedia di <strong>Sistem</strong></div>
+        <div class="error-notice" style="margin-bottom:0;"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Soal untuk pertemuan ini belum tersedia di <strong>Sistem</strong></div>
       ` : locked ? `
-        <div class="error-notice locked-notice" style="margin-bottom:0;">🔒 Latihan ini masih terkunci. Tunggu dosen membukanya.</div>
+        <div class="error-notice locked-notice" style="margin-bottom:0;"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Latihan ini masih terkunci. Tunggu dosen membukanya.</div>
       ` : `
         <div style="font-size:12px;color:var(--gray);margin-bottom:10px;">${jumlah} soal tersedia${attempts>0?` · dikerjakan ${attempts}x`:''}</div>
         <button class="btn-primary" onclick="startQuiz(${p.nomor})">Mulai Latihan</button>
@@ -1598,7 +1598,7 @@ function renderLatihanList(){
 let quizState=null;
 function startQuiz(nomor){
   if(isLatihanLocked(nomor)){
-    alert('🔒 Latihan ini masih terkunci. Tunggu dosen membukanya.');
+    alert('<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Latihan ini masih terkunci. Tunggu dosen membukanya.');
     return;
   }
   const bank=window.SOAL_PERTEMUAN||{};
@@ -1626,8 +1626,8 @@ function renderQuizQuestion(){
       `).join('')}
     </div>
     <div class="quiz-nav">
-      ${idx>0?`<button class="btn-outline" onclick="quizPrev()">‹ Sebelumnya</button>`:''}
-      ${idx<soal.length-1?`<button class="btn-primary" onclick="quizNext()">Selanjutnya ›</button>`:`<button class="btn-primary" onclick="finishQuiz()">Selesai</button>`}
+      ${idx>0?`<button class="btn-outline" onclick="quizPrev()"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><polyline points="15 18 9 12 15 6"/></svg> Sebelumnya</button>`:''}
+      ${idx<soal.length-1?`<button class="btn-primary" onclick="quizNext()">Selanjutnya <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><polyline points="9 18 15 12 9 6"/></svg></button>`:`<button class="btn-primary" onclick="finishQuiz()">Selesai</button>`}
     </div>
   `;
 }
@@ -1646,7 +1646,7 @@ function finishQuiz(){
   const prevBest=parseInt(localStorage.getItem(bestKey)||'0');
   if(skor>prevBest)localStorage.setItem(bestKey,skor);
   localStorage.setItem('kd_lastcount_'+nomor, (parseInt(localStorage.getItem('kd_lastcount_'+nomor)||'0')+1));
-  addNotif('📝','Latihan selesai',`Pertemuan ${nomor}: skor ${skor}`);
+  addNotif('<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>','Latihan selesai',`Pertemuan ${nomor}: skor ${skor}`);
 
   const letters=['A','B','C','D','E'];
   let detailHtml='';
@@ -1657,7 +1657,7 @@ function finishQuiz(){
       <div style="font-weight:700;font-size:13px;margin-bottom:8px;">${i+1}. ${escapeHtml(q.question)}</div>
       <div style="font-size:12px;color:var(--gray);">Jawaban Anda: ${u!==null?letters[u]+'. '+escapeHtml(q.options[u]):'Tidak dijawab'}</div>
       <div style="font-size:12px;color:#2E7D32;margin-top:2px;">Jawaban benar: ${letters[q.answer]}. ${escapeHtml(q.options[q.answer])}</div>
-      ${q.pembahasan?`<div style="font-size:12px;color:var(--dark);margin-top:8px;background:#F8FAFC;padding:8px 10px;border-radius:8px;">💡 ${escapeHtml(q.pembahasan)}</div>`:''}
+      ${q.pembahasan?`<div style="font-size:12px;color:var(--dark);margin-top:8px;background:#F8FAFC;padding:8px 10px;border-radius:8px;"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.3h6c0-1 .4-1.8 1-2.3A7 7 0 0 0 12 2z"/></svg> ${escapeHtml(q.pembahasan)}</div>`:''}
     </div>`;
   });
 
@@ -1743,7 +1743,7 @@ function renderNotifPanel(){
   const log=getNotifLog();
   const list=document.getElementById('notifList');
   if(log.length===0){
-    list.innerHTML=`<div class="notif-empty"><div class="ne-icon">🔔</div><p>Belum ada aktivitas.</p></div>`;
+    list.innerHTML=`<div class="notif-empty"><div class="ne-icon"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div><p>Belum ada aktivitas.</p></div>`;
     return;
   }
   list.innerHTML=log.map(n=>`
@@ -1806,25 +1806,25 @@ function getMenuVisited(){
 }
 
 const BADGE_TIERS=[
-  {tier:1,label:'🎗️ Tier 1 — Pemula',badges:[
-    {id:'first_done',icon:'🎯',name:'Langkah Pertama',desc:'Selesaikan 1 latihan',check:s=>s.totalDone>=1},
-    {id:'penjelajah',icon:'🗺️',name:'Penjelajah',desc:'Kunjungi semua menu utama',check:s=>s.menuAll},
-    {id:'siap_belajar',icon:'✏️',name:'Siap Belajar',desc:'Buka detail 1 pertemuan',check:s=>s.pertemuanDibuka},
-    {id:'aktif_diskusi',icon:'🗨️',name:'Buka Suara',desc:'Kirim 1 pesan di forum diskusi',check:s=>s.diskusiSent>=1},
-    {id:'rajin_hadir',icon:'🙋',name:'Rajin Hadir',desc:'Tercatat hadir minimal 1 pertemuan',check:s=>s.hadirCount>=1},
+  {tier:1,label:'<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg> Tier 1 — Pemula',badges:[
+    {id:'first_done',icon:'<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>',name:'Langkah Pertama',desc:'Selesaikan 1 latihan',check:s=>s.totalDone>=1},
+    {id:'penjelajah',icon:'<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>',name:'Penjelajah',desc:'Kunjungi semua menu utama',check:s=>s.menuAll},
+    {id:'siap_belajar',icon:'<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>',name:'Siap Belajar',desc:'Buka detail 1 pertemuan',check:s=>s.pertemuanDibuka},
+    {id:'aktif_diskusi',icon:'<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',name:'Buka Suara',desc:'Kirim 1 pesan di forum diskusi',check:s=>s.diskusiSent>=1},
+    {id:'rajin_hadir',icon:'<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><polyline points="17 11 19 13 23 9"/></svg>',name:'Rajin Hadir',desc:'Tercatat hadir minimal 1 pertemuan',check:s=>s.hadirCount>=1},
   ]},
-  {tier:2,label:'🔵 Tier 2 — Menengah',badges:[
-    {id:'nilai_sempurna',icon:'💯',name:'Nilai Sempurna',desc:'Raih skor 100 di satu latihan',check:s=>s.perfectCount>=1},
-    {id:'rajin',icon:'📓',name:'Rajin Berlatih',desc:'Kerjakan minimal 2 latihan berbeda',check:s=>s.totalDone>=2},
-    {id:'pantang',icon:'🔁',name:'Pantang Menyerah',desc:'Ulangi 1 latihan 3 kali atau lebih',check:s=>s.maxAttempt>=3},
-    {id:'jelajah_semua',icon:'🧭',name:'Jelajah Tuntas',desc:'Buka semua pertemuan yang ada',check:s=>s.totalPertemuan>0&&s.pertemuanVisitedCount>=s.totalPertemuan},
-    {id:'kehadiran_baik',icon:'📆',name:'Kehadiran Baik',desc:'Hadir minimal separuh dari seluruh pertemuan',check:s=>s.totalPertemuan>0&&s.hadirCount>=Math.ceil(s.totalPertemuan/2)},
+  {tier:2,label:'<svg width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="8"/></svg> Tier 2 — Menengah',badges:[
+    {id:'nilai_sempurna',icon:'<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>',name:'Nilai Sempurna',desc:'Raih skor 100 di satu latihan',check:s=>s.perfectCount>=1},
+    {id:'rajin',icon:'<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>',name:'Rajin Berlatih',desc:'Kerjakan minimal 2 latihan berbeda',check:s=>s.totalDone>=2},
+    {id:'pantang',icon:'<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>',name:'Pantang Menyerah',desc:'Ulangi 1 latihan 3 kali atau lebih',check:s=>s.maxAttempt>=3},
+    {id:'jelajah_semua',icon:'<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>',name:'Jelajah Tuntas',desc:'Buka semua pertemuan yang ada',check:s=>s.totalPertemuan>0&&s.pertemuanVisitedCount>=s.totalPertemuan},
+    {id:'kehadiran_baik',icon:'<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',name:'Kehadiran Baik',desc:'Hadir minimal separuh dari seluruh pertemuan',check:s=>s.totalPertemuan>0&&s.hadirCount>=Math.ceil(s.totalPertemuan/2)},
   ]},
-  {tier:3,label:'🥇 Tier 3 — Mahir',badges:[
-    {id:'semua_tuntas',icon:'🏁',name:'Semua Latihan Tuntas',desc:'Kerjakan semua latihan yang tersedia',check:s=>s.totalTersedia>0&&s.totalDone>=s.totalTersedia},
-    {id:'master',icon:'👑',name:'Master Statistika',desc:'Skor sempurna di semua latihan',check:s=>s.totalTersedia>0&&s.perfectCount>=s.totalTersedia},
-    {id:'kehadiran_sempurna',icon:'🌟',name:'Kehadiran Sempurna',desc:'Hadir di semua pertemuan tanpa absen',check:s=>s.totalPertemuan>0&&s.hadirCount>=s.totalPertemuan},
-    {id:'aktivis_diskusi',icon:'📣',name:'Aktivis Diskusi',desc:'Kirim minimal 5 pesan di forum diskusi',check:s=>s.diskusiSent>=5},
+  {tier:3,label:'<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg> Tier 3 — Mahir',badges:[
+    {id:'semua_tuntas',icon:'<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>',name:'Semua Latihan Tuntas',desc:'Kerjakan semua latihan yang tersedia',check:s=>s.totalTersedia>0&&s.totalDone>=s.totalTersedia},
+    {id:'master',icon:'<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M2 18h20l-2-11-5 5-3-8-3 8-5-5-2 11z"/></svg>',name:'Master Statistika',desc:'Skor sempurna di semua latihan',check:s=>s.totalTersedia>0&&s.perfectCount>=s.totalTersedia},
+    {id:'kehadiran_sempurna',icon:'<svg width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14l-5-4.87 6.91-1.01L12 2z"/></svg>',name:'Kehadiran Sempurna',desc:'Hadir di semua pertemuan tanpa absen',check:s=>s.totalPertemuan>0&&s.hadirCount>=s.totalPertemuan},
+    {id:'aktivis_diskusi',icon:'<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M3 11v3a1 1 0 0 0 1 1h2l4 4V6L6 10H4a1 1 0 0 0-1 1z"/><path d="M14 8a4 4 0 0 1 0 8"/><path d="M17.5 5a8 8 0 0 1 0 14"/></svg>',name:'Aktivis Diskusi',desc:'Kirim minimal 5 pesan di forum diskusi',check:s=>s.diskusiSent>=5},
   ]},
 ];
 
@@ -1879,7 +1879,7 @@ function renderRps(){
   const wrap=document.getElementById('rpsWrap');
   const rps=window.RPS_DATA;
   if(!rps || (!rps.url && !rps.data)){
-    wrap.innerHTML=`<div class="empty-state"><div class="es-icon">📄</div><p>RPS belum diisi.<br>Isi window.RPS_DATA di file rps.js dengan URL atau base64 dokumen RPS.</p></div>`;
+    wrap.innerHTML=`<div class="empty-state"><div class="es-icon"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div><p>RPS belum diisi.<br>Isi window.RPS_DATA di file rps.js dengan URL atau base64 dokumen RPS.</p></div>`;
     return;
   }
   const judul=rps.judul?escapeHtml(rps.judul):'RPS';
@@ -1894,7 +1894,7 @@ function renderRps(){
   }else if(rps.url){
     mediaHtml=`<iframe class="file-preview" style="height:70vh;border-radius:12px;" src="${previewUrl(rps.url,'pdf')}" loading="lazy"></iframe>`;
   }
-  const openLink=rps.url?`<a class="file-open-link" href="${rps.url}" target="_blank" rel="noopener">🔗 Buka di Tab Baru</a>`:'';
+  const openLink=rps.url?`<a class="file-open-link" href="${rps.url}" target="_blank" rel="noopener"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3"/><path d="M9 17H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"/><line x1="8" y1="12" x2="16" y2="12"/></svg> Buka di Tab Baru</a>`:'';
   wrap.innerHTML=`
     <div class="file-item" style="padding:0;">
       <div class="file-item-top" style="padding:14px 14px 10px;">
@@ -1929,7 +1929,7 @@ function renderPencapaian(){
         <div class="badge-icon">${b.icon}</div>
         <div class="badge-name">${b.name}</div>
         <div class="badge-desc">${b.desc}</div>
-        <div class="badge-unlocked-check">${unlocked?'✅ Diraih!':'🔒 Belum'}</div>
+        <div class="badge-unlocked-check">${unlocked?'<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Diraih!':'<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Belum'}</div>
       </div>`;
     });
     html+='</div></div>';
@@ -1982,7 +1982,7 @@ function _buildSkyDOM(){
 
   const cData=[[5,10,26],[22,18,22],[48,13,28],[68,8,24],[84,20,20]];
   document.getElementById('_skyClouds').innerHTML=cData.map(([x,y,sz],i)=>
-    `<div style="position:absolute;left:${x}%;top:${y}%;font-size:${sz}px;animation:_drift ${10+i*2}s ease-in-out infinite ${i*.8}s;opacity:.6;">☁️</div>`
+    `<div style="position:absolute;left:${x}%;top:${y}%;font-size:${sz}px;animation:_drift ${10+i*2}s ease-in-out infinite ${i*.8}s;opacity:.6;"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg></div>`
   ).join('');
 }
 
@@ -2032,10 +2032,10 @@ function _skyLoop(ts){
   const body=document.getElementById('_skyBody');
   if(body){
     body.style.transform=`translate(${bx-20}px,${by-20}px)`;
-    if(h>=6&&h<7){body.textContent='🌅';body.style.fontSize='26px';body.style.filter='drop-shadow(0 0 8px rgba(255,140,40,.9))';}
-    else if(h>=7&&h<17){body.textContent='☀️';body.style.fontSize=(h>=11&&h<15)?'34px':'30px';body.style.filter=(h>=11&&h<15)?'drop-shadow(0 0 16px rgba(255,235,50,1))':'drop-shadow(0 0 10px rgba(255,210,60,.75))';}
-    else if(h>=17&&h<19){body.textContent='🌇';body.style.fontSize='26px';body.style.filter='drop-shadow(0 0 8px rgba(255,90,20,.85))';}
-    else{body.textContent='🌙';body.style.fontSize='28px';body.style.filter='drop-shadow(0 0 10px rgba(200,220,255,.65))';}
+    if(h>=6&&h<7){body.innerHTML='<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em;color:#FF8C28" xmlns="http://www.w3.org/2000/svg"><path d="M17 18a5 5 0 0 0-10 0"/><line x1="12" y1="2" x2="12" y2="9"/><line x1="4.22" y1="10.22" x2="5.64" y2="11.64"/><line x1="1" y1="18" x2="3" y2="18"/><line x1="21" y1="18" x2="23" y2="18"/><line x1="18.36" y1="11.64" x2="19.78" y2="10.22"/><line x1="23" y1="22" x2="1" y2="22"/><polyline points="8 6 12 2 16 6"/></svg>';body.style.fontSize='26px';body.style.filter='drop-shadow(0 0 8px rgba(255,140,40,.9))';}
+    else if(h>=7&&h<17){body.innerHTML='<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em;color:#FFD23C" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>';body.style.fontSize=(h>=11&&h<15)?'34px':'30px';body.style.filter=(h>=11&&h<15)?'drop-shadow(0 0 16px rgba(255,235,50,1))':'drop-shadow(0 0 10px rgba(255,210,60,.75))';}
+    else if(h>=17&&h<19){body.innerHTML='<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em;color:#FF5A14" xmlns="http://www.w3.org/2000/svg"><path d="M17 18a5 5 0 0 0-10 0"/><line x1="12" y1="9" x2="12" y2="2"/><line x1="4.22" y1="10.22" x2="5.64" y2="11.64"/><line x1="1" y1="18" x2="3" y2="18"/><line x1="21" y1="18" x2="23" y2="18"/><line x1="18.36" y1="11.64" x2="19.78" y2="10.22"/><line x1="23" y1="22" x2="1" y2="22"/><polyline points="16 5 12 9 8 5"/></svg>';body.style.fontSize='26px';body.style.filter='drop-shadow(0 0 8px rgba(255,90,20,.85))';}
+    else{body.innerHTML='<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em;color:#C8DCFF" xmlns="http://www.w3.org/2000/svg"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';body.style.fontSize='28px';body.style.filter='drop-shadow(0 0 10px rgba(200,220,255,.65))';}
   }
 
   if(h!==_skyPrevHour){
@@ -2107,22 +2107,22 @@ function _applySkyPhase(h){
 
   const EXTRAS={
     0:'',1:'',2:'',3:'',4:'',
-    5:`<div style="position:absolute;left:10%;bottom:22%;font-size:18px;opacity:.28;animation:_float 5s ease-in-out infinite;">🌄</div>`,
-    6:`<div style="position:absolute;right:7%;bottom:18%;font-size:20px;opacity:.3;animation:_float 4s ease-in-out infinite;">🌸</div>`,
-    7:`<div style="position:absolute;left:6%;top:22%;font-size:13px;opacity:.48;animation:_float 2.5s ease-in-out infinite;">🌸</div><div style="position:absolute;right:10%;top:17%;font-size:11px;opacity:.38;animation:_float 3s ease-in-out infinite .7s;">🐦</div>`,
-    8:`<div style="position:absolute;right:10%;top:17%;font-size:11px;opacity:.38;animation:_float 3s ease-in-out infinite;">🐦</div>`,
+    5:`<div style="position:absolute;left:10%;bottom:22%;font-size:18px;opacity:.28;animation:_float 5s ease-in-out infinite;"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M17 18a5 5 0 0 0-10 0"/><line x1="12" y1="2" x2="12" y2="9"/><line x1="4.22" y1="10.22" x2="5.64" y2="11.64"/><line x1="1" y1="18" x2="3" y2="18"/><line x1="21" y1="18" x2="23" y2="18"/><line x1="18.36" y1="11.64" x2="19.78" y2="10.22"/><line x1="23" y1="22" x2="1" y2="22"/><polyline points="8 6 12 2 16 6"/></svg></div>`,
+    6:`<div style="position:absolute;right:7%;bottom:18%;font-size:20px;opacity:.3;animation:_float 4s ease-in-out infinite;"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="7" r="3"/><circle cx="17" cy="10" r="3"/><circle cx="15" cy="16" r="3"/><circle cx="9" cy="16" r="3"/><circle cx="7" cy="10" r="3"/></svg></div>`,
+    7:`<div style="position:absolute;left:6%;top:22%;font-size:13px;opacity:.48;animation:_float 2.5s ease-in-out infinite;"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="7" r="3"/><circle cx="17" cy="10" r="3"/><circle cx="15" cy="16" r="3"/><circle cx="9" cy="16" r="3"/><circle cx="7" cy="10" r="3"/></svg></div><div style="position:absolute;right:10%;top:17%;font-size:11px;opacity:.38;animation:_float 3s ease-in-out infinite .7s;"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M22 3s-2 1-3 1c-1-2-3-3-5-2-2 .7-3 3-2 5-4 0-7-2-9-5 0 3 1 6 4 8-1 0-2 0-3-1 0 3 2 5 5 6-2 1-4 1-6 1 3 2 6 3 9 2 6-2 9-8 8-14 1-1 2-1 2-1z"/></svg></div>`,
+    8:`<div style="position:absolute;right:10%;top:17%;font-size:11px;opacity:.38;animation:_float 3s ease-in-out infinite;"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M22 3s-2 1-3 1c-1-2-3-3-5-2-2 .7-3 3-2 5-4 0-7-2-9-5 0 3 1 6 4 8-1 0-2 0-3-1 0 3 2 5 5 6-2 1-4 1-6 1 3 2 6 3 9 2 6-2 9-8 8-14 1-1 2-1 2-1z"/></svg></div>`,
     9:'',10:'',
-    11:`<div style="position:absolute;left:4%;top:20%;font-size:11px;opacity:.42;animation:_float 2s ease-in-out infinite;">💫</div>`,
-    12:`<div style="position:absolute;left:4%;top:20%;font-size:11px;opacity:.42;animation:_float 2s ease-in-out infinite;">💫</div><div style="position:absolute;right:6%;top:16%;font-size:9px;opacity:.38;animation:_float 1.5s ease-in-out infinite .5s;">✨</div>`,
+    11:`<div style="position:absolute;left:4%;top:20%;font-size:11px;opacity:.42;animation:_float 2s ease-in-out infinite;"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14l-5-4.87 6.91-1.01L12 2z"/></svg></div>`,
+    12:`<div style="position:absolute;left:4%;top:20%;font-size:11px;opacity:.42;animation:_float 2s ease-in-out infinite;"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14l-5-4.87 6.91-1.01L12 2z"/></svg></div><div style="position:absolute;right:6%;top:16%;font-size:9px;opacity:.38;animation:_float 1.5s ease-in-out infinite .5s;"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14l-5-4.87 6.91-1.01L12 2z"/></svg></div>`,
     13:'',14:'',
-    15:`<div style="position:absolute;right:5%;bottom:16%;font-size:22px;opacity:.2;animation:_float 4s ease-in-out infinite;">🌅</div>`,
-    16:`<div style="position:absolute;right:5%;bottom:16%;font-size:22px;opacity:.2;animation:_float 4s ease-in-out infinite;">🌅</div>`,
-    17:`<div style="position:absolute;right:5%;bottom:16%;font-size:18px;opacity:.18;animation:_float 4s ease-in-out infinite;">🌇</div>`,
-    18:`<div style="position:absolute;right:8%;bottom:20%;font-size:16px;opacity:.28;animation:_float 5s ease-in-out infinite;">🌆</div><div style="position:absolute;left:10%;top:18%;font-size:9px;opacity:.28;animation:_float 3s ease-in-out infinite .5s;">⭐</div>`,
-    19:`<div style="position:absolute;left:10%;top:18%;font-size:9px;opacity:.28;animation:_float 3s ease-in-out infinite .5s;">⭐</div>`,
-    20:`<div style="position:absolute;right:10%;bottom:22%;font-size:20px;opacity:.15;animation:_float 6s ease-in-out infinite;">🌙</div>`,
-    21:`<div style="position:absolute;right:10%;bottom:22%;font-size:20px;opacity:.15;animation:_float 6s ease-in-out infinite;">🌙</div><div style="position:absolute;left:16%;top:14%;font-size:9px;opacity:.32;animation:_float 4s ease-in-out infinite 1s;">✨</div>`,
-    22:`<div style="position:absolute;left:16%;top:14%;font-size:9px;opacity:.32;animation:_float 4s ease-in-out infinite 1s;">✨</div>`,
+    15:`<div style="position:absolute;right:5%;bottom:16%;font-size:22px;opacity:.2;animation:_float 4s ease-in-out infinite;"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M17 18a5 5 0 0 0-10 0"/><line x1="12" y1="2" x2="12" y2="9"/><line x1="4.22" y1="10.22" x2="5.64" y2="11.64"/><line x1="1" y1="18" x2="3" y2="18"/><line x1="21" y1="18" x2="23" y2="18"/><line x1="18.36" y1="11.64" x2="19.78" y2="10.22"/><line x1="23" y1="22" x2="1" y2="22"/><polyline points="8 6 12 2 16 6"/></svg></div>`,
+    16:`<div style="position:absolute;right:5%;bottom:16%;font-size:22px;opacity:.2;animation:_float 4s ease-in-out infinite;"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M17 18a5 5 0 0 0-10 0"/><line x1="12" y1="2" x2="12" y2="9"/><line x1="4.22" y1="10.22" x2="5.64" y2="11.64"/><line x1="1" y1="18" x2="3" y2="18"/><line x1="21" y1="18" x2="23" y2="18"/><line x1="18.36" y1="11.64" x2="19.78" y2="10.22"/><line x1="23" y1="22" x2="1" y2="22"/><polyline points="8 6 12 2 16 6"/></svg></div>`,
+    17:`<div style="position:absolute;right:5%;bottom:16%;font-size:18px;opacity:.18;animation:_float 4s ease-in-out infinite;"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M17 18a5 5 0 0 0-10 0"/><line x1="12" y1="9" x2="12" y2="2"/><line x1="4.22" y1="10.22" x2="5.64" y2="11.64"/><line x1="1" y1="18" x2="3" y2="18"/><line x1="21" y1="18" x2="23" y2="18"/><line x1="18.36" y1="11.64" x2="19.78" y2="10.22"/><line x1="23" y1="22" x2="1" y2="22"/><polyline points="16 5 12 9 8 5"/></svg></div>`,
+    18:`<div style="position:absolute;right:8%;bottom:20%;font-size:16px;opacity:.28;animation:_float 5s ease-in-out infinite;"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M17 18a5 5 0 0 0-10 0"/><line x1="12" y1="9" x2="12" y2="2"/><line x1="4.22" y1="10.22" x2="5.64" y2="11.64"/><line x1="1" y1="18" x2="3" y2="18"/><line x1="21" y1="18" x2="23" y2="18"/><line x1="18.36" y1="11.64" x2="19.78" y2="10.22"/><line x1="23" y1="22" x2="1" y2="22"/><polyline points="16 5 12 9 8 5"/></svg></div><div style="position:absolute;left:10%;top:18%;font-size:9px;opacity:.28;animation:_float 3s ease-in-out infinite .5s;"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14l-5-4.87 6.91-1.01L12 2z"/></svg></div>`,
+    19:`<div style="position:absolute;left:10%;top:18%;font-size:9px;opacity:.28;animation:_float 3s ease-in-out infinite .5s;"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14l-5-4.87 6.91-1.01L12 2z"/></svg></div>`,
+    20:`<div style="position:absolute;right:10%;bottom:22%;font-size:20px;opacity:.15;animation:_float 6s ease-in-out infinite;"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></div>`,
+    21:`<div style="position:absolute;right:10%;bottom:22%;font-size:20px;opacity:.15;animation:_float 6s ease-in-out infinite;"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></div><div style="position:absolute;left:16%;top:14%;font-size:9px;opacity:.32;animation:_float 4s ease-in-out infinite 1s;"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14l-5-4.87 6.91-1.01L12 2z"/></svg></div>`,
+    22:`<div style="position:absolute;left:16%;top:14%;font-size:9px;opacity:.32;animation:_float 4s ease-in-out infinite 1s;"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14l-5-4.87 6.91-1.01L12 2z"/></svg></div>`,
     23:'',
   };
   if(extras) extras.innerHTML=EXTRAS[h]||'';
