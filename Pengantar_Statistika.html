@@ -109,6 +109,8 @@ body{
 .menu-icon-wrap.blue{background:#E3F2FD;}
 .menu-icon-wrap.purple{background:#F3E5F5;}
 .menu-icon-wrap.yellow{background:#FFF8E1;}
+.menu-icon-wrap.green{background:#E0F2F1;}
+.menu-icon-wrap.orange{background:#FFF3E0;}
 .menu-item-name{font-size:14px;font-weight:700;color:var(--dark);}
 .menu-item-desc{font-size:11px;color:var(--gray);line-height:1.4;margin-top:4px;}
 
@@ -469,6 +471,16 @@ body{
       <div class="menu-item-name">Pencapaian</div>
       <div class="menu-item-desc">Kumpulkan badge dari belajarmu</div>
     </div>
+    <div class="menu-item" onclick="openRps()">
+      <div class="menu-icon-wrap green">📄</div>
+      <div class="menu-item-name">RPS</div>
+      <div class="menu-item-desc">Rencana Pembelajaran Semester</div>
+    </div>
+    <div class="menu-item" onclick="goTo('tentangPage');markMenuVisited('tentangPage')">
+      <div class="menu-icon-wrap orange">ℹ️</div>
+      <div class="menu-item-name">Tentang</div>
+      <div class="menu-item-desc">Tentang aplikasi ini</div>
+    </div>
   </div>
   <div style="height:20px;"></div>
 </div>
@@ -645,6 +657,52 @@ body{
   </div>
 </div>
 
+<!-- =========== RPS =========== -->
+<div id="rpsPage" class="page">
+  <div class="page-header">
+    <button class="btn-back" onclick="goTo('homePage')">←</button>
+    <h2>📄 RPS</h2>
+  </div>
+  <div class="page-body">
+    <div id="rpsWrap"></div>
+  </div>
+</div>
+
+<!-- =========== TENTANG =========== -->
+<div id="tentangPage" class="page">
+  <div class="page-header">
+    <button class="btn-back" onclick="goTo('homePage')">←</button>
+    <h2>ℹ️ Tentang</h2>
+  </div>
+  <div class="page-body">
+    <div class="akun-hero" style="margin-bottom:20px;">
+      <div class="akun-avatar-big">🎓</div>
+      <div class="akun-name">Kelas Digital</div>
+      <span class="akun-badge-pill">Pengantar Statistika</span>
+    </div>
+    <div class="akun-info-card">
+      <div class="akun-row"><span class="akun-row-left">Aplikasi</span><span class="akun-row-val">Kelas Digital</span></div>
+      <div class="akun-row"><span class="akun-row-left">Mata Kuliah</span><span class="akun-row-val">Pengantar Statistika</span></div>
+      <div class="akun-row"><span class="akun-row-left">Versi</span><span class="akun-row-val">1.0.0</span></div>
+    </div>
+    <div class="section-title" style="padding:16px 0 8px;">📖 Tentang Aplikasi</div>
+    <div class="card" style="font-size:13px;color:var(--dark);line-height:1.6;">
+      Kelas Digital adalah aplikasi pendamping perkuliahan yang memudahkan
+      mahasiswa mengakses materi pertemuan, mengerjakan latihan, berdiskusi
+      dengan sesama mahasiswa, memantau kehadiran, dan melihat Rencana
+      Pembelajaran Semester (RPS) — semuanya dalam satu tempat.
+    </div>
+    <div class="section-title" style="padding:16px 0 8px;">✨ Fitur Utama</div>
+    <div class="card" style="font-size:13px;color:var(--dark);line-height:1.8;">
+      📅 Materi &amp; absensi tiap pertemuan<br>
+      📝 Latihan soal per pertemuan<br>
+      💬 Forum diskusi kelas<br>
+      🏆 Sistem pencapaian &amp; badge<br>
+      📄 Rencana Pembelajaran Semester (RPS)
+    </div>
+  </div>
+</div>
+
 <!-- ===== BOTTOM NAV ===== -->
 <div class="bottom-nav" id="bottomNav" style="display:none;">
   <button class="nav-item active" id="navHome" onclick="navTo('homePage','navHome')">
@@ -684,6 +742,13 @@ body{
      false untuk membuka. Edit di file ini untuk mengatur pertemuan/latihan mana yang
      sudah boleh diakses mahasiswa. -->
 <script src="setting-locks.js"></script>
+<!-- Data RPS (Rencana Pembelajaran Semester), ditampilkan lewat menu "RPS" di
+     halaman utama. Isi window.RPS_DATA di file ini dengan salah satu cara:
+     1) URL ke PDF (tipe:'url', url:'https://...')
+     2) File di-encode base64 (tipe:'base64', data:'data:application/pdf;base64,...'
+        atau 'data:image/png;base64,...' kalau berupa gambar hasil scan).
+     Lihat komentar contoh di dalam file rps.js. -->
+<script src="rps.js"></script>
 <script>
 /* ============================================================
    STORAGE HELPERS
@@ -1710,6 +1775,52 @@ function getBadgeStats(){
   const diskusiSent=parseInt(localStorage.getItem('kd_diskusi_sent')||'0');
 
   return{totalTersedia,totalDone,perfectCount,maxAttempt,menuAll,pertemuanDibuka,totalPertemuan,pertemuanVisitedCount,hadirCount,diskusiSent};
+}
+
+/* ============================================================
+   RPS (Rencana Pembelajaran Semester)
+   Sumber data: window.RPS_DATA dari rps.js. Bentuknya salah satu:
+   { tipe:'url', url:'https://....pdf', judul:'RPS ...' }
+   { tipe:'base64', data:'data:application/pdf;base64,...', judul:'...' }
+   { tipe:'base64', data:'data:image/png;base64,...', judul:'...' }  (scan/foto)
+============================================================ */
+function openRps(){
+  goTo('rpsPage');
+  markMenuVisited('rpsPage');
+  renderRps();
+}
+function renderRps(){
+  const wrap=document.getElementById('rpsWrap');
+  const rps=window.RPS_DATA;
+  if(!rps || (!rps.url && !rps.data)){
+    wrap.innerHTML=`<div class="empty-state"><div class="es-icon">📄</div><p>RPS belum diisi.<br>Isi window.RPS_DATA di file rps.js dengan URL atau base64 dokumen RPS.</p></div>`;
+    return;
+  }
+  const judul=rps.judul?escapeHtml(rps.judul):'RPS';
+  let mediaHtml='';
+  if(rps.tipe==='base64' && rps.data){
+    if(rps.data.startsWith('data:image')){
+      mediaHtml=`<img src="${rps.data}" alt="${judul}" style="width:100%;border-radius:12px;display:block;">`;
+    }else{
+      // data:application/pdf;base64,... atau tipe data URI PDF lainnya
+      mediaHtml=`<iframe class="file-preview" style="height:70vh;border-radius:12px;" src="${rps.data}" loading="lazy"></iframe>`;
+    }
+  }else if(rps.url){
+    mediaHtml=`<iframe class="file-preview" style="height:70vh;border-radius:12px;" src="${previewUrl(rps.url,'pdf')}" loading="lazy"></iframe>`;
+  }
+  const openLink=rps.url?`<a class="file-open-link" href="${rps.url}" target="_blank" rel="noopener">🔗 Buka di Tab Baru</a>`:'';
+  wrap.innerHTML=`
+    <div class="file-item" style="padding:0;">
+      <div class="file-item-top" style="padding:14px 14px 10px;">
+        <div class="file-badge pdf">PDF</div>
+        <div style="flex:1;min-width:0;">
+          <div class="file-name">${judul}</div>
+          <div class="file-type">Rencana Pembelajaran Semester</div>
+        </div>
+      </div>
+      ${mediaHtml}
+      ${openLink}
+    </div>`;
 }
 
 function renderPencapaian(){
