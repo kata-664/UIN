@@ -529,7 +529,7 @@ body{
       <button onclick="batalBalas()" class="diskusi-reply-cancel">✕</button>
     </div>
     <div class="diskusi-input-row">
-      <textarea id="diskusiInput" rows="1" maxlength="500" placeholder="Tulis pertanyaan atau tanggapan..." oninput="autoGrow(this)" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();kirimDiskusi(event);}"></textarea>
+      <textarea id="diskusiInput" rows="1" maxlength="500" placeholder="Tulis pertanyaan atau tanggapan..." oninput="autoGrow(this)"></textarea>
       <button class="diskusi-send-btn" onclick="kirimDiskusi(event)" aria-label="Kirim">➤</button>
     </div>
   </div>
