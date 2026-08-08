@@ -1225,23 +1225,34 @@ function addDeletedDiskusiId(id){
     localStorage.setItem('kd_deleted_diskusi',JSON.stringify(arr));
   }
 }
-function loadDiskusi(){
+function loadDiskusi(silent){
   const wrap=document.getElementById('diskusiListWrap');
   if(!gasReady()){
     wrap.innerHTML=`<div class="empty-state"><div class="es-icon">💬</div><p>Forum diskusi belum diaktifkan.<br>Isi GAS_DISKUSI_URL di file HTML dengan URL Web App Apps Script (lihat PANDUAN_SETUP_FORUM.md).</p></div>`;
     return;
   }
-  wrap.innerHTML=`<div class="empty-state"><div class="es-icon">⏳</div><p>Memuat diskusi...</p></div>`;
+  // Kalau sudah ada pesan tertampil (mis. reload setelah kirim pesan / auto-refresh),
+  // jangan timpa layar dengan "Memuat diskusi..." dulu — biarkan pesan lama tetap
+  // terlihat sampai data baru siap, supaya tidak terasa seperti reload total.
+  const hasContent=wrap.querySelector('.chat-row, .diskusi-date-sep');
+  if(!silent && !hasContent){
+    wrap.innerHTML=`<div class="empty-state"><div class="es-icon">⏳</div><p>Memuat diskusi...</p></div>`;
+  }
   fetch(GAS_DISKUSI_URL+'?pertemuan='+encodeURIComponent(DISKUSI_THREAD_ID))
     .then(r=>r.json())
     .then(res=>{
-      if(!res.ok){wrap.innerHTML=`<div class="empty-state"><p>⚠️ Gagal memuat diskusi.</p></div>`;return;}
+      if(!res.ok){
+        if(!hasContent)wrap.innerHTML=`<div class="empty-state"><p>⚠️ Gagal memuat diskusi.</p></div>`;
+        return;
+      }
       console.log('[diskusi] data mentah dari server:',res.data);
       const items=(res.data||[]).map(normalizeDiskusiItem_);
       console.log('[diskusi] setelah dinormalisasi:',items);
       renderDiskusiList(items);
     })
-    .catch(()=>{wrap.innerHTML=`<div class="empty-state"><p>⚠️ Gagal terhubung ke server diskusi. Cek koneksi internet.</p></div>`;});
+    .catch(()=>{
+      if(!hasContent)wrap.innerHTML=`<div class="empty-state"><p>⚠️ Gagal terhubung ke server diskusi. Cek koneksi internet.</p></div>`;
+    });
 }
 function renderDiskusiList(items){
   const wrap=document.getElementById('diskusiListWrap');
@@ -1390,7 +1401,7 @@ function kirimDiskusi(ev){
       input.value='';
       autoGrow(input);
       batalBalas();
-      loadDiskusi();
+      loadDiskusi(true);
       try{const c=parseInt(localStorage.getItem('kd_diskusi_sent')||'0');localStorage.setItem('kd_diskusi_sent',String(c+1));}catch(e){}
     } else {
       alert(res.error||'Gagal mengirim pesan.');
