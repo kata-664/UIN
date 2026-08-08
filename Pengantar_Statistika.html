@@ -1319,15 +1319,7 @@ function formatDiskusiDate(d){
 function scrollDiskusiToBottom(){
   const anchor=document.getElementById('diskusiScrollAnchor');
   if(!anchor)return;
-  const doScroll=()=>{
-    anchor.scrollIntoView({block:'end'});
-    // Cara kedua sebagai jaga-jaga: langsung set posisi scroll ke paling
-    // bawah. Dipakai berbarengan karena scrollIntoView saja kadang gagal
-    // kalau dipanggil pas halaman diskusi baru saja dimunculkan (browser
-    // belum selesai menghitung ulang tinggi halaman yang sebenarnya).
-    const se=document.scrollingElement||document.documentElement;
-    se.scrollTop=se.scrollHeight;
-  };
+  const doScroll=()=>anchor.scrollIntoView({block:'end'});
   // Coba beberapa kali di titik waktu berbeda supaya tetap kena sasaran
   // walau tinggi halaman masih berubah-ubah (render baru / keyboard HP).
   doScroll();
