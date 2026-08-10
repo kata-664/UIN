@@ -823,7 +823,7 @@ body{
    Ganti URL di bawah dengan URL Web App hasil Deploy Apps Script.
    Lihat panduan setup di PANDUAN_SETUP_FORUM.md
 ============================================================ */
-const GAS_DISKUSI_URL = 'https://script.google.com/macros/s/AKfycbwqSawCfNrsQQnxBJJaLa3HmJmcO4sFwUqMmmEegtuzdcb7z52NXv2EIabiEH9bmE8UhA/exec';
+const GAS_DISKUSI_URL = 'https://script.google.com/macros/s/AKfycbyhHppo-SrkY2vJYbAU54MSFlca7dEMXHZR4S4WGSAO6h6JFzxEyj9C_oBFOi73wDapiw/exec';
 /* Diskusi sekarang jadi satu ruang obrolan kelas (bukan per pertemuan lagi).
    Nilai konstan ini dikirim sebagai parameter "pertemuan" ke Apps Script supaya
    semua pesan tersimpan & dimuat dari satu ruang yang sama.
@@ -838,7 +838,7 @@ const DISKUSI_THREAD_ID = 'ruang_kelas';
    Ganti URL di bawah dengan URL Web App hasil Deploy Apps Script
    yang menangani login & ganti password. Lihat PANDUAN_SETUP_LOGIN.md
 ============================================================ */
-const GAS_AUTH_URL = 'https://script.google.com/macros/s/AKfycbwqSawCfNrsQQnxBJJaLa3HmJmcO4sFwUqMmmEegtuzdcb7z52NXv2EIabiEH9bmE8UhA/exec';
+const GAS_AUTH_URL = 'https://script.google.com/macros/s/AKfycbyhHppo-SrkY2vJYbAU54MSFlca7dEMXHZR4S4WGSAO6h6JFzxEyj9C_oBFOi73wDapiw/exec';
 function authReady(){ return GAS_AUTH_URL && !GAS_AUTH_URL.includes('PASTE_URL'); }
 
 /* ============================================================
@@ -849,7 +849,7 @@ function authReady(){ return GAS_AUTH_URL && !GAS_AUTH_URL.includes('PASTE_URL')
    supaya aksi kunci/buka pertemuan & latihan hanya bisa dilakukan
    dari akun dosen (bukan mahasiswa yang iseng manggil endpoint-nya
    langsung). Ganti nilainya sebelum dipakai sungguhan. */
-const GAS_ADMIN_URL = 'https://script.google.com/macros/s/AKfycbwqSawCfNrsQQnxBJJaLa3HmJmcO4sFwUqMmmEegtuzdcb7z52NXv2EIabiEH9bmE8UhA/exec';
+const GAS_ADMIN_URL = 'https://script.google.com/macros/s/AKfycbyhHppo-SrkY2vJYbAU54MSFlca7dEMXHZR4S4WGSAO6h6JFzxEyj9C_oBFOi73wDapiw/exec';
 const DOSEN_SECRET = 'GANTI_KODE_RAHASIA_INI';
 function adminReady(){ return GAS_ADMIN_URL && !GAS_ADMIN_URL.includes('PASTE_URL'); }
 
