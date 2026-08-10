@@ -207,11 +207,44 @@ body{
 .file-badge.doc{background:#1565C0;}
 .file-badge.xlsx{background:#2E7D32;}
 .file-badge.pdf{background:#C62828;}
+.file-badge.rangkuman{background:#7B1FA2;}
 .file-name{font-size:13px;font-weight:700;color:var(--dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .file-type{font-size:10.5px;color:var(--gray);text-transform:uppercase;letter-spacing:.4px;}
 .file-actions{margin-left:auto;display:flex;gap:6px;flex-shrink:0;}
 .file-preview{width:100%;height:230px;border:none;border-top:1px solid var(--border);background:#F8FAFC;}
 .file-open-link{display:block;text-align:center;font-size:12px;font-weight:700;color:var(--blue);padding:10px;border-top:1px solid var(--border);text-decoration:none;}
+.file-rangkuman-open{display:flex;align-items:center;justify-content:center;gap:8px;text-align:center;font-size:12.5px;font-weight:700;color:#fff;padding:12px;border-top:1px solid var(--border);text-decoration:none;background:linear-gradient(135deg,#7B1FA2,#BA68C8);cursor:pointer;border:none;width:100%;}
+.file-rangkuman-open:active{opacity:.9;}
+
+/* ===== RANGKUMAN READER (blog-post style, mendukung LaTeX & code) ===== */
+.rangkuman-body{padding:86px 18px 40px;}
+.rangkuman-meta{font-size:12px;color:var(--gray);margin-bottom:18px;}
+.rangkuman-loading{text-align:center;padding:60px 20px;color:var(--gray);font-size:13px;}
+.rangkuman-loading .rk-spinner{width:30px;height:30px;border-radius:50%;border:3px solid #E2E8F0;border-top-color:var(--purple);animation:_spin .8s linear infinite;margin:0 auto 14px;}
+.rangkuman-error{background:#FFEBEE;border:1px solid #FFCDD2;color:#B71C1C;padding:14px 16px;border-radius:12px;font-size:13px;line-height:1.5;}
+.rangkuman-article{font-size:15px;line-height:1.85;color:var(--dark);word-break:break-word;}
+.rangkuman-article h1{font-size:22px;font-weight:900;margin:6px 0 14px;line-height:1.3;}
+.rangkuman-article h2{font-size:18px;font-weight:800;margin:26px 0 12px;line-height:1.35;color:var(--blue-dark);}
+.rangkuman-article h3{font-size:15.5px;font-weight:800;margin:20px 0 10px;color:var(--dark);}
+.rangkuman-article p{margin:0 0 14px;}
+.rangkuman-article ul,.rangkuman-article ol{margin:0 0 14px;padding-left:22px;}
+.rangkuman-article li{margin-bottom:6px;}
+.rangkuman-article blockquote{border-left:3px solid var(--purple-light);background:#F8F1FB;color:#5B2A6B;padding:10px 14px;border-radius:8px;margin:0 0 14px;font-size:14px;}
+.rangkuman-article strong{color:var(--dark);font-weight:800;}
+.rangkuman-article a{color:var(--blue);text-decoration:underline;}
+.rangkuman-article img{max-width:100%;border-radius:10px;margin:8px 0 14px;}
+.rangkuman-article table{width:100%;border-collapse:collapse;margin:0 0 16px;font-size:13px;}
+.rangkuman-article th,.rangkuman-article td{border:1px solid var(--border);padding:8px 10px;text-align:left;}
+.rangkuman-article th{background:#F8FAFC;font-weight:800;}
+.rangkuman-article code{background:#F1F0FF;color:#6A1B9A;padding:2px 6px;border-radius:6px;font-size:13px;font-family:'SFMono-Regular',Consolas,'Liberation Mono',Menlo,monospace;}
+.rk-codewrap{position:relative;margin:0 0 16px;border-radius:12px;overflow:hidden;box-shadow:0 2px 10px rgba(21,101,192,.10);}
+.rk-codehead{display:flex;align-items:center;justify-content:space-between;background:#2b2140;padding:8px 12px;font-size:10.5px;color:#D4C6E8;font-weight:700;text-transform:uppercase;letter-spacing:.4px;}
+.rk-codehead .rk-copy-hint{font-weight:600;text-transform:none;letter-spacing:0;opacity:.75;font-size:10.5px;}
+.rk-codewrap pre{margin:0;cursor:pointer;background:#1E1730 !important;}
+.rk-codewrap pre code.hljs{display:block;padding:14px !important;font-size:12.5px;line-height:1.6;overflow-x:auto;background:transparent !important;}
+.rk-codewrap.rk-copied .rk-codehead .rk-copy-hint{color:#69F0AE;opacity:1;}
+.rangkuman-article .katex-display{overflow-x:auto;overflow-y:hidden;padding:4px 0 10px;}
+.rangkuman-article .katex{font-size:1.05em;}
 
 /* mahasiswa */
 .mhs-row{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--border);}
@@ -518,6 +551,18 @@ body{
     <div class="card">
       <div id="mhsListWrap"></div>
     </div>
+  </div>
+</div>
+
+<!-- =========== RANGKUMAN (baca artikel: markdown + LaTeX + code disalin) =========== -->
+<div id="rangkumanPage" class="page">
+  <div class="page-header">
+    <button class="btn-back" onclick="goTo('pertemuanDetailPage')"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></button>
+    <h2 id="rkTitle">Rangkuman</h2>
+  </div>
+  <div class="rangkuman-body">
+    <div id="rkMeta" class="rangkuman-meta"></div>
+    <div id="rkContent"></div>
   </div>
 </div>
 
@@ -1151,26 +1196,182 @@ function renderFileList(){
     wrap.innerHTML=`<div class="empty-state"><div class="es-icon"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.20 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></div><p>Belum ada file dibagikan di pertemuan ini.</p></div>`;
     return;
   }
-  const labels={ppt:'PPT',doc:'DOC',xlsx:'XLSX',pdf:'PDF'};
+  const labels={ppt:'PPT',doc:'DOC',xlsx:'XLSX',pdf:'PDF',rangkuman:'Rangkuman'};
   const seen=new Set(getSeenFiles());
   wrap.innerHTML=files.map(f=>{
     const isNew=!seen.has(f.id);
+    const badgeInner=f.tipe==='rangkuman'?'<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>':labels[f.tipe];
+    const bodyHtml=f.tipe==='rangkuman'
+      ? `<button class="file-rangkuman-open" onclick="openRangkuman('${f.id}')"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg> Baca Rangkuman</button>`
+      : `<iframe class="file-preview" src="${previewUrl(f.url,f.tipe)}" loading="lazy"></iframe>
+      <a class="file-open-link" href="${driveDownloadUrl(f.url)}" target="_blank" rel="noopener"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3"/><path d="M9 17H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"/><line x1="8" y1="12" x2="16" y2="12"/></svg> Unduh File</a>`;
     return `
     <div class="file-item">
       <div class="file-item-top">
-        <div class="file-badge ${f.tipe}">${labels[f.tipe]}</div>
+        <div class="file-badge ${f.tipe}">${badgeInner}</div>
         <div style="flex:1;min-width:0;">
           <div class="file-name">${escapeHtml(f.nama)}${isNew?'<span class="tag-new"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> BARU</span>':''}</div>
-          <div class="file-type">${labels[f.tipe]}</div>
+          <div class="file-type">${labels[f.tipe]||f.tipe}</div>
         </div>
       </div>
-      <iframe class="file-preview" src="${previewUrl(f.url,f.tipe)}" loading="lazy"></iframe>
-      <a class="file-open-link" href="${driveDownloadUrl(f.url)}" target="_blank" rel="noopener"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3"/><path d="M9 17H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"/><line x1="8" y1="12" x2="16" y2="12"/></svg> Unduh File</a>
+      ${bodyHtml}
     </div>`;
   }).join('');
   markFilesSeen(files.map(f=>f.id));
   refreshHomeStats();
 }
+/* ============================================================
+   RANGKUMAN (artikel per pertemuan): markdown + LaTeX + code
+   ============================================================
+   Tipe file baru "rangkuman": field "url"-nya mengarah ke file JS
+   terpisah (mis. teksPT1.js untuk Pertemuan 1) yang HARUS mengisi
+   variabel global berikut saat file itu dimuat:
+     window.RANGKUMAN_TEXT = `... isi tulisan di sini ...`;
+   Isi teks mendukung:
+     - Markdown dasar: # Judul, ## Subjudul, **tebal**, *miring*,
+       - daftar, > kutipan, tabel, dst.
+     - LaTeX: inline pakai $...$ , blok pakai $$...$$ (dirender KaTeX)
+     - Blok kode dibungkus tiga backtick + nama bahasa, contoh:
+         ```js
+         console.log("halo");
+         ```
+       Blok kode otomatis di-highlight, dan bisa disalin dengan
+       cara mengetuk/klik area kode tersebut (mirip blog teknis).
+   Contoh isi teksPT1.js:
+     window.RANGKUMAN_TEXT = `
+     # Rangkuman Pertemuan 1
+
+     Statistika deskriptif adalah cabang ilmu statistika yang
+     berfokus pada **pengumpulan, penyajian, dan peringkasan data**.
+
+     Rumus rata-rata (mean):
+     $$\\bar{x} = \\frac{\\sum_{i=1}^{n} x_i}{n}$$
+
+     Contoh kode menghitung mean di Python:
+     \`\`\`python
+     data = [70, 80, 90]
+     mean = sum(data) / len(data)
+     print(mean)
+     \`\`\`
+     `;
+============================================================ */
+let _rkLibsPromise=null;
+function ensureRangkumanLibs(){
+  if(_rkLibsPromise)return _rkLibsPromise;
+  function loadCss(href){
+    return new Promise(res=>{
+      if(document.querySelector(`link[href="${href}"]`)){res();return;}
+      const l=document.createElement('link');
+      l.rel='stylesheet';l.href=href;l.onload=()=>res();l.onerror=()=>res();
+      document.head.appendChild(l);
+    });
+  }
+  function loadJs(src){
+    return new Promise((res,rej)=>{
+      if(document.querySelector(`script[src="${src}"]`)){res();return;}
+      const s=document.createElement('script');
+      s.src=src;s.onload=()=>res();s.onerror=()=>rej(new Error('Gagal memuat '+src));
+      document.head.appendChild(s);
+    });
+  }
+  _rkLibsPromise=Promise.all([
+    loadCss('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css'),
+    loadCss('https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css')
+  ]).then(()=>Promise.all([
+    loadJs('https://cdnjs.cloudflare.com/ajax/libs/markdown-it/13.0.2/markdown-it.min.js'),
+    loadJs('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js').then(()=>loadJs('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js')),
+    loadJs('https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js')
+  ]));
+  return _rkLibsPromise;
+}
+function loadRangkumanScript(url){
+  return new Promise((resolve,reject)=>{
+    delete window.RANGKUMAN_TEXT;
+    const s=document.createElement('script');
+    // cache-bust supaya perubahan isi file JS-nya langsung kelihatan
+    s.src=url+(url.includes('?')?'&':'?')+'_v='+Date.now();
+    s.onload=()=>{
+      const txt=window.RANGKUMAN_TEXT;
+      delete window.RANGKUMAN_TEXT;
+      s.remove();
+      if(typeof txt!=='string'||!txt.trim()){reject(new Error('File rangkuman tidak berisi window.RANGKUMAN_TEXT.'));return;}
+      resolve(txt);
+    };
+    s.onerror=()=>{s.remove();reject(new Error('Gagal memuat file rangkuman dari: '+url));};
+    document.body.appendChild(s);
+  });
+}
+function openRangkuman(fid){
+  const p=getCurrentPertemuan();
+  const f=(p&&p.files||[]).find(x=>x.id===fid);
+  if(!f)return;
+  document.getElementById('rkTitle').textContent=f.nama||'Rangkuman';
+  document.getElementById('rkMeta').innerHTML=`<strong>${escapeHtml(p.judul)}</strong> · Pertemuan ${p.nomor}`;
+  const content=document.getElementById('rkContent');
+  content.innerHTML=`<div class="rangkuman-loading"><div class="rk-spinner"></div>Memuat rangkuman…</div>`;
+  goTo('rangkumanPage');
+  ensureRangkumanLibs()
+    .then(()=>loadRangkumanScript(f.url))
+    .then(text=>renderRangkumanText(text))
+    .catch(err=>{
+      content.innerHTML=`<div class="rangkuman-error"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> ${escapeHtml(err.message||'Gagal memuat rangkuman.')}</div>`;
+    });
+}
+function renderRangkumanText(raw){
+  const content=document.getElementById('rkContent');
+  const md=window.markdownit({html:false,linkify:true,breaks:true});
+  const html=md.render(raw);
+  content.innerHTML=`<div class="rangkuman-article" id="rkArticle">${html}</div>`;
+  const article=document.getElementById('rkArticle');
+  // Bungkus tiap blok kode: highlight syntax + bisa diketuk untuk disalin
+  article.querySelectorAll('pre > code').forEach(codeEl=>{
+    const pre=codeEl.parentElement;
+    const rawCode=codeEl.textContent;
+    const lang=(codeEl.className.match(/language-([\w-]+)/)||[])[1]||'kode';
+    if(window.hljs){
+      try{window.hljs.highlightElement(codeEl);}catch(e){}
+    }
+    const wrap=document.createElement('div');
+    wrap.className='rk-codewrap';
+    wrap.innerHTML=`<div class="rk-codehead"><span>${escapeHtml(lang)}</span><span class="rk-copy-hint">Ketuk untuk menyalin</span></div>`;
+    pre.parentNode.insertBefore(wrap,pre);
+    wrap.appendChild(pre);
+    wrap.addEventListener('click',()=>{
+      copyToClipboard(rawCode);
+      wrap.classList.add('rk-copied');
+      const hint=wrap.querySelector('.rk-copy-hint');
+      const old=hint.textContent;
+      hint.textContent='✓ Disalin!';
+      setTimeout(()=>{hint.textContent=old;wrap.classList.remove('rk-copied');},1400);
+    });
+  });
+  if(window.renderMathInElement){
+    window.renderMathInElement(article,{
+      delimiters:[
+        {left:'$$',right:'$$',display:true},
+        {left:'\\[',right:'\\]',display:true},
+        {left:'$',right:'$',display:false},
+        {left:'\\(',right:'\\)',display:false}
+      ],
+      throwOnError:false
+    });
+  }
+}
+function copyToClipboard(text){
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).catch(()=>fallbackCopy(text));
+  }else{
+    fallbackCopy(text);
+  }
+}
+function fallbackCopy(text){
+  const ta=document.createElement('textarea');
+  ta.value=text;ta.style.position='fixed';ta.style.opacity='0';
+  document.body.appendChild(ta);ta.focus();ta.select();
+  try{document.execCommand('copy');}catch(e){}
+  document.body.removeChild(ta);
+}
+
 function openAddFileModal(){
   document.getElementById('mfNama').value='';
   document.getElementById('mfTipe').value='ppt';
