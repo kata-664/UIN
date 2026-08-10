@@ -271,6 +271,9 @@ body{
 .hadir-toggle.tidak{background:#FFEBEE;color:#C62828;}
 .hadir-toggle.izin{background:#FFF3E0;color:#E65100;}
 .hadir-toggle.alpha{background:#FFEBEE;color:#C62828;}
+.hadir-toggle-edit{font-family:inherit;}
+.hadir-toggle-edit:active{transform:scale(0.94);}
+.mhs-edit-hint{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--gray);padding:0 0 10px;}
 .mhs-del{background:none;border:none;color:#CFD8DC;font-size:16px;cursor:pointer;padding:0 2px;flex-shrink:0;}
 .mhs-row.mhs-row-self{background:#E3F2FD;border-radius:10px;padding-left:8px;padding-right:8px;margin:0 -8px;}
 .mhs-row.mhs-row-self .mhs-name{color:var(--blue);}
@@ -887,11 +890,19 @@ function getPertemuan(){
 function getMahasiswaByNomor(nomor){
   const master=window.MAHASISWA_DATA||[];
   const statusMap=(window.ABSENSI_DATA&&window.ABSENSI_DATA[nomor])||{};
+  // Kalau dosen sudah pernah mengubah kehadiran lewat aplikasi (tersimpan di
+  // sheet "Absensi" via GAS_ADMIN_URL), status dari sheet itu MENANG dibanding
+  // status statis di daftar-mahasiswa.js untuk NIM tsb. NIM yang belum pernah
+  // diubah dosen dari app tetap memakai status dari file statis (atau default
+  // "alpha" kalau tidak dicantumkan sama sekali).
+  const remoteMap=(window.ABSENSI_STATE_REMOTE&&window.ABSENSI_STATE_REMOTE.nomor===nomor)
+    ? window.ABSENSI_STATE_REMOTE.data
+    : ((window.ABSENSI_LIST_REMOTE&&window.ABSENSI_LIST_REMOTE[nomor])||{});
   return master.map(m=>({
     id:m.nim,
     nama:m.nama,
     nim:m.nim,
-    status:statusMap[m.nim]||'alpha' // default: kalau NIM gak dicantumkan = alpha
+    status:remoteMap[m.nim]||statusMap[m.nim]||'alpha' // default: kalau NIM gak dicantumkan = alpha
   }));
 }
 
@@ -1003,6 +1014,94 @@ async function toggleLockLatihan(nomor,ev){
   }catch(e){alert('Gagal menghubungi server. Coba lagi.');}
 }
 
+/* --- Absensi: dosen bisa ubah status kehadiran langsung dari app ---
+   Status hasil ubahan dosen disimpan di sheet "Absensi" via GAS_ADMIN_URL
+   (aksi "absensi" untuk baca, "simpanabsensi" untuk tulis) supaya semua
+   orang yang membuka app melihat status yang sama, dan tetap tersimpan
+   walau dosen ganti perangkat. window.ABSENSI_STATE_REMOTE menyimpan hasil
+   baca terakhir untuk SATU nomor pertemuan yang sedang dibuka (bukan
+   semuanya sekaligus, supaya tetap ringan). Kalau GAS_ADMIN_URL belum
+   diisi/gagal dimuat, otomatis fallback ke window.ABSENSI_DATA statis dari
+   daftar-mahasiswa.js (lihat getMahasiswaByNomor). */
+async function loadAbsensiState(nomor){
+  if(!adminReady())return;
+  try{
+    const res=await fetch(GAS_ADMIN_URL+'?aksi=absensi&pertemuan='+encodeURIComponent(nomor));
+    const json=await res.json();
+    if(!json.ok||!Array.isArray(json.data))return;
+    const data={};
+    json.data.forEach(r=>{ if(r.nim)data[String(r.nim).trim()]=String(r.status||'').trim().toLowerCase(); });
+    window.ABSENSI_STATE_REMOTE={nomor,data};
+  }catch(e){
+    console.error('Gagal memuat status absensi:',e);
+  }
+}
+/* Versi "sekaligus semua pertemuan", dipakai di halaman daftar Pertemuan
+   supaya angka "x/y hadir" di tiap kartu juga ikut ter-update tanpa harus
+   membuka detail tiap pertemuan satu-satu. window.ABSENSI_STATE_REMOTE (per
+   satu pertemuan yang sedang dibuka di halaman detail) tetap lebih prioritas
+   karena datanya paling baru; ini cuma fallback untuk tampilan daftar. */
+async function loadAbsensiListState(){
+  if(!adminReady())return;
+  try{
+    const res=await fetch(GAS_ADMIN_URL+'?aksi=absensi');
+    const json=await res.json();
+    if(!json.ok||!Array.isArray(json.data))return;
+    const byPertemuan={};
+    json.data.forEach(r=>{
+      if(!r.nim)return;
+      const nomor=Number(r.pertemuan);
+      if(!byPertemuan[nomor])byPertemuan[nomor]={};
+      byPertemuan[nomor][String(r.nim).trim()]=String(r.status||'').trim().toLowerCase();
+    });
+    window.ABSENSI_LIST_REMOTE=byPertemuan;
+  }catch(e){
+    console.error('Gagal memuat rekap status absensi:',e);
+  }
+}
+async function setAbsensiStatus(nomor,nim,status,ev){
+  if(ev)ev.stopPropagation();
+  if(!isDosen())return;
+  if(!adminReady()){alert('Fitur ubah kehadiran belum aktif. Isi GAS_ADMIN_URL terlebih dahulu.');return;}
+  // Update optimistis di layar dulu supaya terasa instan, baru dikirim ke server.
+  if(!window.ABSENSI_STATE_REMOTE||window.ABSENSI_STATE_REMOTE.nomor!==nomor){
+    window.ABSENSI_STATE_REMOTE={nomor,data:{}};
+  }
+  const prevStatus=window.ABSENSI_STATE_REMOTE.data[nim];
+  window.ABSENSI_STATE_REMOTE.data[nim]=status;
+  if(!window.ABSENSI_LIST_REMOTE)window.ABSENSI_LIST_REMOTE={};
+  if(!window.ABSENSI_LIST_REMOTE[nomor])window.ABSENSI_LIST_REMOTE[nomor]={};
+  window.ABSENSI_LIST_REMOTE[nomor][nim]=status;
+  renderMhsList();
+  renderPertemuanList();
+  try{
+    const res=await fetch(GAS_ADMIN_URL,{method:'POST',body:JSON.stringify({
+      aksi:'simpanabsensi',pertemuan:nomor,data:[{nim,status}],kodeDosen:DOSEN_SECRET
+    })});
+    const json=await res.json();
+    if(!json.ok){
+      // Gagal -> kembalikan status semula
+      if(prevStatus===undefined)delete window.ABSENSI_STATE_REMOTE.data[nim];
+      else window.ABSENSI_STATE_REMOTE.data[nim]=prevStatus;
+      renderMhsList();
+      renderPertemuanList();
+      alert(json.error||'Gagal menyimpan status kehadiran.');
+    }
+  }catch(e){
+    if(prevStatus===undefined)delete window.ABSENSI_STATE_REMOTE.data[nim];
+    else window.ABSENSI_STATE_REMOTE.data[nim]=prevStatus;
+    renderMhsList();
+    renderPertemuanList();
+    alert('Gagal menghubungi server. Coba lagi.');
+  }
+}
+/* Klik badge status (mode dosen) -> siklus hadir -> izin -> alpha -> hadir. */
+function cycleAbsensiStatus(nim,currentStatus,ev){
+  const order=['hadir','izin','alpha'];
+  const next=order[(order.indexOf(currentStatus)+1)%order.length];
+  setAbsensiStatus(currentPertemuanId,nim,next,ev);
+}
+
 /* ============================================================
    PAGE ROUTER
 ============================================================ */
@@ -1040,10 +1139,10 @@ function goTo(pageId){
 function navTo(pageId,navId){
   goTo(pageId);
   if(pageId==='homePage'){refreshHomeStats();refreshProgressBelajar();refreshNextPertemuan();}
-  if(pageId==='pertemuanListPage'){renderPertemuanList();loadLockState().then(renderPertemuanList);startLockPolling();}
+  if(pageId==='pertemuanListPage'){renderPertemuanList();loadLockState().then(renderPertemuanList);loadAbsensiListState().then(renderPertemuanList);startLockPolling();}
   if(pageId==='latihanListPage'){renderLatihanList();loadLockState().then(renderLatihanList);startLockPolling();}
   if(pageId==='diskusiThreadPage')openDiskusiChat();
-  if(pageId==='akunPage')renderAkun();
+  if(pageId==='akunPage'){renderAkun();loadAbsensiListState().then(renderAkun);}
   markMenuVisited(pageId);
 }
 
@@ -1194,6 +1293,7 @@ function initHome(){
   updateNotifDot();
   updateHeaderAnim();
   loadLockState().then(()=>{refreshHomeStats();refreshProgressBelajar();refreshNextPertemuan();});
+  loadAbsensiListState().then(()=>{refreshHomeStats();refreshProgressBelajar();refreshNextPertemuan();});
 }
 function refreshHomeStats(){
   const list=getPertemuan();
@@ -1285,6 +1385,10 @@ function openPertemuanDetail(id){
   goTo('pertemuanDetailPage');
   markMenuVisited('pertemuanDetailPage');
   markPertemuanVisited(id);
+  // Muat status kehadiran terbaru dari server (kalau dosen pernah mengubahnya
+  // dari app), lalu render ulang daftar mahasiswa supaya status yang tampil
+  // selalu yang terbaru, bukan cuma dari file statis daftar-mahasiswa.js.
+  loadAbsensiState(id).then(()=>{ if(currentPertemuanId===id)renderMhsList(); });
 }
 function getCurrentPertemuan(){return getPertemuan().find(x=>x.nomor===currentPertemuanId);}
 function updateCurrentPertemuan(mutateFn){
@@ -1577,8 +1681,12 @@ function renderMhsList(){
     return;
   }
   const myName=(getUser()||'').trim().toLowerCase();
-  wrap.innerHTML=list.map(m=>{
+  const dosen=isDosen();
+  wrap.innerHTML=(dosen?`<div class="mhs-edit-hint"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg> Tap status untuk mengubah kehadiran</div>`:'')+list.map(m=>{
     const isMe=!!myName&&(m.nama||'').trim().toLowerCase()===myName;
+    const statusEl=dosen
+      ? `<button type="button" class="hadir-toggle hadir-toggle-edit ${m.status}" onclick="cycleAbsensiStatus('${escapeJs(m.nim)}','${m.status}',event)">${STATUS_LABEL[m.status]}</button>`
+      : `<span class="hadir-toggle ${m.status}">${STATUS_LABEL[m.status]}</span>`;
     return `
     <div class="mhs-row ${isMe?'mhs-row-self':''}">
       <div class="mhs-avatar">${(m.nama||'?').charAt(0).toUpperCase()}</div>
@@ -1586,7 +1694,7 @@ function renderMhsList(){
         <div class="mhs-name">${escapeHtml(m.nama)}${isMe?'<span class="mhs-self-tag">(Anda)</span>':''}</div>
         <div class="mhs-nim">${escapeHtml(m.nim||'-')}</div>
       </div>
-      <span class="hadir-toggle ${m.status}">${STATUS_LABEL[m.status]}</span>
+      ${statusEl}
     </div>`;
   }).join('');
 }
@@ -2398,6 +2506,12 @@ function clearAllNotif(){
 ============================================================ */
 function escapeHtml(str){
   return String(str==null?'':str).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+/* Untuk nilai yang disisipkan ke dalam atribut onclick="...('...')" di HTML
+   (mis. NIM mahasiswa), supaya tidak merusak string JS kalau kebetulan ada
+   tanda kutip di dalamnya. */
+function escapeJs(str){
+  return String(str==null?'':str).replace(/\\/g,'\\\\').replace(/'/g,"\\'");
 }
 function formatTanggal(iso){
   if(!iso)return '';
