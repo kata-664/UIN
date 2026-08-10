@@ -22,21 +22,17 @@
    TIPE FILE "rangkuman" (tulisan/blog pertemuan):
    Dipakai untuk membagikan rangkuman materi dalam bentuk tulisan
    (bukan file PPT/PDF), yang mendukung format markdown, LaTeX,
-   dan blok kode yang bisa disalin dengan sekali klik. File JS yang
-   dirujuk di "url" WAJIB mengisi variabel global berikut saat
-   dimuat:
+   perataan teks (kiri/tengah/kanan/kiri-kanan), tab/indentasi,
+   dan blok kode R (RStudio) yang bisa disalin dengan sekali klik.
+   File JS yang dirujuk di "url" WAJIB mengisi variabel global
+   berikut saat dimuat:
      window.RANGKUMAN_TEXT = `... isi tulisan di sini ...`;
-   Isi tulisan mendukung:
-     - Markdown dasar: # Judul, ## Subjudul, **tebal**, *miring*,
-       - daftar, > kutipan, tabel, dst.
-     - LaTeX: inline pakai $...$ , blok pakai $$...$$
-     - Blok kode dibungkus tiga backtick + nama bahasa, contoh:
-         ```python
-         print("halo")
-         ```
-       (otomatis di-highlight & bisa diketuk untuk disalin)
-   Lihat contoh isinya di file teksPT1.js (satu folder dengan file
-   data-pertemuan.js ini).
+   Tata cara penulisan lengkapnya (markdown, LaTeX, blok kode,
+   class perataan rk-left/rk-center/rk-right/rk-justify, dan
+   class tab/indentasi rk-tab/rk-indent/rk-indent-2) sudah
+   dikomentari lengkap di file teksPT1.js dan di fungsi
+   openRangkuman() pada Pengantar_Statistika.html — tinggal contek
+   pola yang sama untuk teksPT2.js, teksPT3.js, dst.
    CATATAN: 16 pertemuan di bawah ini disusun mengikuti struktur
    semester standar (Pertemuan 8 = UTS, Pertemuan 16 = UAS).
    Judul, tanggal (mingguan tiap Selasa), dan file boleh diubah
