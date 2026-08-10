@@ -600,6 +600,11 @@ body{
     </div>
     <div class="akun-info-card">
       <div class="akun-row"><span class="akun-row-left">Nama</span><span class="akun-row-val" id="akunUsernameInfo">—</span></div>
+      <div class="akun-row"><span class="akun-row-left">NIM</span><span class="akun-row-val" id="akunNimInfo">—</span></div>
+      <div class="akun-row"><span class="akun-row-left">Mata Kuliah</span><span class="akun-row-val">Pengantar Statistika</span></div>
+      <div class="akun-row"><span class="akun-row-left">Prodi</span><span class="akun-row-val">Ekonomi Syariah</span></div>
+      <div class="akun-row"><span class="akun-row-left">Fakultas</span><span class="akun-row-val">Fakultas Ekonomi dan Bisnis Islam</span></div>
+      <div class="akun-row"><span class="akun-row-left">Universitas</span><span class="akun-row-val">UIN Jambi</span></div>
       <div class="akun-row"><span class="akun-row-left">Total Pertemuan</span><span class="akun-row-val" id="akunPertemuanCount">0</span></div>
       <div class="akun-row"><span class="akun-row-left">Total File Dibagikan</span><span class="akun-row-val" id="akunFileCount">0</span></div>
       <div class="akun-row"><span class="akun-row-left">Total Mahasiswa Terdaftar</span><span class="akun-row-val" id="akunMhsCount">0</span></div>
@@ -1910,6 +1915,7 @@ function renderAkun(){
   const nama=getUser();
   document.getElementById('akunUsername').textContent=nama;
   document.getElementById('akunUsernameInfo').textContent=nama;
+  document.getElementById('akunNimInfo').textContent=getNim()||'—';
   const list=getPertemuan();
   document.getElementById('akunPertemuanCount').textContent=list.length;
   document.getElementById('akunFileCount').textContent=list.reduce((a,p)=>a+(p.files?p.files.length:0),0);
@@ -1918,9 +1924,12 @@ function renderAkun(){
   list.forEach(p=>{latihanCount+=parseInt(localStorage.getItem('kd_lastcount_'+p.nomor)||'0');});
   document.getElementById('akunLatihanCount').textContent=latihanCount;
 
+  /* Rekap kehadiran hanya dihitung dari pertemuan yang sudah dibuka dosen
+     (belum dibuka = belum bisa dinilai hadir/izin/alpha). */
+  const listDibuka=list.filter(p=>!isPertemuanLocked(p.nomor));
   const myName=(nama||'').trim().toLowerCase();
   let hadir=0,izin=0,alpha=0;
-  list.forEach(p=>{
+  listDibuka.forEach(p=>{
     const me=(p.mahasiswa||[]).find(m=>(m.nama||'').trim().toLowerCase()===myName);
     if(me){
       if(me.status==='hadir')hadir++;
