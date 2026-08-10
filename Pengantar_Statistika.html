@@ -952,6 +952,30 @@ async function loadLockState(){
     console.error('Gagal memuat status kunci pertemuan/latihan:',e);
   }
 }
+let _lockPollTimer=null;
+function startLockPolling(){
+  stopLockPolling();
+  // Poll tiap 5 detik selama halaman Pertemuan/Latihan masih terbuka,
+  // supaya status buka/kunci dari dosen otomatis ke-update tanpa perlu
+  // keluar-masuk halaman. Di-skip kalau tab sedang tidak aktif (hemat
+  // kuota/baterai), dan re-render cuma dipanggil untuk halaman yang
+  // sedang aktif saja.
+  _lockPollTimer=setInterval(()=>{
+    const pagePertemuan=document.getElementById('pertemuanListPage');
+    const pageLatihan=document.getElementById('latihanListPage');
+    const aktifPertemuan=pagePertemuan&&pagePertemuan.classList.contains('active');
+    const aktifLatihan=pageLatihan&&pageLatihan.classList.contains('active');
+    if((aktifPertemuan||aktifLatihan)&&!document.hidden){
+      loadLockState().then(()=>{
+        if(aktifPertemuan)renderPertemuanList();
+        if(aktifLatihan)renderLatihanList();
+      });
+    }
+  },5000);
+}
+function stopLockPolling(){
+  if(_lockPollTimer){clearInterval(_lockPollTimer);_lockPollTimer=null;}
+}
 async function toggleLockPertemuan(nomor,ev){
   if(ev)ev.stopPropagation();
   if(!adminReady()){alert('Fitur kunci belum aktif. Isi GAS_ADMIN_URL terlebih dahulu.');return;}
@@ -986,6 +1010,7 @@ const MAIN_PAGES={homePage:'navHome',pertemuanListPage:'navPertemuan',diskusiThr
 
 function goTo(pageId){
   stopDiskusiPolling();
+  stopLockPolling();
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById(pageId).classList.add('active');
   window.scrollTo(0,0);
@@ -1015,8 +1040,8 @@ function goTo(pageId){
 function navTo(pageId,navId){
   goTo(pageId);
   if(pageId==='homePage'){refreshHomeStats();refreshProgressBelajar();refreshNextPertemuan();}
-  if(pageId==='pertemuanListPage'){renderPertemuanList();loadLockState().then(renderPertemuanList);}
-  if(pageId==='latihanListPage'){renderLatihanList();loadLockState().then(renderLatihanList);}
+  if(pageId==='pertemuanListPage'){renderPertemuanList();loadLockState().then(renderPertemuanList);startLockPolling();}
+  if(pageId==='latihanListPage'){renderLatihanList();loadLockState().then(renderLatihanList);startLockPolling();}
   if(pageId==='diskusiThreadPage')openDiskusiChat();
   if(pageId==='akunPage')renderAkun();
   markMenuVisited(pageId);
