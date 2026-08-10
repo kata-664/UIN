@@ -142,6 +142,9 @@ body{
 .pertemuan-title{font-size:14px;font-weight:700;color:var(--dark);white-space:normal;overflow-wrap:break-word;line-height:1.35;}
 .pertemuan-meta{font-size:11px;color:var(--gray);margin-top:3px;}
 .pertemuan-chevron{color:#B0BEC5;font-size:18px;align-self:center;flex-shrink:0;}
+.btn-lock-toggle{border:none;border-radius:8px;padding:7px 11px;font-size:11px;font-weight:700;cursor:pointer;flex-shrink:0;align-self:center;white-space:nowrap;}
+.btn-lock-toggle.st-locked{background:#E8F5E9;color:#2E7D32;}
+.btn-lock-toggle.st-unlocked{background:#FFF3E0;color:#F57C00;}
 
 /* diskusi */
 .diskusi-item{background:#fff;border-radius:var(--radius-sm);box-shadow:var(--shadow);padding:12px 14px;margin-bottom:10px;display:flex;gap:10px;}
@@ -838,6 +841,18 @@ const DISKUSI_THREAD_ID = 'ruang_kelas';
 const GAS_AUTH_URL = 'https://script.google.com/macros/s/AKfycbwqSawCfNrsQQnxBJJaLa3HmJmcO4sFwUqMmmEegtuzdcb7z52NXv2EIabiEH9bmE8UhA/exec';
 function authReady(){ return GAS_AUTH_URL && !GAS_AUTH_URL.includes('PASTE_URL'); }
 
+/* ============================================================
+   ADMIN DOSEN (lock/unlock pertemuan & latihan, dst) — Google
+   Apps Script + Google Sheet. URL-nya sama persis dengan
+   GAS_DISKUSI_URL / GAS_AUTH_URL di atas (satu backend gabungan).
+   DOSEN_SECRET WAJIB SAMA PERSIS dengan DOSEN_SECRET di Code.gs,
+   supaya aksi kunci/buka pertemuan & latihan hanya bisa dilakukan
+   dari akun dosen (bukan mahasiswa yang iseng manggil endpoint-nya
+   langsung). Ganti nilainya sebelum dipakai sungguhan. */
+const GAS_ADMIN_URL = 'https://script.google.com/macros/s/AKfycbwqSawCfNrsQQnxBJJaLa3HmJmcO4sFwUqMmmEegtuzdcb7z52NXv2EIabiEH9bmE8UhA/exec';
+const DOSEN_SECRET = 'GANTI_KODE_RAHASIA_INI';
+function adminReady(){ return GAS_ADMIN_URL && !GAS_ADMIN_URL.includes('PASTE_URL'); }
+
 const LS_USER='kd_user', LS_NIM='kd_nim', LS_NOTIF='kd_notif', LS_ROLE='kd_role';
 /* Login dosen memakai form login yang SAMA dengan mahasiswa (satu pintu
    login), hanya beda kredensialnya: NIM = "admin01" & Password = "admin01".
@@ -898,16 +913,62 @@ function markFilesSeen(ids){
   localStorage.setItem('kd_seen_files',JSON.stringify([...seen]));
 }
 
-/* --- Lock/kunci pertemuan & latihan (diatur di setting-locks.js) ---
-   window.LOCK_SETTINGS = { pertemuan:{1:false,2:true,...}, latihan:{1:false,2:true,...} }
+/* --- Lock/kunci pertemuan & latihan ---
+   Sumber utama sekarang sheet "Pertemuan" via GAS_ADMIN_URL, supaya
+   dosen bisa kunci/buka langsung dari app dan semua orang lihat status
+   yang sama. window.LOCK_STATE_REMOTE diisi oleh loadLockState().
+   Kalau GAS_ADMIN_URL belum diisi (atau gagal dimuat), fallback ke
+   window.LOCK_SETTINGS lama dari setting-locks.js supaya app tetap
+   jalan seperti sebelumnya.
    true = terkunci (belum bisa dibuka), false/tidak ada = terbuka. */
 function isPertemuanLocked(nomor){
+  if(window.LOCK_STATE_REMOTE) return !!window.LOCK_STATE_REMOTE.pertemuan[nomor];
   const locks=(window.LOCK_SETTINGS&&window.LOCK_SETTINGS.pertemuan)||{};
   return !!locks[nomor];
 }
 function isLatihanLocked(nomor){
+  if(window.LOCK_STATE_REMOTE) return !!window.LOCK_STATE_REMOTE.latihan[nomor];
   const locks=(window.LOCK_SETTINGS&&window.LOCK_SETTINGS.latihan)||{};
   return !!locks[nomor];
+}
+async function loadLockState(){
+  if(!adminReady())return;
+  try{
+    const res=await fetch(GAS_ADMIN_URL+'?aksi=pertemuan');
+    const json=await res.json();
+    if(!json.ok||!Array.isArray(json.data))return;
+    const pertemuan={},latihan={};
+    json.data.forEach(p=>{pertemuan[p.nomor]=!!p.locked;latihan[p.nomor]=!!p.latihan_locked;});
+    window.LOCK_STATE_REMOTE={pertemuan,latihan};
+  }catch(e){
+    console.error('Gagal memuat status kunci pertemuan/latihan:',e);
+  }
+}
+async function toggleLockPertemuan(nomor,ev){
+  if(ev)ev.stopPropagation();
+  if(!adminReady()){alert('Fitur kunci belum aktif. Isi GAS_ADMIN_URL terlebih dahulu.');return;}
+  const newLocked=!isPertemuanLocked(nomor);
+  try{
+    const res=await fetch(GAS_ADMIN_URL,{method:'POST',body:JSON.stringify({aksi:'lockpertemuan',nomor,locked:newLocked,kodeDosen:DOSEN_SECRET})});
+    const json=await res.json();
+    if(!json.ok){alert(json.error||'Gagal mengubah status kunci pertemuan.');return;}
+    if(!window.LOCK_STATE_REMOTE)window.LOCK_STATE_REMOTE={pertemuan:{},latihan:{}};
+    window.LOCK_STATE_REMOTE.pertemuan[nomor]=newLocked;
+    renderPertemuanList();
+  }catch(e){alert('Gagal menghubungi server. Coba lagi.');}
+}
+async function toggleLockLatihan(nomor,ev){
+  if(ev)ev.stopPropagation();
+  if(!adminReady()){alert('Fitur kunci belum aktif. Isi GAS_ADMIN_URL terlebih dahulu.');return;}
+  const newLocked=!isLatihanLocked(nomor);
+  try{
+    const res=await fetch(GAS_ADMIN_URL,{method:'POST',body:JSON.stringify({aksi:'locklatihan',nomor,locked:newLocked,kodeDosen:DOSEN_SECRET})});
+    const json=await res.json();
+    if(!json.ok){alert(json.error||'Gagal mengubah status kunci latihan.');return;}
+    if(!window.LOCK_STATE_REMOTE)window.LOCK_STATE_REMOTE={pertemuan:{},latihan:{}};
+    window.LOCK_STATE_REMOTE.latihan[nomor]=newLocked;
+    renderLatihanList();
+  }catch(e){alert('Gagal menghubungi server. Coba lagi.');}
 }
 
 /* ============================================================
@@ -946,8 +1007,8 @@ function goTo(pageId){
 function navTo(pageId,navId){
   goTo(pageId);
   if(pageId==='homePage'){refreshHomeStats();refreshProgressBelajar();refreshNextPertemuan();}
-  if(pageId==='pertemuanListPage')renderPertemuanList();
-  if(pageId==='latihanListPage')renderLatihanList();
+  if(pageId==='pertemuanListPage'){renderPertemuanList();loadLockState().then(renderPertemuanList);}
+  if(pageId==='latihanListPage'){renderLatihanList();loadLockState().then(renderLatihanList);}
   if(pageId==='diskusiThreadPage')openDiskusiChat();
   if(pageId==='akunPage')renderAkun();
   markMenuVisited(pageId);
@@ -1099,6 +1160,7 @@ function initHome(){
   refreshNextPertemuan();
   updateNotifDot();
   updateHeaderAnim();
+  loadLockState().then(()=>{refreshHomeStats();refreshProgressBelajar();refreshNextPertemuan();});
 }
 function refreshHomeStats(){
   const list=getPertemuan();
@@ -1165,7 +1227,7 @@ function renderPertemuanList(){
         <div class="pertemuan-title">${escapeHtml(p.judul)}${locked?'<span class="tag-locked"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Terkunci</span>':visited[p.nomor]?'<span class="tag-visited"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><polyline points="20 6 9 17 4 12"/></svg> Dipelajari</span>':''}</div>
         <div class="pertemuan-meta">${locked?'Belum dibuka dosen':`${p.tanggal?formatTanggal(p.tanggal)+' · ':''}${(p.files||[]).length} file${unread>0?` · <span class="tag-unread"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> ${unread} baru</span>`:''} · ${hadir}/${total} hadir`}</div>
       </div>
-      <div class="pertemuan-chevron">${locked?'':'<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><polyline points="9 18 15 12 9 6"/></svg>'}</div>
+      ${isDosen()?`<button class="btn-lock-toggle ${locked?'st-locked':'st-unlocked'}" onclick="toggleLockPertemuan(${p.nomor},event)">${locked?'Buka':'Kunci'}</button>`:`<div class="pertemuan-chevron">${locked?'':'<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><polyline points="9 18 15 12 9 6"/></svg>'}</div>`}
     </div>`;
   }).join('');
 }
@@ -1176,7 +1238,7 @@ function renderPertemuanList(){
 let currentPertemuanId=null;
 
 function openPertemuanDetail(id){
-  if(isPertemuanLocked(id)){
+  if(isPertemuanLocked(id)&&!isDosen()){
     alert('<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Pertemuan ini belum dibuka oleh dosen.');
     return;
   }
@@ -2081,11 +2143,11 @@ function renderLatihanList(){
     return `<div class="latihan-card">
       <div class="latihan-top">
         <div class="latihan-title">Pertemuan ${p.nomor} — ${escapeHtml(p.judul)}${locked?'<span class="tag-locked"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Terkunci</span>':''}</div>
-        ${best?`<span class="score-pill">Terbaik: ${best}</span>`:`<span class="score-pill none">Belum</span>`}
+        ${isDosen()?`<button class="btn-lock-toggle ${locked?'st-locked':'st-unlocked'}" onclick="toggleLockLatihan(${p.nomor},event)">${locked?'Buka':'Kunci'}</button>`:best?`<span class="score-pill">Terbaik: ${best}</span>`:`<span class="score-pill none">Belum</span>`}
       </div>
       ${!soal ? `
         <div class="error-notice" style="margin-bottom:0;"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Soal untuk pertemuan ini belum tersedia di <strong>Sistem</strong></div>
-      ` : locked ? `
+      ` : (locked&&!isDosen()) ? `
         <div class="error-notice locked-notice" style="margin-bottom:0;"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Latihan ini masih terkunci. Tunggu dosen membukanya.</div>
       ` : `
         <div style="font-size:12px;color:var(--gray);margin-bottom:10px;">${jumlah} soal tersedia${attempts>0?` · dikerjakan ${attempts}x`:''}</div>
@@ -2100,7 +2162,7 @@ function renderLatihanList(){
 ============================================================ */
 let quizState=null;
 function startQuiz(nomor){
-  if(isLatihanLocked(nomor)){
+  if(isLatihanLocked(nomor)&&!isDosen()){
     alert('<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Latihan ini masih terkunci. Tunggu dosen membukanya.');
     return;
   }
