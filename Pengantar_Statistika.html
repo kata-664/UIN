@@ -922,12 +922,20 @@ function markFilesSeen(ids){
    jalan seperti sebelumnya.
    true = terkunci (belum bisa dibuka), false/tidak ada = terbuka. */
 function isPertemuanLocked(nomor){
-  if(window.LOCK_STATE_REMOTE) return !!window.LOCK_STATE_REMOTE.pertemuan[nomor];
+  // Kalau nomor ini SUDAH pernah di-toggle dosen (ada di sheet via GAS_ADMIN_URL),
+  // pakai status dari sana. Kalau BELUM pernah ada di sheet, jangan langsung
+  // dianggap terbuka -> fallback ke setting-locks.js supaya tetap aman/terkunci
+  // sampai dosen benar-benar membukanya.
+  if(window.LOCK_STATE_REMOTE && Object.prototype.hasOwnProperty.call(window.LOCK_STATE_REMOTE.pertemuan, nomor)){
+    return !!window.LOCK_STATE_REMOTE.pertemuan[nomor];
+  }
   const locks=(window.LOCK_SETTINGS&&window.LOCK_SETTINGS.pertemuan)||{};
   return !!locks[nomor];
 }
 function isLatihanLocked(nomor){
-  if(window.LOCK_STATE_REMOTE) return !!window.LOCK_STATE_REMOTE.latihan[nomor];
+  if(window.LOCK_STATE_REMOTE && Object.prototype.hasOwnProperty.call(window.LOCK_STATE_REMOTE.latihan, nomor)){
+    return !!window.LOCK_STATE_REMOTE.latihan[nomor];
+  }
   const locks=(window.LOCK_SETTINGS&&window.LOCK_SETTINGS.latihan)||{};
   return !!locks[nomor];
 }
