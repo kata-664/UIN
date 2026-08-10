@@ -13,10 +13,30 @@
    Tiap file punya:
      - id   : kode unik bebas, asal tidak sama dengan file lain (mis. "f1", "f2")
      - nama : nama file yang ditampilkan
-     - tipe : salah satu dari "ppt", "doc", "xlsx", "pdf"
-     - url  : link file (Google Drive/SharePoint/dsb — WAJIB bisa
-              diakses publik/"anyone with the link")
-
+     - tipe : salah satu dari "ppt", "doc", "xlsx", "pdf", "rangkuman"
+     - url  : link file. Untuk tipe "ppt"/"doc"/"xlsx"/"pdf", link
+              Google Drive/SharePoint/dsb (WAJIB bisa diakses
+              publik/"anyone with the link"). Untuk tipe
+              "rangkuman", url mengarah ke file JS terpisah (mis.
+              "teksPT1.js") yang berisi tulisan pertemuan itu.
+   TIPE FILE "rangkuman" (tulisan/blog pertemuan):
+   Dipakai untuk membagikan rangkuman materi dalam bentuk tulisan
+   (bukan file PPT/PDF), yang mendukung format markdown, LaTeX,
+   dan blok kode yang bisa disalin dengan sekali klik. File JS yang
+   dirujuk di "url" WAJIB mengisi variabel global berikut saat
+   dimuat:
+     window.RANGKUMAN_TEXT = `... isi tulisan di sini ...`;
+   Isi tulisan mendukung:
+     - Markdown dasar: # Judul, ## Subjudul, **tebal**, *miring*,
+       - daftar, > kutipan, tabel, dst.
+     - LaTeX: inline pakai $...$ , blok pakai $$...$$
+     - Blok kode dibungkus tiga backtick + nama bahasa, contoh:
+         ```python
+         print("halo")
+         ```
+       (otomatis di-highlight & bisa diketuk untuk disalin)
+   Lihat contoh isinya di file teksPT1.js (satu folder dengan file
+   data-pertemuan.js ini).
    CATATAN: 16 pertemuan di bawah ini disusun mengikuti struktur
    semester standar (Pertemuan 8 = UTS, Pertemuan 16 = UAS).
    Judul, tanggal (mingguan tiap Selasa), dan file boleh diubah
@@ -42,6 +62,12 @@ window.PERTEMUAN_DATA = [
         nama: "Modul Pertemuan 1",
         tipe: "ppt",
         url: "https://drive.google.com/file/d/16sUh3zUVYd1lqALIED2OCXXQi2js-GNK/view?usp=sharing"
+      },
+      {
+        id: "f3",
+        nama: "Rangkuman Pertemuan 1",
+        tipe: "rangkuman",
+        url: "teksPT1.js"
       }
     ]
   },
