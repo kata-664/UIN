@@ -422,6 +422,24 @@ table.rekap-table tbody tr:nth-child(even){background:#FAFBFD;}
 .rekap-pct-bad{color:#C62828;font-weight:700;}
 .rekap-pct-mid{color:#B8860B;font-weight:700;}
 .rekap-pct-good{color:#1B7A3D;font-weight:700;}
+
+/* ===== Banner Pengumuman (Home) ===== */
+.pengumuman-banner{position:relative;background:linear-gradient(135deg,#FFF6E5,#FFE9C2);border:1.5px solid #F0C77D;border-radius:14px;padding:14px 40px 14px 14px;margin-bottom:12px;display:flex;gap:10px;align-items:flex-start;}
+.pengumuman-banner-icon{flex-shrink:0;color:#B8710A;margin-top:1px;}
+.pengumuman-banner-body{flex:1;min-width:0;}
+.pengumuman-banner-label{font-size:10.5px;font-weight:800;color:#B8710A;letter-spacing:.3px;text-transform:uppercase;margin-bottom:3px;}
+.pengumuman-banner-text{font-size:13.5px;color:#4A3200;white-space:pre-wrap;word-break:break-word;line-height:1.45;}
+.pengumuman-banner-time{font-size:10.5px;color:#9C7A34;margin-top:6px;}
+.pengumuman-banner-close{position:absolute;top:10px;right:10px;background:none;border:none;color:#B8710A;cursor:pointer;padding:4px;line-height:0;opacity:.7;}
+.pengumuman-banner-close:hover{opacity:1;}
+
+/* ===== Kelola Pengumuman (dosen) ===== */
+.pengumuman-item{background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:10px;}
+.pengumuman-item-text{font-size:13.5px;color:var(--dark);white-space:pre-wrap;word-break:break-word;margin-bottom:8px;line-height:1.45;}
+.pengumuman-item-foot{display:flex;justify-content:space-between;align-items:center;gap:8px;}
+.pengumuman-item-time{font-size:11px;color:var(--gray);}
+.pengumuman-item-del{background:none;border:none;color:#C62828;font-size:12px;font-weight:700;cursor:pointer;padding:4px 8px;}
+
 @media print{
   .no-print,#bottomNav{display:none!important;}
   .page.active{position:static!important;padding:0!important;}
@@ -488,6 +506,8 @@ table.rekap-table tbody tr:nth-child(even){background:#FAFBFD;}
       </button>
     </div>
   </div>
+
+  <div id="pengumumanBannerWrap"></div>
 
   <div class="hero-card-wrap">
     <div class="hero-card">
@@ -701,7 +721,8 @@ table.rekap-table tbody tr:nth-child(even){background:#FAFBFD;}
       <div class="akun-row"><span class="akun-row-left">Total Mahasiswa Terdaftar</span><span class="akun-row-val" id="akunMhsCount">0</span></div>
       <div class="akun-row" id="akunLatihanRow"><span class="akun-row-left">Latihan Dikerjakan</span><span class="akun-row-val" id="akunLatihanCount">0</span></div>
     </div>
-    <button class="btn-outline" id="btnRekapAbsensi" style="display:none;margin-bottom:10px;" onclick="goTo('rekapAbsensiPage');renderRekapAbsensiPage();loadAbsensiListState().then(renderRekapAbsensiPage);loadLockState().then(renderRekapAbsensiPage);"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M9 14l2 2 4-4"/></svg> Rekap Absensi Mahasiswa</button>
+    <button class="btn-outline" id="btnRekapAbsensi" style="display:none;margin-bottom:10px;" onclick="goTo('rekapAbsensiPage');renderRekapAbsensiPage();loadAbsensiListState().then(renderRekapAbsensiPage);loadLockState().then(renderRekapAbsensiPage);loadNilaiListState().then(renderRekapAbsensiPage);"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M9 14l2 2 4-4"/></svg> Rekap Absensi &amp; Nilai Latihan</button>
+    <button class="btn-outline" id="btnKelolaPengumuman" style="display:none;margin-bottom:10px;" onclick="goTo('pengumumanPage');renderPengumumanKelola();"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg> Kelola Pengumuman</button>
     <button class="btn-outline" style="margin-bottom:10px;" onclick="openGantiPassword()"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Ubah Password</button>
     <button class="btn-logout" onclick="doLogout()"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> Logout</button>
   </div>
@@ -711,11 +732,11 @@ table.rekap-table tbody tr:nth-child(even){background:#FAFBFD;}
 <div id="rekapAbsensiPage" class="page">
   <div class="page-header no-print">
     <button class="btn-back" onclick="goTo('akunPage')"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></button>
-    <h2><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg> Rekap Absensi</h2>
+    <h2><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg> Rekap Absensi &amp; Nilai</h2>
   </div>
   <div class="page-body">
     <div class="rekap-print-title" style="display:none;">
-      <h2>Rekap Absensi Mahasiswa — Pengantar Statistika</h2>
+      <h2>Rekap Absensi &amp; Nilai Latihan Mahasiswa — Pengantar Statistika</h2>
       <div class="rekap-print-sub" id="rekapPrintSub"></div>
     </div>
     <div class="rekap-toolbar no-print">
@@ -724,6 +745,24 @@ table.rekap-table tbody tr:nth-child(even){background:#FAFBFD;}
     </div>
     <div class="rekap-sub no-print" id="rekapAbsensiSub">Dihitung dari pertemuan yang sudah dibuka.</div>
     <div id="rekapAbsensiWrap"></div>
+  </div>
+</div>
+
+<!-- =========== KELOLA PENGUMUMAN (KHUSUS DOSEN) =========== -->
+<div id="pengumumanPage" class="page">
+  <div class="page-header">
+    <button class="btn-back" onclick="goTo('akunPage')"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></button>
+    <h2><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg> Kelola Pengumuman</h2>
+  </div>
+  <div class="page-body">
+    <div class="field-group">
+      <label>Pengumuman Baru</label>
+      <textarea id="pengumumanInput" rows="4" maxlength="300" placeholder="Tulis pengumuman untuk semua mahasiswa... (mis. jadwal pindah, UTS diundur, dsb.)" style="width:100%;padding:10px;border:1.5px solid var(--border);border-radius:10px;font-family:inherit;font-size:14px;resize:vertical;box-sizing:border-box;"></textarea>
+    </div>
+    <div id="pengumumanError" class="login-error"></div>
+    <button class="btn-primary" id="btnKirimPengumuman" style="margin-bottom:20px;" onclick="kirimPengumuman()"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Kirim ke Semua Mahasiswa</button>
+    <div class="section-title" style="padding:0 0 10px;">Pengumuman Aktif</div>
+    <div id="pengumumanListWrap"></div>
   </div>
 </div>
 
@@ -875,7 +914,7 @@ table.rekap-table tbody tr:nth-child(even){background:#FAFBFD;}
    Ganti URL di bawah dengan URL Web App hasil Deploy Apps Script.
    Lihat panduan setup di PANDUAN_SETUP_FORUM.md
 ============================================================ */
-const GAS_DISKUSI_URL = 'https://script.google.com/macros/s/AKfycbyrNX8GefWTm46hfgFu9oLbZAhhHdoaPvz7wFQFRPrvVTwN2m5_hEQ54WuuMGhBXJ_rDw/exec';
+const GAS_DISKUSI_URL = 'https://script.google.com/macros/s/AKfycbyBEETnZSZVHIBAu7x_8qrqL5b44ZxJXlmrSB6Pm2iP6g9_Ff5g3SWFOyRWwAx53pGBTA/exec';
 
 /* ============================================================
    BACKGROUND CHAT (halaman Diskusi Kelas)
@@ -913,7 +952,7 @@ const DISKUSI_THREAD_ID = 'ruang_kelas';
    Ganti URL di bawah dengan URL Web App hasil Deploy Apps Script
    yang menangani login & ganti password. Lihat PANDUAN_SETUP_LOGIN.md
 ============================================================ */
-const GAS_AUTH_URL = 'https://script.google.com/macros/s/AKfycbyrNX8GefWTm46hfgFu9oLbZAhhHdoaPvz7wFQFRPrvVTwN2m5_hEQ54WuuMGhBXJ_rDw/exec';
+const GAS_AUTH_URL = 'https://script.google.com/macros/s/AKfycbyBEETnZSZVHIBAu7x_8qrqL5b44ZxJXlmrSB6Pm2iP6g9_Ff5g3SWFOyRWwAx53pGBTA/exec/exec';
 function authReady(){ return GAS_AUTH_URL && !GAS_AUTH_URL.includes('PASTE_URL'); }
 
 /* ============================================================
@@ -924,7 +963,7 @@ function authReady(){ return GAS_AUTH_URL && !GAS_AUTH_URL.includes('PASTE_URL')
    supaya aksi kunci/buka pertemuan & latihan hanya bisa dilakukan
    dari akun dosen (bukan mahasiswa yang iseng manggil endpoint-nya
    langsung). Ganti nilainya sebelum dipakai sungguhan. */
-const GAS_ADMIN_URL = 'https://script.google.com/macros/s/AKfycbyrNX8GefWTm46hfgFu9oLbZAhhHdoaPvz7wFQFRPrvVTwN2m5_hEQ54WuuMGhBXJ_rDw/exec';
+const GAS_ADMIN_URL = 'https://script.google.com/macros/s/AKfycbyBEETnZSZVHIBAu7x_8qrqL5b44ZxJXlmrSB6Pm2iP6g9_Ff5g3SWFOyRWwAx53pGBTA/exec';
 const DOSEN_SECRET = '113333';
 function adminReady(){ return GAS_ADMIN_URL && !GAS_ADMIN_URL.includes('PASTE_URL'); }
 
@@ -935,7 +974,7 @@ const LS_USER='kd_user', LS_NIM='kd_nim', LS_NOTIF='kd_notif', LS_ROLE='kd_role'
    tidak perlu didaftarkan di sheet mahasiswa. Login dosen otomatis diberi
    nama tetap "Dosen Pengampu" dan role 'dosen' (disimpan di localStorage),
    TIDAK pernah ikut dihitung sebagai mahasiswa (lihat renderAkun & getRole). */
-const DOSEN_NIM='admin01', DOSEN_PASSWORD='admin01', DOSEN_NAME='Dosen Pengampu';
+const DOSEN_NIM='admin01', DOSEN_PASSWORD='admin01', DOSEN_NAME='Yunus Iman Katabba';
 function getRole(){return localStorage.getItem(LS_ROLE)||'mahasiswa';}
 function setRole(v){localStorage.setItem(LS_ROLE,v);}
 function isDosen(){return getRole()==='dosen';}
@@ -1175,6 +1214,208 @@ function cycleAbsensiStatus(nim,currentStatus,ev){
 }
 
 /* ============================================================
+   NILAI LATIHAN (sinkron ke server, dipakai untuk Rekap Dosen)
+   ------------------------------------------------------------
+   Sebelumnya skor kuis HANYA tersimpan di localStorage (per HP),
+   jadi dosen tidak bisa lihat nilai mahasiswa lain dari
+   perangkatnya sendiri. Sekarang setiap kali mahasiswa selesai
+   mengerjakan latihan, skor terbaik & jumlah percobaan JUGA
+   dikirim ke sheet "Nilai" via GAS_ADMIN_URL (aksi "nilai" untuk
+   baca, "simpannilai" untuk tulis). Ini aksi mahasiswa biasa
+   (bukan aksi dosen), jadi TIDAK butuh kodeDosen — sama seperti
+   kirim pesan diskusi.
+   Kalau GAS_ADMIN_URL belum diisi / gagal, cukup dilewati saja
+   (localStorage tetap jadi sumber utama untuk tampilan mahasiswa
+   itu sendiri, tidak mengganggu pengalaman dia).
+============================================================ */
+async function syncNilaiToServer(nomor,skor){
+  if(isDosen())return; // dosen tidak mengerjakan latihan
+  if(!adminReady())return;
+  const nim=getNim();
+  if(!nim)return;
+  try{
+    await fetch(GAS_ADMIN_URL,{method:'POST',body:JSON.stringify({
+      aksi:'simpannilai',pertemuan:nomor,nim,skor
+    })});
+  }catch(e){
+    console.error('Gagal mengirim skor latihan ke server:',e);
+  }
+}
+/* Dipakai di halaman Rekap (dosen): ambil SEMUA nilai semua mahasiswa
+   semua pertemuan sekaligus, lalu diringkas per NIM. */
+async function loadNilaiListState(){
+  if(!adminReady())return;
+  try{
+    const res=await fetch(GAS_ADMIN_URL+'?aksi=nilai');
+    const json=await res.json();
+    if(!json.ok||!Array.isArray(json.data))return;
+    const byNim={};
+    json.data.forEach(r=>{
+      if(!r.nim)return;
+      const nim=String(r.nim).trim();
+      if(!byNim[nim])byNim[nim]={totalSkorTerbaik:0,pertemuanDikerjakan:0,totalPercobaan:0};
+      byNim[nim].totalSkorTerbaik+=Number(r.skor_terbaik)||0;
+      byNim[nim].pertemuanDikerjakan+=1;
+      byNim[nim].totalPercobaan+=Number(r.percobaan)||0;
+    });
+    window.NILAI_LIST_REMOTE=byNim;
+  }catch(e){
+    console.error('Gagal memuat rekap nilai latihan:',e);
+  }
+}
+
+/* ============================================================
+   BROADCAST PENGUMUMAN (dosen -> semua mahasiswa, tampil di Home)
+   ------------------------------------------------------------
+   Beda dengan Forum Diskusi (linear, dua arah), ini satu arah:
+   dosen kirim sekali, langsung tampil sebagai banner di halaman
+   Home SEMUA orang yang membuka app, tersimpan di sheet
+   "Pengumuman" via GAS_ADMIN_URL (aksi "pengumuman" untuk baca,
+   "simpanpengumuman"/"hapuspengumuman" khusus dosen).
+   Mahasiswa bisa menutup banner (tombol ×) yang HANYA
+   menyembunyikannya di perangkat itu (localStorage) — pengumuman
+   yang sama akan tetap muncul lagi di perangkat lain / kalau dia
+   belum pernah menutupnya di situ. Dosen bisa menonaktifkan
+   pengumuman sepenuhnya dari semua perangkat lewat halaman
+   "Kelola Pengumuman".
+============================================================ */
+function getDismissedPengumuman(){
+  try{return JSON.parse(localStorage.getItem('kd_pengumuman_dismissed')||'[]');}catch(e){return [];}
+}
+function dismissPengumuman(id){
+  const arr=getDismissedPengumuman();
+  if(!arr.includes(id)){arr.push(id);localStorage.setItem('kd_pengumuman_dismissed',JSON.stringify(arr));}
+  const el=document.getElementById('pengumuman-banner-'+id);
+  if(el)el.remove();
+}
+async function loadPengumuman(){
+  const wrap=document.getElementById('pengumumanBannerWrap');
+  if(!wrap)return;
+  if(!adminReady()){wrap.innerHTML='';return;}
+  try{
+    const res=await fetch(GAS_ADMIN_URL+'?aksi=pengumuman');
+    const json=await res.json();
+    if(!json.ok||!Array.isArray(json.data)){wrap.innerHTML='';return;}
+    const dismissed=getDismissedPengumuman();
+    const aktif=json.data
+      .filter(r=>r.aktif===true||r.aktif==='true')
+      .filter(r=>!dismissed.includes(String(r.id)))
+      .sort((a,b)=>new Date(b.waktu)-new Date(a.waktu));
+    window.PENGUMUMAN_LIST_REMOTE=json.data; // simpan mentah untuk halaman Kelola
+    wrap.innerHTML=aktif.map(r=>`
+      <div class="pengumuman-banner" id="pengumuman-banner-${escapeHtml(String(r.id))}">
+        <div class="pengumuman-banner-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div>
+        <div class="pengumuman-banner-body">
+          <div class="pengumuman-banner-label">Pengumuman Dosen</div>
+          <div class="pengumuman-banner-text">${escapeHtml(r.isi||'')}</div>
+          <div class="pengumuman-banner-time">${formatWaktuPengumuman(r.waktu)}</div>
+        </div>
+        <button class="pengumuman-banner-close" onclick="dismissPengumuman('${escapeHtml(String(r.id))}')" aria-label="Tutup"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+    `).join('');
+  }catch(e){
+    console.error('Gagal memuat pengumuman:',e);
+  }
+}
+function formatWaktuPengumuman(iso){
+  try{
+    const d=new Date(iso);
+    return d.toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'})+' · '+d.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});
+  }catch(e){return '';}
+}
+async function kirimPengumuman(){
+  if(!isDosen())return;
+  const input=document.getElementById('pengumumanInput');
+  const errEl=document.getElementById('pengumumanError');
+  const btn=document.getElementById('btnKirimPengumuman');
+  const isi=(input.value||'').trim();
+  errEl.classList.remove('show');
+  if(!isi){
+    errEl.textContent='Isi pengumuman tidak boleh kosong.';
+    errEl.classList.add('show');
+    return;
+  }
+  if(!adminReady()){
+    errEl.textContent='Fitur pengumuman belum aktif. Isi GAS_ADMIN_URL terlebih dahulu.';
+    errEl.classList.add('show');
+    return;
+  }
+  btn.disabled=true;
+  const originalHtml=btn.innerHTML;
+  btn.innerHTML='Mengirim...';
+  try{
+    const res=await fetch(GAS_ADMIN_URL,{method:'POST',body:JSON.stringify({
+      aksi:'simpanpengumuman',isi,kodeDosen:DOSEN_SECRET
+    })});
+    const json=await res.json();
+    if(!json.ok){
+      errEl.textContent=json.error||'Gagal mengirim pengumuman.';
+      errEl.classList.add('show');
+    }else{
+      input.value='';
+      await renderPengumumanKelola();
+      loadPengumuman();
+    }
+  }catch(e){
+    errEl.textContent='Gagal menghubungi server. Coba lagi.';
+    errEl.classList.add('show');
+  }finally{
+    btn.disabled=false;
+    btn.innerHTML=originalHtml;
+  }
+}
+async function nonaktifkanPengumuman(id){
+  if(!isDosen())return;
+  if(!confirm('Nonaktifkan pengumuman ini? Banner akan hilang dari layar semua mahasiswa.'))return;
+  try{
+    const res=await fetch(GAS_ADMIN_URL,{method:'POST',body:JSON.stringify({
+      aksi:'hapuspengumuman',id,kodeDosen:DOSEN_SECRET
+    })});
+    const json=await res.json();
+    if(!json.ok){alert(json.error||'Gagal menonaktifkan pengumuman.');return;}
+    await renderPengumumanKelola();
+    loadPengumuman();
+  }catch(e){
+    alert('Gagal menghubungi server. Coba lagi.');
+  }
+}
+async function renderPengumumanKelola(){
+  if(!isDosen()){goTo('akunPage');return;}
+  const wrap=document.getElementById('pengumumanListWrap');
+  if(!wrap)return;
+  if(!adminReady()){
+    wrap.innerHTML='<div class="empty-state">Fitur pengumuman belum aktif. Isi GAS_ADMIN_URL terlebih dahulu.</div>';
+    return;
+  }
+  wrap.innerHTML='<div class="empty-state">Memuat...</div>';
+  try{
+    const res=await fetch(GAS_ADMIN_URL+'?aksi=pengumuman');
+    const json=await res.json();
+    if(!json.ok||!Array.isArray(json.data)){
+      wrap.innerHTML='<div class="empty-state">Gagal memuat data.</div>';
+      return;
+    }
+    const aktif=json.data.filter(r=>r.aktif===true||r.aktif==='true')
+      .sort((a,b)=>new Date(b.waktu)-new Date(a.waktu));
+    if(aktif.length===0){
+      wrap.innerHTML='<div class="empty-state">Belum ada pengumuman aktif.</div>';
+      return;
+    }
+    wrap.innerHTML=aktif.map(r=>`
+      <div class="pengumuman-item">
+        <div class="pengumuman-item-text">${escapeHtml(r.isi||'')}</div>
+        <div class="pengumuman-item-foot">
+          <span class="pengumuman-item-time">${formatWaktuPengumuman(r.waktu)}</span>
+          <button class="pengumuman-item-del" onclick="nonaktifkanPengumuman('${escapeHtml(String(r.id))}')">Nonaktifkan</button>
+        </div>
+      </div>
+    `).join('');
+  }catch(e){
+    wrap.innerHTML='<div class="empty-state">Gagal menghubungi server.</div>';
+  }
+}
+
+/* ============================================================
    PAGE ROUTER
 ============================================================ */
 const MAIN_PAGES={homePage:'navHome',pertemuanListPage:'navPertemuan',diskusiThreadPage:'navDiskusi',akunPage:'navProfil'};
@@ -1212,7 +1453,7 @@ function goTo(pageId){
 }
 function navTo(pageId,navId){
   goTo(pageId);
-  if(pageId==='homePage'){refreshHomeStats();refreshProgressBelajar();refreshNextPertemuan();}
+  if(pageId==='homePage'){refreshHomeStats();refreshProgressBelajar();refreshNextPertemuan();loadPengumuman();}
   if(pageId==='pertemuanListPage'){renderPertemuanList();loadLockState().then(renderPertemuanList);loadAbsensiListState().then(renderPertemuanList);startLockPolling();}
   if(pageId==='latihanListPage'){renderLatihanList();loadLockState().then(renderLatihanList);startLockPolling();}
   if(pageId==='diskusiThreadPage')openDiskusiChat();
@@ -1222,6 +1463,11 @@ function navTo(pageId,navId){
     renderRekapAbsensiPage();
     loadLockState().then(renderRekapAbsensiPage);
     loadAbsensiListState().then(renderRekapAbsensiPage);
+    loadNilaiListState().then(renderRekapAbsensiPage);
+  }
+  if(pageId==='pengumumanPage'){
+    if(!isDosen()){goTo('akunPage');return;}
+    renderPengumumanKelola();
   }
   markMenuVisited(pageId);
 }
@@ -1372,6 +1618,7 @@ function initHome(){
   refreshNextPertemuan();
   updateNotifDot();
   updateHeaderAnim();
+  loadPengumuman();
   loadLockState().then(()=>{refreshHomeStats();refreshProgressBelajar();refreshNextPertemuan();});
   loadAbsensiListState().then(()=>{refreshHomeStats();refreshProgressBelajar();refreshNextPertemuan();});
 }
@@ -2440,6 +2687,7 @@ function finishQuiz(){
   const prevBest=parseInt(localStorage.getItem(bestKey)||'0');
   if(skor>prevBest)localStorage.setItem(bestKey,skor);
   localStorage.setItem('kd_lastcount_'+nomor, (parseInt(localStorage.getItem('kd_lastcount_'+nomor)||'0')+1));
+  syncNilaiToServer(nomor,skor);
   addNotif('<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" xmlns="http://www.w3.org/2000/svg"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>','Latihan selesai',`Pertemuan ${nomor}: skor ${skor}`);
 
   const letters=['A','B','C','D','E'];
@@ -2485,9 +2733,11 @@ function renderAkun(){
   // akun dosen (admin01) tidak pernah ada di situ, jadi angka ini otomatis
   // TIDAK bertambah walau ada dosen yang login.
   document.getElementById('akunMhsCount').textContent=(window.MAHASISWA_DATA||[]).length;
-  // Tombol "Rekap Absensi Mahasiswa" hanya untuk dosen.
+  // Tombol "Rekap Absensi & Nilai" dan "Kelola Pengumuman" hanya untuk dosen.
   const btnRekap=document.getElementById('btnRekapAbsensi');
   if(btnRekap)btnRekap.style.display=dosen?'':'none';
+  const btnPengumuman=document.getElementById('btnKelolaPengumuman');
+  if(btnPengumuman)btnPengumuman.style.display=dosen?'':'none';
   // "Latihan Dikerjakan" hanya relevan untuk mahasiswa; disembunyikan
   // untuk akun dosen.
   const latihanRow=document.getElementById('akunLatihanRow');
@@ -2542,6 +2792,7 @@ function computeRekapAbsensi(){
   const master=window.MAHASISWA_DATA||[];
   const listDibuka=getPertemuan().filter(p=>!isPertemuanLocked(p.nomor));
   const total=listDibuka.length;
+  const nilaiRemote=window.NILAI_LIST_REMOTE||{};
   const rows=master.map(m=>{
     let hadir=0,izin=0,alpha=0;
     listDibuka.forEach(p=>{
@@ -2552,7 +2803,10 @@ function computeRekapAbsensi(){
       else alpha++;
     });
     const pct=total?Math.round(hadir/total*100):0;
-    return {nim:m.nim,nama:m.nama,hadir,izin,alpha,total,pct};
+    const n=nilaiRemote[String(m.nim).trim()];
+    const latihanDikerjakan=n?n.pertemuanDikerjakan:0;
+    const rataNilai=n&&n.pertemuanDikerjakan>0?Math.round(n.totalSkorTerbaik/n.pertemuanDikerjakan):0;
+    return {nim:m.nim,nama:m.nama,hadir,izin,alpha,total,pct,latihanDikerjakan,rataNilai};
   });
   rows.sort((a,b)=>(a.nama||'').localeCompare(b.nama||'','id'));
   return {rows,totalPertemuan:total};
@@ -2568,8 +2822,9 @@ function renderRekapAbsensiPage(){
   const wrap=document.getElementById('rekapAbsensiWrap');
   const sub=document.getElementById('rekapAbsensiSub');
   const printSub=document.getElementById('rekapPrintSub');
+  const nilaiTersedia=adminReady();
   const subText=`Dihitung dari ${totalPertemuan} pertemuan yang sudah dibuka · ${rows.length} mahasiswa terdaftar · dicetak ${formatTanggal(new Date().toISOString().slice(0,10))}`;
-  if(sub)sub.textContent=`Dihitung dari ${totalPertemuan} pertemuan yang sudah dibuka.`;
+  if(sub)sub.textContent=`Dihitung dari ${totalPertemuan} pertemuan yang sudah dibuka.`+(nilaiTersedia?'':' Nilai latihan belum tersedia (GAS_ADMIN_URL belum aktif).');
   if(printSub)printSub.textContent=subText;
   if(!wrap)return;
   if(rows.length===0){
@@ -2584,8 +2839,9 @@ function renderRekapAbsensiPage(){
       <td class="num">${r.hadir}</td>
       <td class="num">${r.izin}</td>
       <td class="num">${r.alpha}</td>
-      <td class="num">${r.total}</td>
       <td class="num ${pctClass(r.pct)}">${r.pct}%</td>
+      <td class="num">${nilaiTersedia?r.latihanDikerjakan:'—'}</td>
+      <td class="num">${nilaiTersedia?r.rataNilai:'—'}</td>
     </tr>`).join('');
   wrap.innerHTML=`
     <div class="rekap-table-wrap">
@@ -2594,7 +2850,7 @@ function renderRekapAbsensiPage(){
           <tr>
             <th>No</th><th>NIM</th><th>Nama</th>
             <th class="num">Hadir</th><th class="num">Izin</th><th class="num">Alpha</th>
-            <th class="num">Total</th><th class="num">% Hadir</th>
+            <th class="num">% Hadir</th><th class="num">Latihan Dikerjakan</th><th class="num">Rata² Nilai</th>
           </tr>
         </thead>
         <tbody>${body}</tbody>
@@ -2623,7 +2879,8 @@ async function exportRekapAbsensiExcel(ev){
   if(btn){btn.disabled=true;btn.innerHTML='Menyiapkan file...';}
   try{
     await ensureXlsxLib();
-    const {rows,totalPertemuan}=computeRekapAbsensi();
+    const {rows}=computeRekapAbsensi();
+    const nilaiTersedia=adminReady();
     const dataForSheet=rows.map((r,i)=>({
       'No':i+1,
       'NIM':r.nim,
@@ -2631,15 +2888,16 @@ async function exportRekapAbsensiExcel(ev){
       'Hadir':r.hadir,
       'Izin':r.izin,
       'Alpha':r.alpha,
-      'Total Pertemuan Dibuka':r.total,
-      '% Hadir':r.pct
+      '% Hadir':r.pct,
+      'Latihan Dikerjakan':nilaiTersedia?r.latihanDikerjakan:'',
+      'Rata-rata Nilai':nilaiTersedia?r.rataNilai:''
     }));
     const ws=XLSX.utils.json_to_sheet(dataForSheet);
-    ws['!cols']=[{wch:5},{wch:14},{wch:26},{wch:8},{wch:8},{wch:8},{wch:18},{wch:10}];
+    ws['!cols']=[{wch:5},{wch:14},{wch:26},{wch:8},{wch:8},{wch:8},{wch:10},{wch:18},{wch:14}];
     const wb=XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb,ws,'Rekap Absensi');
+    XLSX.utils.book_append_sheet(wb,ws,'Rekap Absensi Nilai');
     const tanggal=new Date().toISOString().slice(0,10);
-    XLSX.writeFile(wb,`Rekap-Absensi-Pengantar-Statistika-${tanggal}.xlsx`);
+    XLSX.writeFile(wb,`Rekap-Absensi-Nilai-Pengantar-Statistika-${tanggal}.xlsx`);
   }catch(e){
     alert(e.message||'Gagal membuat file Excel.');
   }finally{
